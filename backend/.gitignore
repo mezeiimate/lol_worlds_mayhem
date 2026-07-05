@@ -1,0 +1,22 @@
+# Node.js függőségek
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Környezeti változók és titkok (Adatbázis jelszavak)
+.env
+.env.local
+.env.development
+
+# Hatalmas adatmérnöki fájlok (Ne töltsük fel a GitHubot feleslegesen)
+*.csv
+*.txt
+
+# Fordított kód (ha később TS-ből JS-t építesz)
+dist/
+build/
+
+# IDE és operációs rendszer fájlok
+.vscode/
+.DS_Store
+Thumbs.db

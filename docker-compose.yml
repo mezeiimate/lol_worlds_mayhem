@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  worlds_db:
+    image: postgres:15-alpine
+    container_name: worlds_db
+    environment:
+      POSTGRES_USER: ${DB_USER:-mayhem_admin}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-SuperSecureWorlds2026!_Key}
+      POSTGRES_DB: ${DB_NAME:-worlds_mayhem}
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres_mayhem_data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d
+    networks:
+      - mayhem_network
+    restart: unless-stopped
+
+volumes:
+  postgres_mayhem_data:
+
+networks:
+  mayhem_network:
+    driver: bridge

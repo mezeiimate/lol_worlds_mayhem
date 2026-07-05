@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <style> 
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap');
+        
+        body { background-color: #010a13; color: #f0e6d2; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; } 
+        h1, h2, h3, .esport-font { font-family: 'Oswald', sans-serif; text-transform: uppercase; }
+        
+        .hex-border { border: 1px solid #c8aa6e; }
+        .hex-bg { background-color: #1e2328; }
+        .hex-bg-hover:hover { background-color: #2b3137; border-color: #f0e6d2; }
+        .text-gold { color: #c8aa6e; }
+        .text-gold-light { color: #f0e6d2; }
+
+        .corner-borders { position: relative; }
+        .corner-borders::before, .corner-borders::after { content: ''; position: absolute; width: 8px; height: 8px; border: 1px solid #c8aa6e; transition: all 0.2s ease; }
+        .corner-borders::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+        .corner-borders::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+        .corner-borders:hover::before, .corner-borders:hover::after { width: 12px; height: 12px; border-color: #f0e6d2; }
+
+        /* HELYI TÉRKÉP (map.png) BETÖLTÉSE A PUBLIC MAPPÁBÓL */
+        .sr-map {
+            background-image: url('/map.png');
+            background-size: cover;
+            background-position: center;
+            border: 2px solid #c8aa6e;
+            box-shadow: 0 0 20px rgba(200, 170, 110, 0.15);
+        }
+        
+        .map-node { position: absolute; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; z-index: 10; transition: all 0.3s ease; }
+        .map-node-empty { width: 40px; height: 40px; border-radius: 50%; border: 2px dashed rgba(200, 170, 110, 0.5); background: rgba(1, 10, 19, 0.7); display: flex; align-items: center; justify-content: center; }
+        .map-node-filled img { width: 44px; height: 44px; border-radius: 50%; border: 2px solid #c8aa6e; background: #010a13; box-shadow: 0 4px 10px rgba(0,0,0,0.8); }
+        .map-node-filled .badge { background: #010a13; border: 1px solid #c8aa6e; padding: 2px 4px; border-radius: 4px; font-size: 0.55rem; font-weight: bold; margin-top: -6px; z-index: 11; text-align: center; white-space: nowrap;}
+        
+        /* Node positions for Blue Side (Team 1) */
+        .pos-TOP-1 { top: 25%; left: 20%; }
+        .pos-JUNGLE-1 { top: 45%; left: 35%; }
+        .pos-MID-1 { top: 60%; left: 40%; }
+        .pos-ADC-1 { top: 80%; left: 65%; }
+        .pos-SUPPORT-1 { top: 88%; left: 50%; }
+
+        /* Node positions for Red Side (Team 2) */
+        .pos-TOP-2 { top: 12%; left: 50%; }
+        .pos-JUNGLE-2 { top: 20%; left: 65%; }
+        .pos-MID-2 { top: 40%; left: 60%; }
+        .pos-ADC-2 { top: 55%; left: 80%; }
+        .pos-SUPPORT-2 { top: 75%; left: 80%; }
+    </style>
+</head>
+<body class="p-4 md:p-6 min-h-screen flex flex-col">
+
+    <div class="max-w-[1600px] mx-auto w-full flex-1 flex flex-col">
+        <div class="bg-[#091428] hex-border rounded-sm p-4 shadow-xl mb-6 flex justify-between items-center">
+            <div class="flex items-center gap-6">
+                <a href="/dashboard" class="bg-[#1e2328] hover:bg-[#2b3137] border border-[#c8aa6e]/50 px-4 py-1.5 rounded-sm text-sm font-bold transition-colors">Központ</a>
+                <h1 id="lobbyTitle" class="text-3xl tracking-widest text-gold esport-font">WORLDS DRAFT</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="text-right">
+                    <p class="text-[0.65rem] text-slate-400 uppercase tracking-widest mb-0.5">SZOBA KÓD</p>
+                    <div class="bg-[#010a13] border border-[#c8aa6e]/50 px-4 py-1 rounded-sm font-mono text-lg font-bold text-gold-light tracking-widest"><%= inviteCode %></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-4 gap-6 flex-1">
+            
+            <div class="xl:col-span-1 flex flex-col items-center justify-start relative" id="leftMapArea">
+                <div class="w-full flex justify-between items-center mb-4">
+                    <h2 class="text-xl text-gold-light esport-font tracking-widest" id="mapTitle">SAJÁT FELÁLLÁS</h2>
+                    <button id="readyBtnTop" onclick="setReady()" class="hidden esport-font text-sm bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-1 rounded-sm tracking-widest transition-colors">KERET LEZÁRÁSA</button>
+                </div>
+                
+                <div id="mapContainer" class="relative w-full aspect-square max-w-[400px] sr-map rounded-sm mx-auto">
+                    <div id="node-TOP-1" class="map-node pos-TOP-1"><div class="map-node-empty text-gold"></div></div>
+                    <div id="node-JUNGLE-1" class="map-node pos-JUNGLE-1"><div class="map-node-empty text-gold"></div></div>
+                    <div id="node-MID-1" class="map-node pos-MID-1"><div class="map-node-empty text-gold"></div></div>
+                    <div id="node-ADC-1" class="map-node pos-ADC-1"><div class="map-node-empty text-gold"></div></div>
+                    <div id="node-SUPPORT-1" class="map-node pos-SUPPORT-1"><div class="map-node-empty text-gold"></div></div>
+                    
+                    <div id="node-TOP-2" class="map-node pos-TOP-2 hidden"></div>
+                    <div id="node-JUNGLE-2" class="map-node pos-JUNGLE-2 hidden"></div>
+                    <div id="node-MID-2" class="map-node pos-MID-2 hidden"></div>
+                    <div id="node-ADC-2" class="map-node pos-ADC-2 hidden"></div>
+                    <div id="node-SUPPORT-2" class="map-node pos-SUPPORT-2 hidden"></div>
+                </div>
+            </div>
+
+            <div class="xl:col-span-2 flex flex-col h-full relative" id="centerArea">
+                
+                <div id="startArea" class="w-full flex flex-col items-center justify-center h-[500px] border border-[#c8aa6e]/20 bg-[#091428]/50 rounded-sm">
+                    <button id="mainSpinBtn" onclick="rollTeams()" class="esport-font text-3xl text-[#010a13] bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] hover:from-[#f0e6d2] hover:to-[#c8aa6e] px-16 py-4 rounded-sm transition-all hover:scale-105 shadow-[0_0_20px_rgba(200,170,110,0.4)]">
+                        SPIN
+                    </button>
+                    <p class="mt-4 text-slate-500 font-bold tracking-widest text-sm" id="initialRerollText">3 REROLLS LEFT</p>
+                </div>
+
+                <div id="teamsAreaPhase1" class="w-full hidden flex-col">
+                    <div class="flex justify-between items-end mb-4 border-b border-[#c8aa6e]/30 pb-2">
+                        <h2 class="text-xl text-gold-light esport-font tracking-widest">VÁLASSZ EGY CSAPATOT</h2>
+                    </div>
+                    <div id="teamsListPhase1" class="space-y-4"></div>
+                    <div class="mt-8 flex flex-col items-center">
+                        <button onclick="rollTeams()" class="esport-font text-lg text-gold border border-gold hover:bg-[#c8aa6e] hover:text-[#010a13] px-10 py-2 transition-colors">
+                            REROLL
+                        </button>
+                        <p id="rerollsTextP1" class="mt-2 text-slate-500 font-bold tracking-widest text-[0.65rem]">3 LEFT</p>
+                    </div>
+                </div>
+
+                <div id="teamsAreaPhase2" class="w-full hidden flex-col">
+                    <div class="flex items-center gap-3 mb-6 border-b border-[#c8aa6e]/30 pb-4" id="phase2Header"></div>
+                    <div id="teamsListPhase2" class="space-y-3"></div>
+                </div>
+
+                <div id="waitingArea" class="w-full hidden flex-col items-center justify-center h-[500px] border border-[#c8aa6e]/20 bg-[#091428]/50">
+                    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gold mb-6"></div>
+                    <h2 class="text-2xl text-gold esport-font tracking-widest">VÁRAKOZÁS A TÖBBIEKRE...</h2>
+                </div>
+
+                <div id="simulationStudio" class="w-full hidden flex-col items-center justify-start mt-4">
+                    <div id="studioMatchBox" class="bg-[#091428] hex-border w-full rounded-sm p-8 mb-6 text-center min-h-[260px] flex flex-col items-center justify-center relative overflow-hidden">
+                        <div id="matchGroupBadge" class="hidden bg-[#1e2328] text-gold border border-[#c8aa6e]/50 px-4 py-1.5 text-xs font-bold tracking-widest uppercase mb-6">Csoportmérkőzés</div>
+                        
+                        <div id="matchTeamsDisplay" class="hidden flex items-center justify-center gap-6 w-full mb-4">
+                            <div class="flex flex-col items-end flex-1 min-w-0">
+                                <img id="matchTeam1Img" src="" class="w-20 h-20 rounded-full border-2 border-gold mb-3 shadow-lg">
+                                <div id="matchTeam1" class="text-2xl esport-font tracking-wider truncate w-full text-right">Team 1</div>
+                            </div>
+                            <div class="text-[#c8aa6e] font-black italic text-4xl px-2 mt-4">VS</div>
+                            <div class="flex flex-col items-start flex-1 min-w-0">
+                                <img id="matchTeam2Img" src="" class="w-20 h-20 rounded-full border-2 border-gold mb-3 shadow-lg">
+                                <div id="matchTeam2" class="text-2xl esport-font tracking-wider truncate w-full text-left">Team 2</div>
+                            </div>
+                        </div>
+
+                        <div id="bo5ScoreDisplay" class="hidden text-xl font-mono text-gold mb-4 font-bold tracking-widest">
+                            <span id="scoreT1">0</span> - <span id="scoreT2">0</span>
+                        </div>
+
+                        <div id="playByPlayLog" class="hidden text-sm mb-4 bg-[#010a13] px-6 py-4 border border-[#c8aa6e]/30 w-full flex flex-col gap-2 min-h-[120px] text-left"></div>
+
+                        <p class="text-lg text-slate-500 italic" id="matchStatusText">A mérkőzések készen állnak!</p>
+                        
+                        <div id="matchWinnerDisplay" class="hidden mt-2 bg-emerald-900/30 border border-emerald-700 px-6 py-2 rounded-sm text-emerald-400 font-bold text-lg uppercase tracking-wider transition-opacity duration-500">
+                            <span id="winnerTextLabel">Győztes:</span> <span id="winnerText" class="text-white ml-2">Winner</span>
+                        </div>
+                    </div>
+
+                    <div id="hostControls" class="hidden flex-col gap-3 w-full items-center mt-4">
+                        <button id="nextMatchBtn" onclick="triggerNextMatch()" class="w-full esport-font text-xl text-[#010a13] bg-[#c8aa6e] hover:bg-[#f0e6d2] py-3 rounded-sm transition-colors shadow-lg">
+                            KÖVETKEZŐ MECCS
+                        </button>
+                        <div id="fastForwardGroup" class="flex gap-2 w-full mt-2">
+                            <button id="ffGroupBtn" onclick="fastForward('group')" class="flex-1 bg-[#1e2328] hover:bg-[#2b3137] text-slate-300 text-xs font-bold tracking-widest py-2 border border-[#c8aa6e]/50">GYORSÍTÁS: CSOPORT</button>
+                            <button id="ffAllBtn" onclick="fastForward('all')" class="flex-1 bg-[#1e2328] hover:bg-[#2b3137] text-slate-300 text-xs font-bold tracking-widest py-2 border border-[#c8aa6e]/50">GYORSÍTÁS: ÖSSZES</button>
+                            <button id="ffBo5Btn" onclick="fastForward('bo5')" class="hidden flex-1 bg-[#1e2328] hover:bg-[#2b3137] text-slate-300 text-xs font-bold tracking-widest py-2 border border-[#c8aa6e]/50">TELJES BO5</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="championArea" class="hidden w-full flex-col items-center mt-8">
+                    <div class="w-full bg-[#091428] border-2 border-gold rounded-sm p-8 shadow-[0_0_50px_rgba(200,170,110,0.3)] flex flex-col items-center mb-8 relative overflow-hidden">
+                        <h2 class="text-2xl font-bold text-gold-light esport-font tracking-widest mb-4">A torna véget ért</h2>
+                        <img id="championLogo" src="" class="w-24 h-24 rounded-full border-4 border-gold mb-4 shadow-xl">
+                        <p class="text-5xl font-black text-white drop-shadow-lg mb-2">🏆 <span id="championName">Bajnok neve</span> 🏆</p>
+                        <p class="text-lg text-gold font-semibold">Megnyerte a Worlds Mayhem trófeát!</p>
+                    </div>
+                    
+                    <div class="w-full bg-[#010a13] rounded-sm p-6 border border-[#c8aa6e]/50 mb-8">
+                        <h3 class="text-center text-gold font-black text-xl mb-6 esport-font tracking-widest border-b border-[#c8aa6e]/30 pb-3">Végső ranglista</h3>
+                        <div id="standingsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                    </div>
+
+                    <div id="finalGroupTablesArea" class="w-full hidden flex-col gap-4 bg-[#1e2328]/50 p-6 rounded-sm border border-[#c8aa6e]/30">
+                        <h3 class="text-center text-gold-light text-sm uppercase tracking-widest font-bold border-b border-[#c8aa6e]/30 pb-2">Csoportkörök végeredménye</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="finalGroupTablesContainer"></div>
+                    </div>
+                </div>
+
+                <div id="bracketArea" class="w-full mt-8 hidden flex flex-col gap-4">
+                    <h3 class="text-center text-gold-light text-lg esport-font tracking-widest border-b border-[#c8aa6e]/30 pb-2">Kieséses ágrajz</h3>
+                    <div class="flex justify-between gap-2" id="bracketContainer"></div>
+                </div>
+
+            </div>
+
+            <div class="xl:col-span-1 bg-[#091428] hex-border rounded-sm p-5 shadow-xl h-fit flex flex-col" id="sidebarContainer">
+                <h2 id="sidebarTitle" class="text-lg font-bold mb-4 border-b border-[#c8aa6e]/30 pb-2 text-gold esport-font tracking-widest">Menedzserek</h2>
+                <div id="sidebarContent" class="space-y-4 flex-1"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const ROLE_ICONS = {
+            'TOP': `<svg class="w-6 h-6" viewBox="0 0 114 112" fill="none"><path d="M72 71L42 71L42 41L72 41L72 71Z" fill="black" fill-opacity="0.15"/><path d="M101.055 1.13167e-06L-9.79135e-06 9.9662e-06L-9.56827e-07 101.055L22 79.0552L22 21L80.0552 21L101.055 1.13167e-06Z" fill="black" fill-opacity="0.15"/><path d="M35.5112 91L92 91L92 34.5112L114 12.5112L114 112L14.5112 112L35.5112 91Z" fill="black" fill-opacity="0.15"/><path d="M101.055 1.13167e-06L-9.79135e-06 9.9662e-06L-9.56827e-07 101.055L22 79.0552L22 21L80.0552 21L101.055 1.13167e-06Z" fill="#C89B3C"/></svg>`,
+            'JUNGLE': `<svg class="w-6 h-6" viewBox="0 0 112 125" fill="none"><path d="M64.5 60C66.9 64.8 68.1667 71.3333 68.5 74L74 61C73.6667 60 73.2 56 74 48C74.8 40 84.6667 13.3333 89.5 1C85.3333 6.66667 76 19.5 72 25.5C68 31.5 61.3333 44 58.5 49.5C59.5 51 62.1 55.2 64.5 60Z" fill="#C89B3C"/><path d="M81 97.5C78.2 99.9 74.5 104.167 73 106L72.5 91.5C73 89.5 74.3 84.5 75.5 80.5C76.7 76.5 80 68 86.5 56.5C88.1667 54 92.9 47.7 96.5 44.5C100.1 41.3 106 37.5 111.5 34.5C104 43 105 42 98 54.5C92.302 64.6751 91.3333 80.6667 91.5 90C89.1667 91.5 83.8 95.1 81 97.5Z" fill="#C89B3C"/><path d="M61 89C61 108.2 57.6667 121 56 125C43.2 105.8 26.6667 93 20 89C19.5 83 18 69.1 16 61.5C14 53.9 4.5 40.3333 0 34.5C4.5 36.5 15.4 42.2 23 49C30.6 55.8 35.8333 66.5 37.5 71C37.5 66.3333 37.2 54.4 36 44C34.8 33.6 25.8333 10.3333 21.5 0C25.3333 5.83333 33 15 39 25.5C43.1287 32.7252 61 65 61 89Z" fill="#C89B3C"/></svg>`,
+            'MID': `<svg class="w-6 h-6" viewBox="0 0 114 112" fill="none"><path d="M0 0H84.7495L63.7495 21H22V62.7495L0 84.7495V0Z" fill="black" fill-opacity="0.15"/><path d="M29.312 112H114V27.3118L92 49.3118V91H50.312L29.312 112Z" fill="black" fill-opacity="0.15"/><path fill-rule="evenodd" clip-rule="evenodd" d="M114 18.2323L20.2323 112H0V93.8289L93.8289 0H114V18.2323Z" fill="#C89B3C"/></svg>`,
+            'ADC': `<svg class="w-6 h-6" viewBox="0 0 114 112" fill="none"><path d="M42 41H72V71H42V41Z" fill="black" fill-opacity="0.15"/><path d="M12.9448 112H114V10.9448L92 32.9448V91H33.9448L12.9448 112Z" fill="black" fill-opacity="0.15"/><path d="M78.4888 21H22V77.4888L0 99.4888V0H99.4888L78.4888 21Z" fill="black" fill-opacity="0.15"/><path d="M12.9448 112H114V10.9448L92 32.9448V91H33.9448L12.9448 112Z" fill="#C89B3C"/></svg>`,
+            'SUPPORT': `<svg class="w-6 h-6" viewBox="0 0 136 114" fill="none"><path d="M63 39.5L67.5 45.5L72.5 39.5L84.5 100.5L67.5 114L51.5 100.5L63 39.5Z" fill="#C89B3C"/><path d="M87.5 65L78.5 36L92 22.5L136 24C134 26.1667 128.9 30.7 124.5 33.5C120.1 36.3 114 39.5 108.5 40H97L108.5 56.5L87.5 65Z" fill="#C89B3C"/><path d="M67.5 32.5L47 9L51.5 0H84.5L88.5 9L67.5 32.5Z" fill="#C89B3C"/><path d="M56 36L44 24H0C1.66667 25.3333 3 29.5 13 34.5C20.7398 38.3699 27.1667 40.1667 28.5 40H38.5L27 56.5L48.5 65L56 36Z" fill="#C89B3C"/></svg>`
+        };
+
+        const socket = io();
+        const LOBBY_ID = '<%= lobbyId %>';
+        const USER_ID = '<%= userId %>';
+        let currentOffer = [];
+        let selectedTeamIndex = null;
+        const filledRoles = new Set(); 
+        let isSimulating = false;
+        let CURRENT_HOST_ID = null;
+        let isTournamentEnded = false;
+
+        function getRegionBadge(region) {
+            const map = {
+                'KR': { text: 'KR', color: 'bg-blue-600' },
+                'CN': { text: 'CN', color: 'bg-red-600' },
+                'EU': { text: 'EU', color: 'bg-indigo-500' },
+                'NA': { text: 'NA', color: 'bg-cyan-600' },
+                'PCS': { text: 'PCS', color: 'bg-emerald-600' },
+                'VN': { text: 'VN', color: 'bg-yellow-600' },
+                'BR': { text: 'BR', color: 'bg-green-600' },
+                'TR': { text: 'TR', color: 'bg-red-500' },
+                'CIS': { text: 'CIS', color: 'bg-purple-600' },
+                'LATAM': { text: 'LATAM', color: 'bg-pink-600' },
+                'JP': { text: 'JP', color: 'bg-rose-500' },
+                'OCE': { text: 'OCE', color: 'bg-sky-500' }
+            };
+            const r = map[region] || { text: region, color: 'bg-slate-600' };
+            return `<span class="${r.color} text-white text-[0.55rem] font-black px-1.5 py-0.5 rounded tracking-wider mx-1 flex-shrink-0 shadow-sm">${r.text}</span>`;
+        }
+
+        function getAvatarUrl(name, isTeam = false) {
+            const bg = isTeam ? '010a13' : '1e2328';
+            const color = isTeam ? 'c8aa6e' : 'f0e6d2';
+            return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=${bg}&color=${color}&bold=true&size=128`;
+        }
+
+        socket.emit('join_lobby', { userId: USER_ID, inviteCode: '<%= inviteCode %>' }, () => {});
+
+        function updateLobbyStateUI(data) {
+            const cOrder = data.currentMatchOrder;
+            const phase = data.currentPhase;
+            
+            if (USER_ID === data.hostId && !isTournamentEnded && data.status === 'SIMULATING') {
+                document.getElementById('hostControls').classList.remove('hidden');
+                document.getElementById('hostControls').classList.add('flex');
+                document.getElementById('nextMatchBtn').classList.remove('hidden');
+                document.getElementById('nextMatchBtn').disabled = false;
+                document.getElementById('fastForwardGroup').classList.remove('hidden');
+                document.getElementById('fastForwardGroup').classList.add('flex');
+
+                const btnAll = document.getElementById('ffAllBtn');
+                const btnGroup = document.getElementById('ffGroupBtn');
+                const btnBo5 = document.getElementById('ffBo5Btn');
+
+                if (phase === 'GROUP') {
+                    btnAll.classList.remove('hidden'); 
+                    btnGroup.classList.remove('hidden'); 
+                    btnBo5.classList.add('hidden');
+                } else if (phase === 'QUARTER' || phase === 'SEMI' || phase === 'FINAL') {
+                    btnAll.classList.add('hidden'); 
+                    btnGroup.classList.add('hidden'); 
+                    btnBo5.classList.remove('hidden');
+                } else { 
+                    document.getElementById('fastForwardGroup').classList.add('hidden'); 
+                }
+            }
+
+            renderGroupTables(data.players, 'sidebarContent', 'sidebar');
+            if (data.bracket && data.bracket.length > 0) { renderBracket(data.bracket); }
+        }
+
+        socket.on('lobby_state_update', (data) => {
+            CURRENT_HOST_ID = data.hostId;
+            if (data.status === 'SIMULATING' || data.status === 'FINISHED') {
+                if (!isSimulating) { isSimulating = true; transitionToSimulation(); }
+                updateLobbyStateUI(data);
+            } else { renderManagerSidebar(data.players); }
+        });
+
+        // ================= DRAFT UI (BOLT) =================
+
+        function renderShop() {
+            if (selectedTeamIndex !== null) { renderPhase2(); } else { renderPhase1(); }
+        }
+
+        function renderPhase1() {
+            document.getElementById('teamsAreaPhase2').classList.add('hidden');
+            document.getElementById('teamsAreaPhase1').classList.remove('hidden');
+            document.getElementById('teamsAreaPhase1').classList.add('flex');
+            
+            const list = document.getElementById('teamsListPhase1');
+            list.innerHTML = '';
+            
+            currentOffer.forEach((teamObj, index) => {
+                let playersHtml = `<div class="grid grid-cols-2 gap-x-4 gap-y-1 mt-3">`;
+                teamObj.players.forEach(p => {
+                    const icon = ROLE_ICONS[p.ingame_role] || '•';
+                    playersHtml += `
+                        <div class="flex items-center gap-2 text-sm text-slate-300">
+                            <span class="text-[#c8aa6e]">${icon}</span>
+                            <span class="truncate">${p.name}</span>
+                        </div>
+                    `;
+                });
+                playersHtml += `</div>`;
+
+                list.innerHTML += `
+                    <div class="hex-bg hex-border corner-borders cursor-pointer hex-bg-hover p-4" onclick="selectTeam(${index})">
+                        <div class="flex items-center gap-4">
+                            <img src="${getAvatarUrl(teamObj.team, true)}" class="w-14 h-14 border border-[#c8aa6e]" alt="logo">
+                            <div>
+                                <div class="flex items-center">
+                                    ${getRegionBadge(teamObj.country)}
+                                    <h3 class="esport-font text-2xl text-white tracking-widest leading-none ml-2">${teamObj.team}</h3>
+                                </div>
+                                <span class="font-mono text-slate-500 font-bold tracking-widest text-xs">Season ${teamObj.season}</span>
+                            </div>
+                        </div>
+                        ${playersHtml}
+                    </div>
+                `;
+            });
+        }
+
+        function renderPhase2() {
+            document.getElementById('teamsAreaPhase1').classList.add('hidden');
+            document.getElementById('teamsAreaPhase1').classList.remove('flex');
+            document.getElementById('teamsAreaPhase2').classList.remove('hidden');
+            document.getElementById('teamsAreaPhase2').classList.add('flex');
+
+            const teamObj = currentOffer[selectedTeamIndex];
+            
+            document.getElementById('phase2Header').innerHTML = `
+                <img src="${getAvatarUrl(teamObj.team, true)}" class="w-12 h-12 border border-[#c8aa6e]">
+                <div>
+                    <div class="flex items-center">
+                        ${getRegionBadge(teamObj.country)}
+                        <h2 class="esport-font text-2xl text-white tracking-widest leading-none mx-2">${teamObj.team}</h2>
+                    </div>
+                    <span class="font-mono text-slate-500 font-bold tracking-widest text-sm">Season ${teamObj.season}</span>
+                </div>
+            `;
+
+            const list = document.getElementById('teamsListPhase2');
+            list.innerHTML = '';
+
+            teamObj.players.forEach(p => {
+                const isFilled = filledRoles.has(p.ingame_role);
+                const disabledClass = isFilled ? "opacity-30 cursor-not-allowed grayscale" : "cursor-pointer hex-bg-hover";
+                const onClick = isFilled ? "" : `onclick="pickPlayer('${p.id}', '${p.ingame_role}', '${p.name}', '${teamObj.team}', '${teamObj.season}')"`;
+                const icon = ROLE_ICONS[p.ingame_role] || '';
+
+                list.innerHTML += `
+                    <div class="hex-bg hex-border corner-borders p-3 flex items-center justify-between ${disabledClass}" ${onClick}>
+                        <div class="flex items-center gap-4">
+                            <img src="${getAvatarUrl(p.name)}" class="w-12 h-12 rounded-sm border border-[#c8aa6e]" alt="player">
+                            <h3 class="esport-font text-xl text-gold-light tracking-wider">${p.name}</h3>
+                        </div>
+                        <div class="mr-4 text-[#c8aa6e]">
+                            ${icon}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function selectTeam(index) { selectedTeamIndex = index; renderShop(); }
+
+        function rollTeams() { 
+            socket.emit('roll_teams', { lobbyId: LOBBY_ID, userId: USER_ID }, (res) => { 
+                if (res.status === 'success') { 
+                    currentOffer = res.data.offer; 
+                    selectedTeamIndex = null; 
+                    document.getElementById('rerollsTextP1').innerText = `${res.data.rerollsLeft} LEFT`; 
+                    document.getElementById('initialRerollText').innerText = `${res.data.rerollsLeft} REROLLS LEFT`; 
+                    document.getElementById('startArea').classList.add('hidden'); 
+                    renderShop(); 
+                } else { alert(res.message); } 
+            }); 
+        }
+
+        function pickPlayer(playerId, role, playerName, teamName, season) { 
+            socket.emit('pick_player', { lobbyId: LOBBY_ID, userId: USER_ID, playerId, role }, (res) => { 
+                if (res.status === 'success') { 
+                    filledRoles.add(role); 
+                    const node = document.getElementById(`node-${role}-1`);
+                    node.innerHTML = `
+                        <div class="map-node-filled flex flex-col items-center">
+                            <img src="${getAvatarUrl(playerName)}" alt="${playerName}">
+                            <div class="badge">
+                                <span class="text-white block">${playerName}</span>
+                                <span class="text-slate-400 text-[0.55rem] font-mono leading-none">${season}</span>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('teamsAreaPhase2').classList.add('hidden'); 
+                    document.getElementById('teamsAreaPhase2').classList.remove('flex'); 
+                    currentOffer = []; selectedTeamIndex = null;
+                    
+                    if (filledRoles.size >= 5) { 
+                        document.getElementById('readyBtnTop').classList.remove('hidden'); 
+                        document.getElementById('startArea').classList.add('hidden');
+                    } else { document.getElementById('startArea').classList.remove('hidden'); } 
+                } else { alert(res.message); } 
+            }); 
+        }
+
+        function setReady() { 
+            socket.emit('toggle_ready', { lobbyId: LOBBY_ID, userId: USER_ID }, (res) => { 
+                if (res.status === 'success') { 
+                    document.getElementById('readyBtnTop').classList.add('hidden'); 
+                    document.getElementById('startArea').classList.add('hidden');
+                    document.getElementById('teamsAreaPhase1').classList.add('hidden');
+                    document.getElementById('teamsAreaPhase2').classList.add('hidden');
+                    document.getElementById('waitingArea').classList.remove('hidden');
+                    document.getElementById('waitingArea').classList.add('flex'); 
+                } 
+            }); 
+        }
+
+        // ================= TABELLA (NÉV (ÉV) TAG (CSAPAT)) =================
+
+        function toggleRoster(id) { 
+            const el = document.getElementById(`roster-detail-${id}`); 
+            if(el) el.classList.toggle('hidden'); 
+        }
+
+        function renderGroupTables(players, targetId = 'sidebarContent', prefix = 'sidebar') {
+            const container = document.getElementById(targetId); container.innerHTML = '';
+            const groups = ['A', 'B', 'C', 'D'];
+            groups.forEach(g => {
+                const groupTeams = players.filter(p => p.group_name === g);
+                if(groupTeams.length === 0) return;
+                
+                let html = `<div class="bg-[#1e2328]/80 rounded-sm border border-[#c8aa6e]/30 overflow-hidden mb-4 shadow"><div class="bg-[#091428] py-1.5 px-3 border-b border-[#c8aa6e]/30 font-bold text-sm text-gold tracking-widest">'${g}' CSOPORT</div><div class="p-1 space-y-1">`;
+                
+                groupTeams.forEach((t, index) => {
+                    const isHuman = !t.bot_name; 
+                    const nameColor = isHuman ? 'text-[#c8aa6e] font-bold' : 'text-slate-300 hover:text-white';
+                    
+                    html += `
+                        <div class="flex flex-col rounded-sm cursor-pointer transition-colors hover:bg-[#2b3137]" onclick="toggleRoster('${prefix}-${t.team_id}')">
+                            <div class="flex justify-between items-center text-xs p-2">
+                                <div class="flex items-center gap-2 flex-1 min-w-0">
+                                    <img src="${getAvatarUrl(t.username || t.bot_name, true)}" class="w-6 h-6 border border-[#c8aa6e]/50" alt="team">
+                                    <span class="${nameColor} truncate text-sm tracking-wide">${t.username || t.bot_name}</span>
+                                </div>
+                                <span class="font-mono text-emerald-400 font-bold whitespace-nowrap ml-2">${t.group_wins}W - ${t.group_losses}L</span>
+                            </div>
+                            
+                            <div id="roster-detail-${prefix}-${t.team_id}" class="hidden p-2 border-t border-[#c8aa6e]/20 bg-[#010a13]/80 text-[0.65rem] space-y-2">
+                                <div class="flex items-center text-xs w-full min-w-0 pr-1 mt-1">
+                                    <img src="${getAvatarUrl(t.top_name || 'Empty')}" class="w-6 h-6 border border-[#c8aa6e]/50 flex-shrink-0 mr-2">
+                                    <span class="font-bold text-slate-200 truncate max-w-[80px]">${t.top_name || '...'}</span>
+                                    <span class="text-slate-500 ml-1 whitespace-nowrap">(${t.top_season || '-'})</span>
+                                    ${t.top_country ? getRegionBadge(t.top_country) : ''}
+                                    <span class="text-[#c8aa6e] ml-1 truncate">(${t.top_team || '?'})</span>
+                                </div>
+                                <div class="flex items-center text-xs w-full min-w-0 pr-1">
+                                    <img src="${getAvatarUrl(t.jng_name || 'Empty')}" class="w-6 h-6 border border-[#c8aa6e]/50 flex-shrink-0 mr-2">
+                                    <span class="font-bold text-slate-200 truncate max-w-[80px]">${t.jng_name || '...'}</span>
+                                    <span class="text-slate-500 ml-1 whitespace-nowrap">(${t.jng_season || '-'})</span>
+                                    ${t.jng_country ? getRegionBadge(t.jng_country) : ''}
+                                    <span class="text-[#c8aa6e] ml-1 truncate">(${t.jng_team || '?'})</span>
+                                </div>
+                                <div class="flex items-center text-xs w-full min-w-0 pr-1">
+                                    <img src="${getAvatarUrl(t.mid_name || 'Empty')}" class="w-6 h-6 border border-[#c8aa6e]/50 flex-shrink-0 mr-2">
+                                    <span class="font-bold text-slate-200 truncate max-w-[80px]">${t.mid_name || '...'}</span>
+                                    <span class="text-slate-500 ml-1 whitespace-nowrap">(${t.mid_season || '-'})</span>
+                                    ${t.mid_country ? getRegionBadge(t.mid_country) : ''}
+                                    <span class="text-[#c8aa6e] ml-1 truncate">(${t.mid_team || '?'})</span>
+                                </div>
+                                <div class="flex items-center text-xs w-full min-w-0 pr-1">
+                                    <img src="${getAvatarUrl(t.adc_name || 'Empty')}" class="w-6 h-6 border border-[#c8aa6e]/50 flex-shrink-0 mr-2">
+                                    <span class="font-bold text-slate-200 truncate max-w-[80px]">${t.adc_name || '...'}</span>
+                                    <span class="text-slate-500 ml-1 whitespace-nowrap">(${t.adc_season || '-'})</span>
+                                    ${t.adc_country ? getRegionBadge(t.adc_country) : ''}
+                                    <span class="text-[#c8aa6e] ml-1 truncate">(${t.adc_team || '?'})</span>
+                                </div>
+                                <div class="flex items-center text-xs w-full min-w-0 pr-1 mb-1">
+                                    <img src="${getAvatarUrl(t.sup_name || 'Empty')}" class="w-6 h-6 border border-[#c8aa6e]/50 flex-shrink-0 mr-2">
+                                    <span class="font-bold text-slate-200 truncate max-w-[80px]">${t.sup_name || '...'}</span>
+                                    <span class="text-slate-500 ml-1 whitespace-nowrap">(${t.sup_season || '-'})</span>
+                                    ${t.sup_country ? getRegionBadge(t.sup_country) : ''}
+                                    <span class="text-[#c8aa6e] ml-1 truncate">(${t.sup_team || '?'})</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div></div>`; container.innerHTML += html;
+            });
+        }
+
+        function renderManagerSidebar(players) {
+            const container = document.getElementById('sidebarContent'); container.innerHTML = '';
+            const humans = players.filter(p => !p.bot_name);
+            humans.forEach(p => {
+                const readyBadge = p.is_ready ? `<span class="bg-emerald-500/20 text-emerald-400 text-xs font-bold px-2 py-0.5 rounded border border-emerald-500/30">✓</span>` : `<span class="bg-slate-700 text-slate-400 text-xs font-bold px-2 py-0.5 rounded">...</span>`;
+                container.innerHTML += `
+                    <div class="bg-[#1e2328] p-3 rounded-sm border border-[#c8aa6e]/30 flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <img src="${getAvatarUrl(p.username, true)}" class="w-6 h-6 border border-[#c8aa6e]/50">
+                            <span class="font-bold text-slate-200 text-sm">${p.username}</span>
+                        </div>
+                        ${readyBadge}
+                    </div>`;
+            });
+        }
+
+        // ================= SIMULATION & MATCH UI =================
+        
+        function drawTeamOnMap(teamPlayersArr, side) {
+            const getPlayer = (role) => teamPlayersArr.find(p => p.ingame_role === role);
+            ['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT'].forEach(role => {
+                const node = document.getElementById(`node-${role}-${side}`);
+                if (!node) return;
+                const player = getPlayer(role);
+                if (player) {
+                    node.classList.remove('hidden');
+                    node.innerHTML = `
+                        <div class="map-node-filled flex flex-col items-center">
+                            <img src="${getAvatarUrl(player.name)}" alt="${player.name}">
+                            <div class="badge">
+                                <span class="text-white block">${player.name}</span>
+                                <span class="text-slate-400 text-[0.55rem] font-mono leading-none">${player.season}</span>
+                            </div>
+                        </div>
+                    `;
+                } else { node.classList.add('hidden'); }
+            });
+        }
+
+        socket.on('match_simulated_event', (data) => {
+            if (isTournamentEnded) return;
+            document.getElementById('matchStatusText').classList.add('hidden');
+            document.getElementById('matchWinnerDisplay').classList.add('hidden');
+            document.getElementById('fastForwardGroup').classList.add('hidden');
+            document.getElementById('nextMatchBtn').classList.add('hidden');
+            
+            const badge = document.getElementById('matchGroupBadge');
+            badge.classList.remove('hidden'); badge.innerText = data.isBO5 ? `${data.group} - Game ${data.gameNumber}` : data.group;
+            
+            const teamsDisplay = document.getElementById('matchTeamsDisplay');
+            teamsDisplay.classList.remove('hidden'); teamsDisplay.classList.add('flex');
+            
+            document.getElementById('matchTeam1Img').src = getAvatarUrl(data.team1, true);
+            document.getElementById('matchTeam2Img').src = getAvatarUrl(data.team2, true);
+
+            const t1El = document.getElementById('matchTeam1'); const t2El = document.getElementById('matchTeam2');
+            t1El.innerText = data.team1; t2El.innerText = data.team2;
+            t1El.className = "text-2xl esport-font tracking-wider truncate w-full text-right text-slate-300 transition-colors duration-500";
+            t2El.className = "text-2xl esport-font tracking-wider truncate w-full text-left text-slate-300 transition-colors duration-500";
+
+            if (data.isBO5) {
+                document.getElementById('bo5ScoreDisplay').classList.remove('hidden');
+                document.getElementById('scoreT1').innerText = (data.winner === data.team1) ? data.score1 - 1 : data.score1;
+                document.getElementById('scoreT2').innerText = (data.winner === data.team2) ? data.score2 - 1 : data.score2;
+            } else { document.getElementById('bo5ScoreDisplay').classList.add('hidden'); }
+
+            const logEl = document.getElementById('playByPlayLog'); logEl.innerHTML = ''; logEl.classList.remove('hidden');
+
+            const isMyTeamInvolved = (USER_ID === data.t1_user_id || USER_ID === data.t2_user_id);
+            const myTeamId = (USER_ID === data.t1_user_id) ? data.team1_id : data.team2_id;
+
+            if (isMyTeamInvolved) {
+                document.getElementById('mapTitle').innerText = "AKTUÁLIS MÉRKŐZÉS";
+                if (USER_ID === data.t1_user_id) { drawTeamOnMap(data.t1_players, 1); drawTeamOnMap(data.t2_players, 2); } 
+                else { drawTeamOnMap(data.t2_players, 1); drawTeamOnMap(data.t1_players, 2); }
+            } else {
+                document.getElementById('mapTitle').innerText = "SAJÁT FELÁLLÁS";
+                ['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT'].forEach(r => document.getElementById(`node-${r}-2`).classList.add('hidden'));
+            }
+
+            let delay = 0;
+            data.actionLogs.forEach((logObj, index) => {
+                setTimeout(() => {
+                    if (isTournamentEnded) return;
+                    const p = document.createElement('p');
+                    p.className = 'opacity-0 transition-opacity duration-500 font-medium tracking-wide flex gap-2 items-start';
+                    
+                    let colorClass = 'text-[#c8aa6e]';
+                    if (isMyTeamInvolved && logObj.favoredTeamId) { colorClass = (logObj.favoredTeamId === myTeamId) ? 'text-emerald-400' : 'text-red-400'; } 
+                    else if (!isMyTeamInvolved && logObj.favoredTeamId) { colorClass = (logObj.favoredTeamId === data.team1_id) ? 'text-blue-300' : 'text-purple-300'; }
+
+                    p.classList.add(colorClass); 
+                    p.innerHTML = `<span class="mt-1 flex-shrink-0"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 12l10 10 10-10L12 2zm0 3.8l6.2 6.2-6.2 6.2-6.2-6.2L12 5.8z"/></svg></span> <span>${logObj.text}</span>`;
+                    logEl.appendChild(p); setTimeout(() => p.classList.remove('opacity-0'), 50);
+
+                    if (index === data.actionLogs.length - 1) {
+                        setTimeout(() => {
+                            if (isTournamentEnded) return;
+                            const winnerDisplay = document.getElementById('matchWinnerDisplay'); winnerDisplay.classList.remove('hidden');
+                            document.getElementById('winnerText').innerText = data.winner;
+
+                            if (data.isBO5) { document.getElementById('scoreT1').innerText = data.score1; document.getElementById('scoreT2').innerText = data.score2; }
+
+                            if (data.isSeriesFinished) {
+                                document.getElementById('winnerTextLabel').innerText = "🏆 GYŐZTES:";
+                                if (data.team1 === data.winner) { t1El.classList.add('text-emerald-400'); t2El.classList.add('text-slate-600'); } 
+                                else { t1El.classList.add('text-slate-600'); t2El.classList.add('text-emerald-400'); }
+                                
+                                if (data.matchPhase === 'FINAL' && USER_ID === CURRENT_HOST_ID) {
+                                    document.getElementById('nextMatchBtn').innerText = "🏆 EREDMÉNYHIRDETÉS";
+                                }
+                            } else { document.getElementById('winnerTextLabel').innerText = "Game győztes:"; }
+
+                            if (data.newState) { updateLobbyStateUI(data.newState); }
+                        }, 1000);
+                    }
+                }, delay);
+                delay += 1500; 
+            });
+        });
+
+        socket.on('fast_forward_complete', (data) => {
+            if (isTournamentEnded) return;
+            const logEl = document.getElementById('playByPlayLog');
+            logEl.innerHTML = `<p class="text-emerald-400 font-bold text-lg text-center py-4">⏳ ${data.message}</p>`;
+            logEl.classList.remove('hidden');
+            document.getElementById('matchStatusText').classList.add('hidden'); document.getElementById('matchTeamsDisplay').classList.add('hidden'); document.getElementById('matchWinnerDisplay').classList.add('hidden'); document.getElementById('bo5ScoreDisplay').classList.add('hidden');
+            
+            if (data.newState) { updateLobbyStateUI(data.newState); }
+        });
+
+        socket.on('tournament_winner', (data) => {
+            isTournamentEnded = true;
+            document.getElementById('hostControls').classList.add('hidden');
+            document.getElementById('nextMatchBtn').classList.add('hidden');
+            document.getElementById('studioMatchBox').classList.add('hidden');
+            
+            document.getElementById('sidebarContainer').classList.add('hidden');
+            document.getElementById('leftMapArea').classList.add('hidden');
+            document.getElementById('centerArea').classList.replace('xl:col-span-2', 'xl:col-span-4');
+            
+            document.getElementById('championArea').classList.remove('hidden');
+            document.getElementById('championArea').classList.add('flex');
+            document.getElementById('championName').innerText = data.winner;
+            document.getElementById('championLogo').src = getAvatarUrl(data.winner, true);
+
+            const stContainer = document.getElementById('standingsContainer');
+            stContainer.innerHTML = ''; 
+            data.standings.forEach(st => {
+                let cssClass = "bg-[#1e2328] border-[#c8aa6e]/30";
+                if (st.rank === '1.') cssClass = "bg-gradient-to-r from-amber-900/40 to-transparent border-amber-500";
+                else if (st.rank === '2.') cssClass = "bg-gradient-to-r from-slate-600/40 to-transparent border-slate-400";
+                else if (st.rank === 'Top 4') cssClass = "bg-gradient-to-r from-orange-900/40 to-transparent border-orange-700";
+
+                stContainer.innerHTML += `
+                    <div class="flex items-center p-3 rounded-sm mb-2 shadow border ${cssClass}">
+                        <span class="font-mono w-10 text-center ${st.rankColor} font-bold">${st.rank}</span>
+                        <img src="${getAvatarUrl(st.name, true)}" class="w-8 h-8 border border-[#c8aa6e]/50 mx-3">
+                        <span class="flex-1 ${st.nameColor} truncate tracking-wide">${st.name}</span>
+                    </div>
+                `;
+            });
+
+            document.getElementById('finalGroupTablesArea').classList.remove('hidden');
+            document.getElementById('finalGroupTablesArea').classList.add('flex');
+            renderGroupTables(data.newState.players, 'finalGroupTablesContainer', 'final');
+        });
+
+        function transitionToSimulation() {
+            document.getElementById('lobbyTitle').innerText = "KÖZVETÍTÉS"; 
+            document.getElementById('startArea').classList.add('hidden');
+            document.getElementById('teamsAreaPhase1').classList.add('hidden');
+            document.getElementById('teamsAreaPhase2').classList.add('hidden');
+            document.getElementById('waitingArea').classList.add('hidden');
+            
+            document.getElementById('simulationStudio').classList.remove('hidden'); 
+            document.getElementById('simulationStudio').classList.add('flex');
+            document.getElementById('sidebarTitle').innerText = "CSOPORTÁLLÁSOK";
+
+            if (USER_ID === CURRENT_HOST_ID) {
+                document.getElementById('hostControls').classList.remove('hidden');
+                document.getElementById('hostControls').classList.add('flex');
+                document.getElementById('nextMatchBtn').classList.remove('hidden');
+            }
+        }
+
+        function triggerNextMatch() {
+            const btn = document.getElementById('nextMatchBtn'); btn.disabled = true; btn.classList.add('hidden'); document.getElementById('fastForwardGroup').classList.add('hidden');
+            socket.emit('next_match_step', { lobbyId: LOBBY_ID, userId: USER_ID }, (res) => {
+                if (res.status === 'phase_changed') {
+                    btn.classList.remove('hidden'); btn.disabled = false;
+                    document.getElementById('matchStatusText').innerText = `✨ ${res.message} ✨`; document.getElementById('matchStatusText').classList.remove('hidden');
+                    document.getElementById('matchGroupBadge').classList.add('hidden'); document.getElementById('matchTeamsDisplay').classList.add('hidden'); document.getElementById('matchWinnerDisplay').classList.add('hidden'); document.getElementById('bo5ScoreDisplay').classList.add('hidden'); document.getElementById('playByPlayLog').classList.add('hidden');
+                    
+                    ['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT'].forEach(r => document.getElementById(`node-${r}-2`).classList.add('hidden'));
+                    document.getElementById('mapTitle').innerText = "SAJÁT FELÁLLÁS";
+                }
+            });
+        }
+
+        function fastForward(mode) {
+            document.getElementById('fastForwardGroup').classList.add('hidden'); document.getElementById('nextMatchBtn').classList.add('hidden');
+            socket.emit('fast_forward_matches', { lobbyId: LOBBY_ID, userId: USER_ID, mode: mode }, (res) => {});
+        }
+        
+        function renderBracket(matches) {
+            const area = document.getElementById('bracketArea'); const container = document.getElementById('bracketContainer');
+            area.classList.remove('hidden'); container.innerHTML = '';
+            const quarters = matches.filter(m => m.match_type === 'QUARTER'); const semis = matches.filter(m => m.match_type === 'SEMI'); const final = matches.filter(m => m.match_type === 'FINAL');
+            let html = `<div class="flex-1 space-y-2">`;
+            quarters.forEach(m => { html += `<div class="hex-bg hex-border p-2 rounded-sm text-center text-[0.65rem] font-bold"><span class="${m.winner_name === m.team1_name ? 'text-emerald-400': 'text-slate-300'}">${m.team1_name}</span> vs <span class="${m.winner_name === m.team2_name ? 'text-emerald-400': 'text-slate-300'}">${m.team2_name}</span></div>`; });
+            html += `</div><div class="flex flex-col justify-center gap-4 flex-1">`;
+            semis.forEach(m => { html += `<div class="hex-bg border border-blue-500/50 p-2 rounded-sm text-center text-[0.7rem] font-bold"><span class="${m.winner_name === m.team1_name ? 'text-emerald-400': 'text-slate-300'}">${m.team1_name || '?'}</span> vs <span class="${m.winner_name === m.team2_name ? 'text-emerald-400': 'text-slate-300'}">${m.team2_name || '?'}</span></div>`; });
+            html += `</div><div class="flex flex-col justify-center flex-1">`;
+            final.forEach(m => { html += `<div class="hex-bg border border-gold p-4 rounded-sm text-center text-sm font-bold"><span class="${m.winner_name === m.team1_name ? 'text-emerald-400': 'text-slate-300'}">${m.team1_name || '?'}</span> vs <span class="${m.winner_name === m.team2_name ? 'text-emerald-400': 'text-slate-300'}">${m.team2_name || '?'}</span></div>`; });
+            html += `</div>`; container.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
