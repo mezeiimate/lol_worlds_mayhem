@@ -16,6 +16,7 @@
     <div class="max-w-[1600px] mx-auto relative">
         <div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2"></div>
 
+        <!-- HEADER -->
         <header class="bg-[#091428] rounded-sm border border-[#c8aa6e]/50 p-6 shadow-xl mb-8 flex flex-col md:flex-row justify-between items-center gap-4 relative overflow-hidden">
             <div class="z-10">
                 <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-wider uppercase" style="font-family: 'Oswald', sans-serif;">Worlds Mayhem</h1>
@@ -43,6 +44,7 @@
 
         <main class="grid grid-cols-1 xl:grid-cols-12 gap-8">
             
+            <!-- BAL SÁV: BARÁTOK -->
             <div class="xl:col-span-3 space-y-6">
                 <div class="bg-[#091428] rounded-sm border border-[#c8aa6e]/30 p-5 shadow-xl">
                     <h2 class="text-lg font-bold text-[#c8aa6e] uppercase tracking-widest border-b border-[#c8aa6e]/30 pb-2 mb-4">Közösség</h2>
@@ -97,7 +99,9 @@
                 </div>
             </div>
 
+            <!-- KÖZÉPSŐ SÁV: LOBBI ÉS MECCSTÖRTÉNET -->
             <div class="xl:col-span-6 space-y-8">
+                <!-- Lobbi Kezelő -->
                 <div class="bg-gradient-to-br from-[#091428] to-[#1e2328] rounded-sm border border-[#c8aa6e] p-8 shadow-[0_0_30px_rgba(200,170,110,0.15)] flex flex-col md:flex-row gap-8 items-center justify-center relative">
                     <div class="flex-1 text-center border-r border-[#c8aa6e]/30 pr-8">
                         <h2 class="text-xl font-bold text-white uppercase tracking-widest mb-2" style="font-family: 'Oswald', sans-serif;">Új torna indítása</h2>
@@ -115,6 +119,7 @@
                     </div>
                 </div>
 
+                <!-- Meccstörténet -->
                 <div class="bg-[#091428] rounded-sm border border-[#c8aa6e]/30 p-6 shadow-xl">
                     <h2 class="text-lg font-bold text-[#c8aa6e] uppercase tracking-widest border-b border-[#c8aa6e]/30 pb-2 mb-6">Előző tornáim</h2>
                     
@@ -134,11 +139,11 @@
                                         </div>
                                     </div>
                                     <div class="flex gap-2 bg-[#010a13] p-2 rounded-sm border border-[#c8aa6e]/20">
-                                        <img src="/images/players/<%= match.roster_summary.top.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(match.roster_summary.top) %>&background=1e2328&color=c8aa6e&bold=true&size=64';" class="w-10 h-10 rounded-sm object-cover object-top border border-[#c8aa6e]/50" title="<%= match.roster_summary.top %> (Top)">
-                                        <img src="/images/players/<%= match.roster_summary.jng.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(match.roster_summary.jng) %>&background=1e2328&color=c8aa6e&bold=true&size=64';" class="w-10 h-10 rounded-sm object-cover object-top border border-[#c8aa6e]/50" title="<%= match.roster_summary.jng %> (Jungle)">
-                                        <img src="/images/players/<%= match.roster_summary.mid.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(match.roster_summary.mid) %>&background=1e2328&color=c8aa6e&bold=true&size=64';" class="w-10 h-10 rounded-sm object-cover object-top border border-[#c8aa6e]/50" title="<%= match.roster_summary.mid %> (Mid)">
-                                        <img src="/images/players/<%= match.roster_summary.adc.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(match.roster_summary.adc) %>&background=1e2328&color=c8aa6e&bold=true&size=64';" class="w-10 h-10 rounded-sm object-cover object-top border border-[#c8aa6e]/50" title="<%= match.roster_summary.adc %> (ADC)">
-                                        <img src="/images/players/<%= match.roster_summary.sup.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(match.roster_summary.sup) %>&background=1e2328&color=c8aa6e&bold=true&size=64';" class="w-10 h-10 rounded-sm object-cover object-top border border-[#c8aa6e]/50" title="<%= match.roster_summary.sup %> (Support)">
+                                        <img src="/images/players/<%= match.roster_summary.top.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg'; this.classList.remove('border', 'border-[#c8aa6e]/50');" class="w-10 h-10 rounded-sm object-cover object-top border border-[#c8aa6e]/50" title="<%= match.roster_summary.top %> (Top)">
+                                        <img src="/images/players/<%= match.roster_summary.jng.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg'; this.classList.remove('border', 'border-[#c8aa6e]/50');" class="w-10 h-10 rounded-sm object-cover object-top border border-[#c8aa6e]/50" title="<%= match.roster_summary.jng %> (Jungle)">
+                                        <img src="/images/players/<%= match.roster_summary.mid.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg'; this.classList.remove('border', 'border-[#c8aa6e]/50');" class="w-10 h-10 rounded-sm object-cover object-top border border-[#c8aa6e]/50" title="<%= match.roster_summary.mid %> (Mid)">
+                                        <img src="/images/players/<%= match.roster_summary.adc.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg'; this.classList.remove('border', 'border-[#c8aa6e]/50');" class="w-10 h-10 rounded-sm object-cover object-top border border-[#c8aa6e]/50" title="<%= match.roster_summary.adc %> (ADC)">
+                                        <img src="/images/players/<%= match.roster_summary.sup.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg'; this.classList.remove('border', 'border-[#c8aa6e]/50');" class="w-10 h-10 rounded-sm object-cover object-top border border-[#c8aa6e]/50" title="<%= match.roster_summary.sup %> (Support)">
                                     </div>
                                 </div>
                             <% }) %>
@@ -147,6 +152,7 @@
                 </div>
             </div>
 
+            <!-- JOBB SÁV: RANGLISTA -->
             <div class="xl:col-span-3 space-y-6">
                 <div class="bg-[#091428] rounded-sm border border-[#c8aa6e]/30 p-5 shadow-xl">
                     <h2 class="text-lg font-bold text-[#c8aa6e] uppercase tracking-widest border-b border-[#c8aa6e]/30 pb-2 mb-4">Globális ranglista</h2>
