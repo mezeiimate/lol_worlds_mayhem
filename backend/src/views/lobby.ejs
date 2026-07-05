@@ -57,8 +57,7 @@
                 <h2 class="text-xl text-gold-light esport-font tracking-widest">Barát meghívása</h2>
                 <button onclick="closeInviteModal()" class="text-slate-400 hover:text-white transition-colors">✕</button>
             </div>
-            <div id="friendsListContainer" class="space-y-3 max-h-72 overflow-y-auto pr-2">
-                </div>
+            <div id="friendsListContainer" class="space-y-3 max-h-72 overflow-y-auto pr-2"></div>
         </div>
     </div>
 
@@ -138,12 +137,12 @@
                         
                         <div id="matchTeamsDisplay" class="hidden flex items-center justify-center gap-6 w-full mb-4">
                             <div class="flex flex-col items-end flex-1 min-w-0">
-                                <img id="matchTeam1Img" src="" class="w-20 h-20 rounded-full border-2 border-gold mb-3 shadow-lg">
+                                <img id="matchTeam1Img" src="" class="w-20 h-20 rounded-full border-2 border-gold mb-3 shadow-lg object-cover">
                                 <div id="matchTeam1" class="text-2xl esport-font tracking-wider truncate w-full text-right">Team 1</div>
                             </div>
                             <div class="text-[#c8aa6e] font-black italic text-4xl px-2 mt-4">VS</div>
                             <div class="flex flex-col items-start flex-1 min-w-0">
-                                <img id="matchTeam2Img" src="" class="w-20 h-20 rounded-full border-2 border-gold mb-3 shadow-lg">
+                                <img id="matchTeam2Img" src="" class="w-20 h-20 rounded-full border-2 border-gold mb-3 shadow-lg object-cover">
                                 <div id="matchTeam2" class="text-2xl esport-font tracking-wider truncate w-full text-left">Team 2</div>
                             </div>
                         </div>
@@ -176,7 +175,7 @@
                 <div id="championArea" class="hidden w-full flex-col items-center mt-8">
                     <div class="w-full bg-[#091428] border-2 border-gold rounded-sm p-8 shadow-[0_0_50px_rgba(200,170,110,0.3)] flex flex-col items-center mb-8 relative overflow-hidden">
                         <h2 class="text-2xl font-bold text-gold-light esport-font tracking-widest mb-4">A torna véget ért</h2>
-                        <img id="championLogo" src="" class="w-24 h-24 rounded-full border-4 border-gold mb-4 shadow-xl">
+                        <img id="championLogo" src="" class="w-24 h-24 rounded-full border-4 border-gold mb-4 shadow-xl object-cover">
                         <p class="text-5xl font-black text-white drop-shadow-lg mb-2">🏆 <span id="championName">Bajnok neve</span> 🏆</p>
                         <p class="text-lg text-gold font-semibold">Megnyerte a Worlds Mayhem trófeát!</p>
                     </div>
@@ -209,11 +208,11 @@
 
     <script>
         const ROLE_ICONS = {
-            'TOP': `<svg class="w-6 h-6" viewBox="0 0 114 112" fill="none"><path d="M72 71L42 71L42 41L72 41L72 71Z" fill="black" fill-opacity="0.15"/><path d="M101.055 1.13167e-06L-9.79135e-06 9.9662e-06L-9.56827e-07 101.055L22 79.0552L22 21L80.0552 21L101.055 1.13167e-06Z" fill="black" fill-opacity="0.15"/><path d="M35.5112 91L92 91L92 34.5112L114 12.5112L114 112L14.5112 112L35.5112 91Z" fill="black" fill-opacity="0.15"/><path d="M101.055 1.13167e-06L-9.79135e-06 9.9662e-06L-9.56827e-07 101.055L22 79.0552L22 21L80.0552 21L101.055 1.13167e-06Z" fill="#C89B3C"/></svg>`,
+            'TOP': `<svg class="w-6 h-6" viewBox="0 0 114 112" fill="none"><path d="M72 71L42 71L42 41L72 41L72 71Z" fill="black" fill-opacity="0.15"/><path d="M101.055 1.13167e-06L-9.79135e-06 9.9662e-06L-9.56827e-07 101.055L22 79.0552L22 21L80.0552 21L101.055 1.13167e-06Z" fill="#C89B3C"/></svg>`,
             'JUNGLE': `<svg class="w-6 h-6" viewBox="0 0 112 125" fill="none"><path d="M64.5 60C66.9 64.8 68.1667 71.3333 68.5 74L74 61C73.6667 60 73.2 56 74 48C74.8 40 84.6667 13.3333 89.5 1C85.3333 6.66667 76 19.5 72 25.5C68 31.5 61.3333 44 58.5 49.5C59.5 51 62.1 55.2 64.5 60Z" fill="#C89B3C"/><path d="M81 97.5C78.2 99.9 74.5 104.167 73 106L72.5 91.5C73 89.5 74.3 84.5 75.5 80.5C76.7 76.5 80 68 86.5 56.5C88.1667 54 92.9 47.7 96.5 44.5C100.1 41.3 106 37.5 111.5 34.5C104 43 105 42 98 54.5C92.302 64.6751 91.3333 80.6667 91.5 90C89.1667 91.5 83.8 95.1 81 97.5Z" fill="#C89B3C"/><path d="M61 89C61 108.2 57.6667 121 56 125C43.2 105.8 26.6667 93 20 89C19.5 83 18 69.1 16 61.5C14 53.9 4.5 40.3333 0 34.5C4.5 36.5 15.4 42.2 23 49C30.6 55.8 35.8333 66.5 37.5 71C37.5 66.3333 37.2 54.4 36 44C34.8 33.6 25.8333 10.3333 21.5 0C25.3333 5.83333 33 15 39 25.5C43.1287 32.7252 61 65 61 89Z" fill="#C89B3C"/></svg>`,
-            'MID': `<svg class="w-6 h-6" viewBox="0 0 114 112" fill="none"><path d="M0 0H84.7495L63.7495 21H22V62.7495L0 84.7495V0Z" fill="black" fill-opacity="0.15"/><path d="M29.312 112H114V27.3118L92 49.3118V91H50.312L29.312 112Z" fill="black" fill-opacity="0.15"/><path fill-rule="evenodd" clip-rule="evenodd" d="M114 18.2323L20.2323 112H0V93.8289L93.8289 0H114V18.2323Z" fill="#C89B3C"/></svg>`,
-            'ADC': `<svg class="w-6 h-6" viewBox="0 0 114 112" fill="none"><path d="M42 41H72V71H42V41Z" fill="black" fill-opacity="0.15"/><path d="M12.9448 112H114V10.9448L92 32.9448V91H33.9448L12.9448 112Z" fill="black" fill-opacity="0.15"/><path d="M78.4888 21H22V77.4888L0 99.4888V0H99.4888L78.4888 21Z" fill="black" fill-opacity="0.15"/><path d="M12.9448 112H114V10.9448L92 32.9448V91H33.9448L12.9448 112Z" fill="#C89B3C"/></svg>`,
-            'SUPPORT': `<svg class="w-6 h-6" viewBox="0 0 136 114" fill="none"><path d="M63 39.5L67.5 45.5L72.5 39.5L84.5 100.5L67.5 114L51.5 100.5L63 39.5Z" fill="#C89B3C"/><path d="M87.5 65L78.5 36L92 22.5L136 24C134 26.1667 128.9 30.7 124.5 33.5C120.1 36.3 114 39.5 108.5 40H97L108.5 56.5L87.5 65Z" fill="#C89B3C"/><path d="M67.5 32.5L47 9L51.5 0H84.5L88.5 9L67.5 32.5Z" fill="#C89B3C"/><path d="M56 36L44 24H0C1.66667 25.3333 3 29.5 13 34.5C20.7398 38.3699 27.1667 40.1667 28.5 40H38.5L27 56.5L48.5 65L56 36Z" fill="#C89B3C"/></svg>`
+            'MID': `<svg class="w-6 h-6" viewBox="0 0 114 112" fill="none"><path d="M0 0H84.7495L63.7495 21H22V62.7495L0 84.7495V0Z" fill="#C89B3C"/></svg>`,
+            'ADC': `<svg class="w-6 h-6" viewBox="0 0 114 112" fill="none"><path d="M12.9448 112H114V10.9448L92 32.9448V91H33.9448L12.9448 112Z" fill="#C89B3C"/></svg>`,
+            'SUPPORT': `<svg class="w-6 h-6" viewBox="0 0 136 114" fill="none"><path d="M63 39.5L67.5 45.5L72.5 39.5L84.5 100.5L67.5 114L51.5 100.5L63 39.5Z" fill="#C89B3C"/><path d="M87.5 65L78.5 36L92 22.5L136 24C134 26.1667 128.9 30.7 124.5 33.5C120.1 36.3 114 39.5 108.5 40H97L108.5 56.5L87.5 65Z" fill="#C89B3C"/></svg>`
         };
         const socket = io();
         const LOBBY_ID = '<%= lobbyId %>';
@@ -267,6 +266,8 @@
                     alert(res.message);
                     btn.innerText = 'Meghívás';
                     btn.disabled = false;
+                    btn.classList.replace('bg-slate-600', 'bg-[#c8aa6e]');
+                    btn.classList.replace('text-slate-300', 'text-[#010a13]');
                 }
             });
         }
@@ -290,10 +291,18 @@
             return `<span class="${r.color} text-white text-[0.55rem] font-black px-1.5 py-0.5 rounded tracking-wider mx-1 flex-shrink-0 shadow-sm">${r.text}</span>`;
         }
 
-        function getAvatarUrl(name, isTeam = false) {
-            const bg = isTeam ? '010a13' : '1e2328';
-            const color = isTeam ? 'c8aa6e' : 'f0e6d2';
+        // 1. Felhasználói avatarok (UI-Avatars Fallback)
+        function getUserAvatar(name, isTeamBox = false) {
+            const bg = isTeamBox ? '010a13' : '1e2328';
+            const color = isTeamBox ? 'c8aa6e' : 'f0e6d2';
             return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=${bg}&color=${color}&bold=true&size=128`;
+        }
+
+        // 2. Kiszolgáló e-sport képek (Generált a szkript által)
+        function getEsportImage(name, isTeam = false, season = null) {
+            const safeName = name.replace(/[^a-zA-Z0-9]/g, '');
+            const filename = season ? `${safeName}_${season}.png` : `${safeName}.png`;
+            return isTeam ? `/images/teams/${filename}` : `/images/players/${filename}`;
         }
 
         socket.emit('join_lobby', { userId: USER_ID, inviteCode: '<%= inviteCode %>' }, () => {});
@@ -339,8 +348,6 @@
             } else { renderManagerSidebar(data.players); }
         });
 
-        // ================= DRAFT UI (BOLT) =================
-
         function renderShop() {
             if (selectedTeamIndex !== null) { renderPhase2(); } 
             else { renderPhase1(); }
@@ -370,7 +377,7 @@
                 list.innerHTML += `
                     <div class="hex-bg hex-border corner-borders cursor-pointer hex-bg-hover p-4" onclick="selectTeam(${index})">
                         <div class="flex items-center gap-4">
-                            <img src="${getAvatarUrl(teamObj.team, true)}" class="w-14 h-14 border border-[#c8aa6e]" alt="logo">
+                            <img src="${getEsportImage(teamObj.team, true, teamObj.season)}" onerror="this.onerror=null; this.src='${getUserAvatar(teamObj.team, true)}'" class="w-14 h-14 border border-[#c8aa6e] object-contain" alt="logo">
                             <div>
                                 <div class="flex items-center">
                                     ${getRegionBadge(teamObj.country)}
@@ -394,7 +401,7 @@
             const teamObj = currentOffer[selectedTeamIndex];
             
             document.getElementById('phase2Header').innerHTML = `
-                <img src="${getAvatarUrl(teamObj.team, true)}" class="w-12 h-12 border border-[#c8aa6e]">
+                <img src="${getEsportImage(teamObj.team, true, teamObj.season)}" onerror="this.onerror=null; this.src='${getUserAvatar(teamObj.team, true)}'" class="w-12 h-12 border border-[#c8aa6e] object-contain">
                 <div>
                     <div class="flex items-center">
                         ${getRegionBadge(teamObj.country)}
@@ -416,7 +423,7 @@
                 list.innerHTML += `
                     <div class="hex-bg hex-border corner-borders p-3 flex items-center justify-between ${disabledClass}" ${onClick}>
                         <div class="flex items-center gap-4">
-                            <img src="${getAvatarUrl(p.name)}" class="w-12 h-12 rounded-sm border border-[#c8aa6e]" alt="player">
+                            <img src="${getEsportImage(p.name, false, teamObj.season)}" onerror="this.onerror=null; this.src='${getUserAvatar(p.name, false)}'" class="w-12 h-12 rounded-sm border border-[#c8aa6e] object-cover object-top" alt="player">
                             <h3 class="esport-font text-xl text-gold-light tracking-wider">${p.name}</h3>
                         </div>
                         <div class="mr-4 text-[#c8aa6e]">
@@ -449,7 +456,7 @@
                     const node = document.getElementById(`node-${role}-1`);
                     node.innerHTML = `
                         <div class="map-node-filled flex flex-col items-center">
-                            <img src="${getAvatarUrl(playerName)}" alt="${playerName}">
+                            <img src="${getEsportImage(playerName, false, season)}" onerror="this.onerror=null; this.src='${getUserAvatar(playerName, false)}'" class="object-cover object-top" alt="${playerName}">
                             <div class="badge">
                                 <span class="text-white block">${playerName}</span>
                                 <span class="text-slate-400 text-[0.55rem] font-mono leading-none">${season}</span>
@@ -481,8 +488,6 @@
             }); 
         }
 
-        // ================= TABELLA (NÉV (ÉV) TAG (CSAPAT)) =================
-
         function toggleRoster(id) { 
             const el = document.getElementById(`roster-detail-${id}`);
             if(el) el.classList.toggle('hidden'); 
@@ -506,7 +511,7 @@
                         <div class="flex flex-col rounded-sm cursor-pointer transition-colors hover:bg-[#2b3137]" onclick="toggleRoster('${prefix}-${t.team_id}')">
                             <div class="flex justify-between items-center text-xs p-2">
                                 <div class="flex items-center gap-2 flex-1 min-w-0">
-                                    <img src="${getAvatarUrl(t.username || t.bot_name, true)}" class="w-6 h-6 border border-[#c8aa6e]/50" alt="team">
+                                    <img src="${getUserAvatar(t.username || t.bot_name, true)}" class="w-6 h-6 border border-[#c8aa6e]/50" alt="team">
                                     <span class="${nameColor} truncate text-sm tracking-wide">${t.username || t.bot_name}</span>
                                 </div>
                                 <span class="font-mono text-emerald-400 font-bold whitespace-nowrap ml-2">${t.group_wins}W - ${t.group_losses}L</span>
@@ -514,35 +519,35 @@
                             
                             <div id="roster-detail-${prefix}-${t.team_id}" class="hidden p-2 border-t border-[#c8aa6e]/20 bg-[#010a13]/80 text-[0.65rem] space-y-2">
                                 <div class="flex items-center text-xs w-full min-w-0 pr-1 mt-1">
-                                    <img src="${getAvatarUrl(t.top_name || 'Empty')}" class="w-6 h-6 border border-[#c8aa6e]/50 flex-shrink-0 mr-2">
+                                    <img src="${getEsportImage(t.top_name || 'Empty', false, t.top_season)}" onerror="this.onerror=null; this.src='${getUserAvatar(t.top_name || 'Empty', false)}'" class="w-6 h-6 border border-[#c8aa6e]/50 flex-shrink-0 mr-2 object-cover object-top">
                                     <span class="font-bold text-slate-200 truncate max-w-[80px]">${t.top_name || '...'}</span>
                                     <span class="text-slate-500 ml-1 whitespace-nowrap">(${t.top_season || '-'})</span>
                                     ${t.top_country ? getRegionBadge(t.top_country) : ''}
                                     <span class="text-[#c8aa6e] ml-1 truncate">(${t.top_team || '?'})</span>
                                 </div>
                                 <div class="flex items-center text-xs w-full min-w-0 pr-1">
-                                    <img src="${getAvatarUrl(t.jng_name || 'Empty')}" class="w-6 h-6 border border-[#c8aa6e]/50 flex-shrink-0 mr-2">
+                                    <img src="${getEsportImage(t.jng_name || 'Empty', false, t.jng_season)}" onerror="this.onerror=null; this.src='${getUserAvatar(t.jng_name || 'Empty', false)}'" class="w-6 h-6 border border-[#c8aa6e]/50 flex-shrink-0 mr-2 object-cover object-top">
                                     <span class="font-bold text-slate-200 truncate max-w-[80px]">${t.jng_name || '...'}</span>
                                     <span class="text-slate-500 ml-1 whitespace-nowrap">(${t.jng_season || '-'})</span>
                                     ${t.jng_country ? getRegionBadge(t.jng_country) : ''}
                                     <span class="text-[#c8aa6e] ml-1 truncate">(${t.jng_team || '?'})</span>
                                 </div>
                                 <div class="flex items-center text-xs w-full min-w-0 pr-1">
-                                    <img src="${getAvatarUrl(t.mid_name || 'Empty')}" class="w-6 h-6 border border-[#c8aa6e]/50 flex-shrink-0 mr-2">
+                                    <img src="${getEsportImage(t.mid_name || 'Empty', false, t.mid_season)}" onerror="this.onerror=null; this.src='${getUserAvatar(t.mid_name || 'Empty', false)}'" class="w-6 h-6 border border-[#c8aa6e]/50 flex-shrink-0 mr-2 object-cover object-top">
                                     <span class="font-bold text-slate-200 truncate max-w-[80px]">${t.mid_name || '...'}</span>
                                     <span class="text-slate-500 ml-1 whitespace-nowrap">(${t.mid_season || '-'})</span>
                                     ${t.mid_country ? getRegionBadge(t.mid_country) : ''}
                                     <span class="text-[#c8aa6e] ml-1 truncate">(${t.mid_team || '?'})</span>
                                 </div>
                                 <div class="flex items-center text-xs w-full min-w-0 pr-1">
-                                    <img src="${getAvatarUrl(t.adc_name || 'Empty')}" class="w-6 h-6 border border-[#c8aa6e]/50 flex-shrink-0 mr-2">
+                                    <img src="${getEsportImage(t.adc_name || 'Empty', false, t.adc_season)}" onerror="this.onerror=null; this.src='${getUserAvatar(t.adc_name || 'Empty', false)}'" class="w-6 h-6 border border-[#c8aa6e]/50 flex-shrink-0 mr-2 object-cover object-top">
                                     <span class="font-bold text-slate-200 truncate max-w-[80px]">${t.adc_name || '...'}</span>
                                     <span class="text-slate-500 ml-1 whitespace-nowrap">(${t.adc_season || '-'})</span>
                                     ${t.adc_country ? getRegionBadge(t.adc_country) : ''}
                                     <span class="text-[#c8aa6e] ml-1 truncate">(${t.adc_team || '?'})</span>
                                 </div>
                                 <div class="flex items-center text-xs w-full min-w-0 pr-1 mb-1">
-                                    <img src="${getAvatarUrl(t.sup_name || 'Empty')}" class="w-6 h-6 border border-[#c8aa6e]/50 flex-shrink-0 mr-2">
+                                    <img src="${getEsportImage(t.sup_name || 'Empty', false, t.sup_season)}" onerror="this.onerror=null; this.src='${getUserAvatar(t.sup_name || 'Empty', false)}'" class="w-6 h-6 border border-[#c8aa6e]/50 flex-shrink-0 mr-2 object-cover object-top">
                                     <span class="font-bold text-slate-200 truncate max-w-[80px]">${t.sup_name || '...'}</span>
                                     <span class="text-slate-500 ml-1 whitespace-nowrap">(${t.sup_season || '-'})</span>
                                     ${t.sup_country ? getRegionBadge(t.sup_country) : ''}
@@ -565,15 +570,13 @@
                 container.innerHTML += `
                     <div class="bg-[#1e2328] p-3 rounded-sm border border-[#c8aa6e]/30 flex justify-between items-center">
                         <div class="flex items-center gap-2">
-                            <img src="${getAvatarUrl(p.username, true)}" class="w-6 h-6 border border-[#c8aa6e]/50">
+                            <img src="${getUserAvatar(p.username, true)}" class="w-6 h-6 border border-[#c8aa6e]/50">
                             <span class="font-bold text-slate-200 text-sm">${p.username}</span>
                         </div>
                         ${readyBadge}
                     </div>`;
             });
         }
-
-        // ================= SIMULATION & MATCH UI =================
         
         function drawTeamOnMap(teamPlayersArr, side) {
             const getPlayer = (role) => teamPlayersArr.find(p => p.ingame_role === role);
@@ -585,7 +588,7 @@
                     node.classList.remove('hidden');
                     node.innerHTML = `
                         <div class="map-node-filled flex flex-col items-center">
-                            <img src="${getAvatarUrl(player.name)}" alt="${player.name}">
+                            <img src="${getEsportImage(player.name, false, player.season)}" onerror="this.onerror=null; this.src='${getUserAvatar(player.name, false)}'" class="object-cover object-top" alt="${player.name}">
                             <div class="badge">
                                 <span class="text-white block">${player.name}</span>
                                 <span class="text-slate-400 text-[0.55rem] font-mono leading-none">${player.season}</span>
@@ -609,8 +612,8 @@
             const teamsDisplay = document.getElementById('matchTeamsDisplay');
             teamsDisplay.classList.remove('hidden'); teamsDisplay.classList.add('flex');
             
-            document.getElementById('matchTeam1Img').src = getAvatarUrl(data.team1, true);
-            document.getElementById('matchTeam2Img').src = getAvatarUrl(data.team2, true);
+            document.getElementById('matchTeam1Img').src = getUserAvatar(data.team1, true);
+            document.getElementById('matchTeam2Img').src = getUserAvatar(data.team2, true);
 
             const t1El = document.getElementById('matchTeam1'); const t2El = document.getElementById('matchTeam2');
             t1El.innerText = data.team1; t2El.innerText = data.team2;
@@ -702,7 +705,7 @@
             document.getElementById('championArea').classList.remove('hidden');
             document.getElementById('championArea').classList.add('flex');
             document.getElementById('championName').innerText = data.winner;
-            document.getElementById('championLogo').src = getAvatarUrl(data.winner, true);
+            document.getElementById('championLogo').src = getUserAvatar(data.winner, true);
 
             const stContainer = document.getElementById('standingsContainer');
             stContainer.innerHTML = ''; 
@@ -715,7 +718,7 @@
                 stContainer.innerHTML += `
                     <div class="flex items-center p-3 rounded-sm mb-2 shadow border ${cssClass}">
                         <span class="font-mono w-10 text-center ${st.rankColor} font-bold">${st.rank}</span>
-                        <img src="${getAvatarUrl(st.name, true)}" class="w-8 h-8 border border-[#c8aa6e]/50 mx-3">
+                        <img src="${getUserAvatar(st.name, true)}" class="w-8 h-8 border border-[#c8aa6e]/50 mx-3">
                         <span class="flex-1 ${st.nameColor} truncate tracking-wide">${st.name}</span>
                     </div>
                 `;
