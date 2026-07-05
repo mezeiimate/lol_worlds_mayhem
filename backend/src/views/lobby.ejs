@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
+    <title>Draft aréna | Worlds Mayhem</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/socket.io/socket.io.js"></script>
     <style> 
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap');
-        
         body { background-color: #010a13; color: #f0e6d2; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; } 
         h1, h2, h3, .esport-font { font-family: 'Oswald', sans-serif; text-transform: uppercase; }
         
@@ -24,7 +23,6 @@
         .corner-borders::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
         .corner-borders:hover::before, .corner-borders:hover::after { width: 12px; height: 12px; border-color: #f0e6d2; }
 
-        /* HELYI TÉRKÉP (map.png) BETÖLTÉSE A PUBLIC MAPPÁBÓL */
         .sr-map {
             background-image: url('/map.png');
             background-size: cover;
@@ -38,14 +36,12 @@
         .map-node-filled img { width: 44px; height: 44px; border-radius: 50%; border: 2px solid #c8aa6e; background: #010a13; box-shadow: 0 4px 10px rgba(0,0,0,0.8); }
         .map-node-filled .badge { background: #010a13; border: 1px solid #c8aa6e; padding: 2px 4px; border-radius: 4px; font-size: 0.55rem; font-weight: bold; margin-top: -6px; z-index: 11; text-align: center; white-space: nowrap;}
         
-        /* Node positions for Blue Side (Team 1) */
         .pos-TOP-1 { top: 25%; left: 20%; }
         .pos-JUNGLE-1 { top: 45%; left: 35%; }
         .pos-MID-1 { top: 60%; left: 40%; }
         .pos-ADC-1 { top: 80%; left: 65%; }
         .pos-SUPPORT-1 { top: 88%; left: 50%; }
 
-        /* Node positions for Red Side (Team 2) */
         .pos-TOP-2 { top: 12%; left: 50%; }
         .pos-JUNGLE-2 { top: 20%; left: 65%; }
         .pos-MID-2 { top: 40%; left: 60%; }
@@ -55,6 +51,17 @@
 </head>
 <body class="p-4 md:p-6 min-h-screen flex flex-col">
 
+    <div id="inviteModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center backdrop-blur-sm">
+        <div class="bg-[#091428] border border-[#c8aa6e] p-6 rounded-sm w-[400px] max-w-[90%] shadow-[0_0_40px_rgba(200,170,110,0.2)]">
+            <div class="flex justify-between items-center mb-6 border-b border-[#c8aa6e]/30 pb-3">
+                <h2 class="text-xl text-gold-light esport-font tracking-widest">Barát meghívása</h2>
+                <button onclick="closeInviteModal()" class="text-slate-400 hover:text-white transition-colors">✕</button>
+            </div>
+            <div id="friendsListContainer" class="space-y-3 max-h-72 overflow-y-auto pr-2">
+                </div>
+        </div>
+    </div>
+
     <div class="max-w-[1600px] mx-auto w-full flex-1 flex flex-col">
         <div class="bg-[#091428] hex-border rounded-sm p-4 shadow-xl mb-6 flex justify-between items-center">
             <div class="flex items-center gap-6">
@@ -62,6 +69,7 @@
                 <h1 id="lobbyTitle" class="text-3xl tracking-widest text-gold esport-font">WORLDS DRAFT</h1>
             </div>
             <div class="flex items-center gap-4">
+                <button onclick="openInviteModal()" class="bg-[#1e2328] hover:bg-[#2b3137] border border-[#c8aa6e]/50 px-4 py-1.5 rounded-sm text-sm font-bold text-gold transition-colors mr-2">BARÁT MEGHÍVÁSA</button>
                 <div class="text-right">
                     <p class="text-[0.65rem] text-slate-400 uppercase tracking-widest mb-0.5">SZOBA KÓD</p>
                     <div class="bg-[#010a13] border border-[#c8aa6e]/50 px-4 py-1 rounded-sm font-mono text-lg font-bold text-gold-light tracking-widest"><%= inviteCode %></div>
@@ -207,16 +215,61 @@
             'ADC': `<svg class="w-6 h-6" viewBox="0 0 114 112" fill="none"><path d="M42 41H72V71H42V41Z" fill="black" fill-opacity="0.15"/><path d="M12.9448 112H114V10.9448L92 32.9448V91H33.9448L12.9448 112Z" fill="black" fill-opacity="0.15"/><path d="M78.4888 21H22V77.4888L0 99.4888V0H99.4888L78.4888 21Z" fill="black" fill-opacity="0.15"/><path d="M12.9448 112H114V10.9448L92 32.9448V91H33.9448L12.9448 112Z" fill="#C89B3C"/></svg>`,
             'SUPPORT': `<svg class="w-6 h-6" viewBox="0 0 136 114" fill="none"><path d="M63 39.5L67.5 45.5L72.5 39.5L84.5 100.5L67.5 114L51.5 100.5L63 39.5Z" fill="#C89B3C"/><path d="M87.5 65L78.5 36L92 22.5L136 24C134 26.1667 128.9 30.7 124.5 33.5C120.1 36.3 114 39.5 108.5 40H97L108.5 56.5L87.5 65Z" fill="#C89B3C"/><path d="M67.5 32.5L47 9L51.5 0H84.5L88.5 9L67.5 32.5Z" fill="#C89B3C"/><path d="M56 36L44 24H0C1.66667 25.3333 3 29.5 13 34.5C20.7398 38.3699 27.1667 40.1667 28.5 40H38.5L27 56.5L48.5 65L56 36Z" fill="#C89B3C"/></svg>`
         };
-
         const socket = io();
         const LOBBY_ID = '<%= lobbyId %>';
         const USER_ID = '<%= userId %>';
+        
+        socket.emit('identify', { userId: USER_ID });
+
         let currentOffer = [];
         let selectedTeamIndex = null;
         const filledRoles = new Set(); 
         let isSimulating = false;
         let CURRENT_HOST_ID = null;
         let isTournamentEnded = false;
+
+        async function openInviteModal() {
+            document.getElementById('inviteModal').classList.remove('hidden');
+            const container = document.getElementById('friendsListContainer');
+            container.innerHTML = '<p class="text-slate-400 text-sm">Betöltés...</p>';
+            try {
+                const res = await fetch('/api/friends/list');
+                const friends = await res.json();
+                container.innerHTML = '';
+                if (friends.length === 0) {
+                    container.innerHTML = '<p class="text-slate-500 text-sm italic">Nincsenek elérhető barátaid a meghíváshoz.</p>';
+                    return;
+                }
+                friends.forEach(f => {
+                    container.innerHTML += `
+                        <div class="flex justify-between items-center bg-[#1e2328] p-3 rounded-sm border border-[#c8aa6e]/30">
+                            <span class="font-bold text-slate-200 text-sm">${f.username}</span>
+                            <button onclick="sendInvite('${f.id}', this)" class="bg-[#c8aa6e] hover:bg-[#f0e6d2] text-[#010a13] px-3 py-1.5 rounded-sm text-xs font-bold transition-colors">Meghívás</button>
+                        </div>
+                    `;
+                });
+            } catch (e) {
+                container.innerHTML = '<p class="text-red-400 text-sm">Hiba a betöltéskor.</p>';
+            }
+        }
+
+        function closeInviteModal() { 
+            document.getElementById('inviteModal').classList.add('hidden'); 
+        }
+        
+        function sendInvite(targetId, btn) {
+            btn.disabled = true;
+            btn.innerText = 'Elküldve!';
+            btn.classList.replace('bg-[#c8aa6e]', 'bg-slate-600');
+            btn.classList.replace('text-[#010a13]', 'text-slate-300');
+            socket.emit('send_lobby_invite', { userId: USER_ID, targetUserId: targetId, lobbyId: LOBBY_ID }, (res) => {
+                if(res.status === 'error') {
+                    alert(res.message);
+                    btn.innerText = 'Meghívás';
+                    btn.disabled = false;
+                }
+            });
+        }
 
         function getRegionBadge(region) {
             const map = {
@@ -260,17 +313,17 @@
                 const btnAll = document.getElementById('ffAllBtn');
                 const btnGroup = document.getElementById('ffGroupBtn');
                 const btnBo5 = document.getElementById('ffBo5Btn');
-
+                
                 if (phase === 'GROUP') {
-                    btnAll.classList.remove('hidden'); 
+                    btnAll.classList.remove('hidden');
                     btnGroup.classList.remove('hidden'); 
                     btnBo5.classList.add('hidden');
                 } else if (phase === 'QUARTER' || phase === 'SEMI' || phase === 'FINAL') {
-                    btnAll.classList.add('hidden'); 
+                    btnAll.classList.add('hidden');
                     btnGroup.classList.add('hidden'); 
                     btnBo5.classList.remove('hidden');
                 } else { 
-                    document.getElementById('fastForwardGroup').classList.add('hidden'); 
+                    document.getElementById('fastForwardGroup').classList.add('hidden');
                 }
             }
 
@@ -289,7 +342,8 @@
         // ================= DRAFT UI (BOLT) =================
 
         function renderShop() {
-            if (selectedTeamIndex !== null) { renderPhase2(); } else { renderPhase1(); }
+            if (selectedTeamIndex !== null) { renderPhase2(); } 
+            else { renderPhase1(); }
         }
 
         function renderPhase1() {
@@ -349,7 +403,7 @@
                     <span class="font-mono text-slate-500 font-bold tracking-widest text-sm">Season ${teamObj.season}</span>
                 </div>
             `;
-
+            
             const list = document.getElementById('teamsListPhase2');
             list.innerHTML = '';
 
@@ -366,7 +420,7 @@
                             <h3 class="esport-font text-xl text-gold-light tracking-wider">${p.name}</h3>
                         </div>
                         <div class="mr-4 text-[#c8aa6e]">
-                            ${icon}
+                             ${icon}
                         </div>
                     </div>
                 `;
@@ -385,7 +439,7 @@
                     document.getElementById('startArea').classList.add('hidden'); 
                     renderShop(); 
                 } else { alert(res.message); } 
-            }); 
+            });
         }
 
         function pickPlayer(playerId, role, playerName, teamName, season) { 
@@ -403,15 +457,15 @@
                         </div>
                     `;
                     document.getElementById('teamsAreaPhase2').classList.add('hidden'); 
-                    document.getElementById('teamsAreaPhase2').classList.remove('flex'); 
+                    document.getElementById('teamsAreaPhase2').classList.remove('flex');
                     currentOffer = []; selectedTeamIndex = null;
                     
                     if (filledRoles.size >= 5) { 
-                        document.getElementById('readyBtnTop').classList.remove('hidden'); 
+                        document.getElementById('readyBtnTop').classList.remove('hidden');
                         document.getElementById('startArea').classList.add('hidden');
                     } else { document.getElementById('startArea').classList.remove('hidden'); } 
                 } else { alert(res.message); } 
-            }); 
+            });
         }
 
         function setReady() { 
@@ -430,12 +484,13 @@
         // ================= TABELLA (NÉV (ÉV) TAG (CSAPAT)) =================
 
         function toggleRoster(id) { 
-            const el = document.getElementById(`roster-detail-${id}`); 
+            const el = document.getElementById(`roster-detail-${id}`);
             if(el) el.classList.toggle('hidden'); 
         }
 
         function renderGroupTables(players, targetId = 'sidebarContent', prefix = 'sidebar') {
-            const container = document.getElementById(targetId); container.innerHTML = '';
+            const container = document.getElementById(targetId);
+            container.innerHTML = '';
             const groups = ['A', 'B', 'C', 'D'];
             groups.forEach(g => {
                 const groupTeams = players.filter(p => p.group_name === g);
@@ -502,7 +557,8 @@
         }
 
         function renderManagerSidebar(players) {
-            const container = document.getElementById('sidebarContent'); container.innerHTML = '';
+            const container = document.getElementById('sidebarContent');
+            container.innerHTML = '';
             const humans = players.filter(p => !p.bot_name);
             humans.forEach(p => {
                 const readyBadge = p.is_ready ? `<span class="bg-emerald-500/20 text-emerald-400 text-xs font-bold px-2 py-0.5 rounded border border-emerald-500/30">✓</span>` : `<span class="bg-slate-700 text-slate-400 text-xs font-bold px-2 py-0.5 rounded">...</span>`;
@@ -560,18 +616,19 @@
             t1El.innerText = data.team1; t2El.innerText = data.team2;
             t1El.className = "text-2xl esport-font tracking-wider truncate w-full text-right text-slate-300 transition-colors duration-500";
             t2El.className = "text-2xl esport-font tracking-wider truncate w-full text-left text-slate-300 transition-colors duration-500";
-
+            
             if (data.isBO5) {
                 document.getElementById('bo5ScoreDisplay').classList.remove('hidden');
                 document.getElementById('scoreT1').innerText = (data.winner === data.team1) ? data.score1 - 1 : data.score1;
                 document.getElementById('scoreT2').innerText = (data.winner === data.team2) ? data.score2 - 1 : data.score2;
             } else { document.getElementById('bo5ScoreDisplay').classList.add('hidden'); }
 
-            const logEl = document.getElementById('playByPlayLog'); logEl.innerHTML = ''; logEl.classList.remove('hidden');
+            const logEl = document.getElementById('playByPlayLog');
+            logEl.innerHTML = ''; logEl.classList.remove('hidden');
 
             const isMyTeamInvolved = (USER_ID === data.t1_user_id || USER_ID === data.t2_user_id);
             const myTeamId = (USER_ID === data.t1_user_id) ? data.team1_id : data.team2_id;
-
+            
             if (isMyTeamInvolved) {
                 document.getElementById('mapTitle').innerText = "AKTUÁLIS MÉRKŐZÉS";
                 if (USER_ID === data.t1_user_id) { drawTeamOnMap(data.t1_players, 1); drawTeamOnMap(data.t2_players, 2); } 
@@ -670,7 +727,7 @@
         });
 
         function transitionToSimulation() {
-            document.getElementById('lobbyTitle').innerText = "KÖZVETÍTÉS"; 
+            document.getElementById('lobbyTitle').innerText = "KÖZVETÍTÉS";
             document.getElementById('startArea').classList.add('hidden');
             document.getElementById('teamsAreaPhase1').classList.add('hidden');
             document.getElementById('teamsAreaPhase2').classList.add('hidden');
@@ -688,7 +745,8 @@
         }
 
         function triggerNextMatch() {
-            const btn = document.getElementById('nextMatchBtn'); btn.disabled = true; btn.classList.add('hidden'); document.getElementById('fastForwardGroup').classList.add('hidden');
+            const btn = document.getElementById('nextMatchBtn');
+            btn.disabled = true; btn.classList.add('hidden'); document.getElementById('fastForwardGroup').classList.add('hidden');
             socket.emit('next_match_step', { lobbyId: LOBBY_ID, userId: USER_ID }, (res) => {
                 if (res.status === 'phase_changed') {
                     btn.classList.remove('hidden'); btn.disabled = false;
@@ -702,14 +760,18 @@
         }
 
         function fastForward(mode) {
-            document.getElementById('fastForwardGroup').classList.add('hidden'); document.getElementById('nextMatchBtn').classList.add('hidden');
+            document.getElementById('fastForwardGroup').classList.add('hidden');
+            document.getElementById('nextMatchBtn').classList.add('hidden');
             socket.emit('fast_forward_matches', { lobbyId: LOBBY_ID, userId: USER_ID, mode: mode }, (res) => {});
         }
         
         function renderBracket(matches) {
-            const area = document.getElementById('bracketArea'); const container = document.getElementById('bracketContainer');
+            const area = document.getElementById('bracketArea');
+            const container = document.getElementById('bracketContainer');
             area.classList.remove('hidden'); container.innerHTML = '';
-            const quarters = matches.filter(m => m.match_type === 'QUARTER'); const semis = matches.filter(m => m.match_type === 'SEMI'); const final = matches.filter(m => m.match_type === 'FINAL');
+            const quarters = matches.filter(m => m.match_type === 'QUARTER');
+            const semis = matches.filter(m => m.match_type === 'SEMI'); const final = matches.filter(m => m.match_type === 'FINAL');
+            
             let html = `<div class="flex-1 space-y-2">`;
             quarters.forEach(m => { html += `<div class="hex-bg hex-border p-2 rounded-sm text-center text-[0.65rem] font-bold"><span class="${m.winner_name === m.team1_name ? 'text-emerald-400': 'text-slate-300'}">${m.team1_name}</span> vs <span class="${m.winner_name === m.team2_name ? 'text-emerald-400': 'text-slate-300'}">${m.team2_name}</span></div>`; });
             html += `</div><div class="flex flex-col justify-center gap-4 flex-1">`;

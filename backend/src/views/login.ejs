@@ -6,93 +6,143 @@
     <title><%= title %></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #0f172a; color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap');
+        
+        body { background-color: #010a13; color: #f0e6d2; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .esport-font { font-family: 'Oswald', sans-serif; text-transform: uppercase; }
+        
+        .hex-border { border: 1px solid #c8aa6e; }
+        .corner-borders { position: relative; }
+        .corner-borders::before, .corner-borders::after { 
+            content: ''; position: absolute; width: 12px; height: 12px; border: 2px solid #c8aa6e; transition: all 0.3s ease; 
+        }
+        .corner-borders::before { top: -2px; left: -2px; border-right: none; border-bottom: none; }
+        .corner-borders::after { bottom: -2px; right: -2px; border-left: none; border-top: none; }
+        .corner-borders:hover::before, .corner-borders:hover::after { border-color: #f0e6d2; width: 16px; height: 16px; }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
+<body class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+    
+    <div class="absolute top-[-15%] left-[-10%] w-[500px] h-[500px] bg-[#c8aa6e]/10 rounded-full blur-[100px] pointer-events-none"></div>
+    <div class="absolute bottom-[-15%] right-[-10%] w-[500px] h-[500px] bg-[#091428] rounded-full blur-[100px] pointer-events-none"></div>
 
-    <div class="max-w-md w-full bg-slate-800 rounded-xl border border-slate-700 shadow-2xl overflow-hidden">
-        <div class="bg-slate-900 p-6 text-center border-b border-slate-700">
-            <h1 class="text-3xl font-bold text-amber-400 tracking-wider uppercase">Worlds Mayhem</h1>
-            <p class="text-slate-400 mt-2 text-sm">Jelentkezz be a menedzseri pultba</p>
-        </div>
-
-        <div class="p-8">
-            <div id="errorBox" class="hidden mb-6 bg-red-900/50 border border-red-500 text-red-200 px-4 py-3 rounded text-sm">
-                Ide jön a hibaüzenet.
+    <div class="max-w-md w-full bg-[#091428] p-1 hex-border shadow-[0_0_50px_rgba(200,170,110,0.15)] relative z-10 corner-borders">
+        <div class="bg-[#010a13] p-8 md:p-10 h-full w-full">
+            
+            <div class="text-center border-b border-[#c8aa6e]/30 pb-6 mb-8">
+                <h1 class="text-4xl text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-widest font-black esport-font drop-shadow-lg">Worlds Mayhem</h1>
+                <p class="text-[#c8aa6e] mt-2 text-[0.65rem] uppercase tracking-[0.2em] font-bold">Menedzseri hitelesítés</p>
             </div>
 
-            <div class="flex bg-slate-900 rounded-lg p-1 mb-8">
-                <button id="tabLogin" onclick="switchTab('login')" class="flex-1 py-2 text-sm font-bold rounded-md bg-blue-600 text-white transition-all">Bejelentkezés</button>
-                <button id="tabRegister" onclick="switchTab('register')" class="flex-1 py-2 text-sm font-bold rounded-md text-slate-400 hover:text-white transition-all">Regisztráció</button>
-            </div>
+            <div id="messageBox" class="hidden mb-6 px-4 py-3 rounded-sm text-sm text-center font-bold tracking-wide shadow-inner border"></div>
 
-            <form id="authForm" onsubmit="handleSubmit(event)">
+            <form id="authForm" class="space-y-6">
+                <div id="usernameField" class="hidden transform transition-all duration-300">
+                    <label class="block text-xs font-bold text-[#c8aa6e] uppercase tracking-widest mb-2">Felhasználónév</label>
+                    <input type="text" id="username" class="w-full bg-[#1e2328] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#f0e6d2] transition-colors shadow-inner" placeholder="Menedzser neved">
+                </div>
                 
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-400 mb-1">E-mail cím</label>
-                        <input type="email" id="email" required class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 transition-colors">
-                    </div>
-
-                    <div id="usernameContainer" class="hidden">
-                        <label class="block text-sm font-medium text-slate-400 mb-1">Felhasználónév</label>
-                        <input type="text" id="username" class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 transition-colors">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-slate-400 mb-1">Jelszó</label>
-                        <input type="password" id="password" required class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 transition-colors">
+                <div>
+                    <label class="block text-xs font-bold text-[#c8aa6e] uppercase tracking-widest mb-2">E-mail cím</label>
+                    <input type="email" id="email" required class="w-full bg-[#1e2328] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#f0e6d2] transition-colors shadow-inner" placeholder="hello@worldsmayhem.com">
+                </div>
+                
+                <div>
+                    <label class="block text-xs font-bold text-[#c8aa6e] uppercase tracking-widest mb-2">Jelszó</label>
+                    <div class="relative">
+                        <input type="password" id="password" required class="w-full bg-[#1e2328] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 pr-12 text-white focus:outline-none focus:border-[#f0e6d2] transition-colors shadow-inner" placeholder="••••••••">
+                        <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 px-4 flex items-center text-slate-400 hover:text-[#c8aa6e] focus:outline-none">
+                            <svg id="eyeIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </button>
                     </div>
                 </div>
 
-                <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-lg mt-8 transition-colors">
-                    Belépés a rendszerbe
+                <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-[#c8aa6e] to-[#e6d09c] hover:from-[#f0e6d2] hover:to-[#c8aa6e] text-[#010a13] font-black uppercase tracking-widest text-lg py-3.5 rounded-sm transition-all shadow-[0_0_20px_rgba(200,170,110,0.3)] hover:shadow-[0_0_30px_rgba(240,230,210,0.6)] mt-2 esport-font">
+                    Belépés
                 </button>
             </form>
+
+            <div class="mt-8 text-center border-t border-[#c8aa6e]/20 pt-6">
+                <button type="button" id="toggleBtn" onclick="toggleMode()" class="text-[0.7rem] text-slate-400 hover:text-[#c8aa6e] font-bold uppercase tracking-widest transition-colors">
+                    Nincs még fiókod? Regisztráció
+                </button>
+            </div>
+            
         </div>
     </div>
 
     <script>
-        let currentMode = 'login'; // 'login' vagy 'register'
+        let currentMode = 'login';
+        const messageBox = document.getElementById('messageBox');
 
-        function switchTab(mode) {
-            currentMode = mode;
-            const errorBox = document.getElementById('errorBox');
-            errorBox.classList.add('hidden');
+        if (window.location.search.includes('verified=true')) {
+            showMessage('Sikeres e-mail megerősítés! Most már beléphetsz.', 'success');
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
 
-            const tabLogin = document.getElementById('tabLogin');
-            const tabRegister = document.getElementById('tabRegister');
-            const usernameContainer = document.getElementById('usernameContainer');
-            const submitBtn = document.getElementById('submitBtn');
-            const usernameInput = document.getElementById('username');
-
-            if (mode === 'login') {
-                tabLogin.className = 'flex-1 py-2 text-sm font-bold rounded-md bg-blue-600 text-white transition-all';
-                tabRegister.className = 'flex-1 py-2 text-sm font-bold rounded-md text-slate-400 hover:text-white transition-all';
-                usernameContainer.classList.add('hidden');
-                usernameInput.removeAttribute('required');
-                submitBtn.innerText = 'Belépés a rendszerbe';
+        function showMessage(text, type) {
+            messageBox.innerHTML = text;
+            messageBox.classList.remove('hidden', 'bg-red-950/40', 'border-red-500/50', 'text-red-400', 'bg-emerald-950/40', 'border-emerald-500/50', 'text-emerald-400');
+            
+            if (type === 'error') {
+                messageBox.classList.add('bg-red-950/40', 'border-red-500/50', 'text-red-400');
             } else {
-                tabRegister.className = 'flex-1 py-2 text-sm font-bold rounded-md bg-blue-600 text-white transition-all';
-                tabLogin.className = 'flex-1 py-2 text-sm font-bold rounded-md text-slate-400 hover:text-white transition-all';
-                usernameContainer.classList.remove('hidden');
-                usernameInput.setAttribute('required', 'true');
-                submitBtn.innerText = 'Fiók létrehozása';
+                messageBox.classList.add('bg-emerald-950/40', 'border-emerald-500/50', 'text-emerald-400');
             }
         }
 
-        async function handleSubmit(event) {
-            event.preventDefault(); // Megakadályozzuk az oldal újratöltését
+        function togglePasswordVisibility() {
+            const pwdInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eyeIcon');
+            if (pwdInput.type === 'password') {
+                pwdInput.type = 'text';
+                eyeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />`;
+            } else {
+                pwdInput.type = 'password';
+                eyeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />`;
+            }
+        }
 
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const username = document.getElementById('username').value;
-            const errorBox = document.getElementById('errorBox');
+        function toggleMode() {
+            const usernameField = document.getElementById('usernameField');
+            const submitBtn = document.getElementById('submitBtn');
+            const toggleBtn = document.getElementById('toggleBtn');
             
-            const payload = currentMode === 'login' 
-                ? { email, password } 
-                : { email, username, password };
+            messageBox.classList.add('hidden');
+            
+            if (currentMode === 'login') {
+                currentMode = 'register';
+                usernameField.classList.remove('hidden');
+                submitBtn.innerText = 'Regisztráció';
+                toggleBtn.innerText = 'Már van fiókod? Belépés';
+            } else {
+                currentMode = 'login';
+                usernameField.classList.add('hidden');
+                submitBtn.innerText = 'Belépés';
+                toggleBtn.innerText = 'Nincs még fiókod? Regisztráció';
+            }
+        }
+
+        document.getElementById('authForm').addEventListener('submit', handleAuth);
+
+        async function handleAuth(e) {
+            e.preventDefault();
+            const submitBtn = document.getElementById('submitBtn');
+            
+            messageBox.classList.add('hidden');
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Kérlek várj...';
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            const payload = { email, password };
+            if (currentMode === 'register') {
+                payload.username = document.getElementById('username').value.trim();
+            }
 
             const endpoint = currentMode === 'login' ? '/api/auth/login' : '/api/auth/register';
 
@@ -106,31 +156,27 @@
                 const data = await response.json();
 
                 if (!response.ok) {
-                    // Ha a Zod validációs hibát dobott, formázzuk meg
                     if (data.errors) {
-                        errorBox.innerText = data.errors.map(e => e.message).join('\n');
+                        showMessage(data.errors.map(err => `<div>${err.message}</div>`).join(''), 'error');
                     } else {
-                        errorBox.innerText = data.message || 'Ismeretlen hiba történt.';
+                        showMessage(data.message || 'Ismeretlen hiba történt.', 'error');
                     }
-                    errorBox.classList.remove('hidden');
                     return;
                 }
 
-                // Ha regisztrált, rögtön utána be is léptetjük automatikusan
                 if (currentMode === 'register') {
-                    await fetch('/api/auth/login', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email, password })
-                    });
+                    showMessage('Sikeres regisztráció! Kérlek, erősítsd meg az e-mail címedet a fiókodba érkezett levéllel.', 'success');
+                    document.getElementById('authForm').reset();
+                    toggleMode(); 
+                } else {
+                    window.location.href = '/dashboard';
                 }
 
-                // Sikeres belépés (a HttpOnly süti beállítódott a háttérben!) -> Irány a főoldal
-                window.location.href = '/dashboard';
-
             } catch (error) {
-                errorBox.innerText = 'Hálózati hiba. Nem sikerült kapcsolódni a szerverhez.';
-                errorBox.classList.remove('hidden');
+                showMessage('Hálózati hiba. Nem sikerült kapcsolódni a szerverhez.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = currentMode === 'login' ? 'Belépés' : 'Regisztráció';
             }
         }
     </script>

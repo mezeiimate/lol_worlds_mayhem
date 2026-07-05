@@ -3,91 +3,317 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
+    <title>Központ | Worlds Mayhem</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <style> body { background-color: #0f172a; color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; } </style>
+    <style> 
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap');
+        body { background-color: #010a13; color: #f0e6d2; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; } 
+    </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-4 md:p-8 min-h-screen">
 
-    <div class="max-w-6xl mx-auto">
-        <header class="bg-slate-800 rounded-xl border border-slate-700 p-6 shadow-xl mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div>
-                <h1 class="text-3xl font-bold text-amber-400 tracking-wider uppercase">Worlds Mayhem</h1>
-                <p class="text-slate-400 mt-1">Üdvözlünk a menedzseri központban!</p>
+    <div class="max-w-[1600px] mx-auto relative">
+        <div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2"></div>
+
+        <header class="bg-[#091428] rounded-sm border border-[#c8aa6e]/50 p-6 shadow-xl mb-8 flex flex-col md:flex-row justify-between items-center gap-4 relative overflow-hidden">
+            <div class="z-10">
+                <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-wider uppercase" style="font-family: 'Oswald', sans-serif;">Worlds Mayhem</h1>
+                <p class="text-slate-400 mt-1 uppercase tracking-widest text-sm font-bold">Menedzseri központ</p>
             </div>
-            <div class="flex items-center gap-6">
-                <div class="text-right">
-                    <div class="font-bold text-lg text-white"><%= username %></div>
-                    <div class="text-sm text-emerald-400 font-semibold flex items-center justify-end gap-1">🏆 <%= trophies %> Trófea</div>
+            <div class="flex items-center gap-6 z-10">
+                <div class="flex items-center gap-4 bg-[#1e2328] border border-[#c8aa6e]/30 px-6 py-3 rounded-sm shadow-inner">
+                    <div class="text-right">
+                        <div class="font-bold text-xl text-white tracking-wide"><%= username %></div>
+                        <div class="text-xs text-slate-400 font-mono">Menedzser</div>
+                    </div>
+                    <div class="h-10 w-px bg-[#c8aa6e]/30 mx-2"></div>
+                    <div class="flex flex-col items-center">
+                        <span class="text-3xl leading-none font-black text-amber-400 drop-shadow-md"><%= trophies %></span>
+                        <span class="text-[0.65rem] uppercase tracking-widest text-slate-300 font-bold mt-1">Trófea</span>
+                    </div>
                 </div>
-                <div class="h-10 w-px bg-slate-600"></div>
-                <button onclick="logout()" class="text-slate-400 hover:text-red-400 font-bold transition-colors">Kijelentkezés</button>
+                <div class="flex flex-col gap-2">
+                    <button onclick="window.location.href='/profile'" class="bg-[#1e2328] hover:bg-[#2b3137] border border-[#c8aa6e]/50 text-[#c8aa6e] font-bold uppercase tracking-widest text-[0.7rem] px-4 py-1.5 rounded-sm transition-colors text-center">Beállítások</button>
+                    <button onclick="logout()" class="text-red-400 hover:text-red-300 font-bold uppercase tracking-widest text-[0.7rem] transition-colors text-right">Kilépés</button>
+                </div>
             </div>
+            <div class="absolute right-0 top-0 w-64 h-full bg-gradient-to-l from-[#c8aa6e]/10 to-transparent pointer-events-none"></div>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="bg-slate-800 rounded-xl border border-slate-700 p-6 hover:border-blue-500 transition-colors shadow-lg flex flex-col justify-between" style="min-height: 200px;">
-                <div>
-                    <h2 class="text-2xl font-bold text-white mb-2">Új Bajnokság</h2>
-                    <p class="text-slate-400">Hozd létre a saját lobbidat, és hívd meg a barátaidat.</p>
+        <main class="grid grid-cols-1 xl:grid-cols-12 gap-8">
+            
+            <div class="xl:col-span-3 space-y-6">
+                <div class="bg-[#091428] rounded-sm border border-[#c8aa6e]/30 p-5 shadow-xl">
+                    <h2 class="text-lg font-bold text-[#c8aa6e] uppercase tracking-widest border-b border-[#c8aa6e]/30 pb-2 mb-4">Közösség</h2>
+                    
+                    <div class="flex gap-2 mb-6">
+                        <input type="text" id="friendSearchInput" placeholder="Név keresése..." class="flex-1 bg-[#1e2328] border border-[#c8aa6e]/50 rounded-sm px-3 py-1.5 text-sm text-white focus:outline-none focus:border-[#f0e6d2]">
+                        <button onclick="searchFriends()" class="bg-[#c8aa6e] hover:bg-[#f0e6d2] text-[#010a13] px-3 py-1.5 rounded-sm font-bold transition-colors">🔍</button>
+                    </div>
+                    <div id="searchResults" class="space-y-2 mb-6 empty:hidden"></div>
+
+                    <% 
+                    const accepted = friends.filter(f => f.status === 'ACCEPTED');
+                    const pendingRequests = friends.filter(f => f.status === 'PENDING' && f.action_user_id !== userId);
+                    %>
+
+                    <div id="pendingRequestsContainer" class="<%= pendingRequests.length > 0 ? '' : 'hidden' %>">
+                        <% if (pendingRequests.length > 0) { %>
+                            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Bejövő jelölések</h3>
+                            <div class="space-y-2 mb-6">
+                                <% pendingRequests.forEach(req => { %>
+                                    <div class="bg-[#1e2328] border border-blue-500/30 p-2 rounded-sm flex justify-between items-center">
+                                        <span class="text-sm font-bold text-white"><%= req.friend_name %></span>
+                                        <div class="flex gap-1">
+                                            <button onclick="handleFriendAction('accept', '<%= req.friend_id %>')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-2 py-1 rounded-sm">✓</button>
+                                            <button onclick="handleFriendAction('remove', '<%= req.friend_id %>')" class="bg-red-600 hover:bg-red-500 text-white text-xs px-2 py-1 rounded-sm">✕</button>
+                                        </div>
+                                    </div>
+                                <% }) %>
+                            </div>
+                        <% } %>
+                    </div>
+
+                    <div id="acceptedFriendsContainer">
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Barátaim (<%= accepted.length %>)</h3>
+                        <div class="space-y-2">
+                            <% if (accepted.length === 0) { %>
+                                <p class="text-slate-500 text-xs italic">Még nincsenek barátaid.</p>
+                            <% } else { %>
+                                <% accepted.forEach(friend => { %>
+                                    <div class="bg-[#1e2328] border border-[#c8aa6e]/20 p-2 rounded-sm flex justify-between items-center group">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_5px_#10b981]"></div>
+                                            <span class="text-sm font-bold text-slate-200"><%= friend.friend_name %></span>
+                                            <span class="text-[0.6rem] text-amber-500 font-bold ml-1">🏆 <%= friend.trophies_count %></span>
+                                        </div>
+                                        <button onclick="handleFriendAction('remove', '<%= friend.friend_id %>')" class="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-400 text-xs transition-opacity">Törlés</button>
+                                    </div>
+                                <% }) %>
+                            <% } %>
+                        </div>
+                    </div>
                 </div>
-                <button id="createLobbyBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg mt-4 transition-colors">
-                    Lobbi Létrehozása
-                </button>
             </div>
 
-            <div class="bg-slate-800 rounded-xl border border-slate-700 p-6 hover:border-purple-500 transition-colors shadow-lg flex flex-col justify-between" style="min-height: 200px;">
-                <div>
-                    <h2 class="text-2xl font-bold text-white mb-2">Csatlakozás</h2>
-                    <p class="text-slate-400">Lépj be egy létező szobába a 6 karakteres kóddal.</p>
+            <div class="xl:col-span-6 space-y-8">
+                <div class="bg-gradient-to-br from-[#091428] to-[#1e2328] rounded-sm border border-[#c8aa6e] p-8 shadow-[0_0_30px_rgba(200,170,110,0.15)] flex flex-col md:flex-row gap-8 items-center justify-center relative">
+                    <div class="flex-1 text-center border-r border-[#c8aa6e]/30 pr-8">
+                        <h2 class="text-xl font-bold text-white uppercase tracking-widest mb-2" style="font-family: 'Oswald', sans-serif;">Új torna indítása</h2>
+                        <p class="text-slate-400 text-sm mb-6">Hozd létre a saját draft szobádat és oszd meg a kódot!</p>
+                        <button id="createLobbyBtn" class="bg-[#c8aa6e] hover:bg-[#f0e6d2] text-[#010a13] font-black uppercase tracking-widest px-8 py-3 rounded-sm w-full transition-all shadow-lg hover:scale-105">Létrehozás</button>
+                    </div>
+                    
+                    <div class="flex-1 text-center pl-8">
+                        <h2 class="text-xl font-bold text-white uppercase tracking-widest mb-2" style="font-family: 'Oswald', sans-serif;">Csatlakozás</h2>
+                        <p class="text-slate-400 text-sm mb-6">Írd be a meghívókódot a belépéshez.</p>
+                        <div class="flex gap-2">
+                            <input type="text" id="inviteCodeInput" placeholder="XXXXXX" maxlength="6" class="w-full bg-[#010a13] border border-[#c8aa6e]/50 rounded-sm px-4 py-3 text-center text-xl font-mono text-[#c8aa6e] uppercase tracking-widest focus:outline-none focus:border-[#f0e6d2]">
+                            <button id="joinLobbyBtn" class="bg-[#1e2328] hover:bg-[#2b3137] border border-[#c8aa6e]/50 text-white px-6 font-bold rounded-sm transition-colors">→</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="mt-4 flex gap-2">
-                    <input type="text" id="inviteCodeInput" placeholder="KÓD" maxlength="6" class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 font-mono text-center uppercase focus:outline-none focus:border-purple-500">
-                    <button id="joinLobbyBtn" class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-6 py-3 rounded-lg transition-colors">
-                        Belépés
-                    </button>
+
+                <div class="bg-[#091428] rounded-sm border border-[#c8aa6e]/30 p-6 shadow-xl">
+                    <h2 class="text-lg font-bold text-[#c8aa6e] uppercase tracking-widest border-b border-[#c8aa6e]/30 pb-2 mb-6">Előző tornáim</h2>
+                    
+                    <% if (matchHistory.length === 0) { %>
+                        <div class="text-center py-8 border border-dashed border-slate-700">
+                            <p class="text-slate-500 text-sm tracking-widest uppercase font-bold">Még nem fejeztél be egyetlen tornát sem.</p>
+                        </div>
+                    <% } else { %>
+                        <div class="space-y-4">
+                            <% matchHistory.forEach(match => { %>
+                                <div class="bg-[#1e2328] border <%= match.final_position === 1 ? 'border-yellow-500 shadow-[0_0_15px_rgba(234,179,8,0.2)]' : 'border-[#c8aa6e]/20' %> p-4 rounded-sm flex flex-col md:flex-row items-center justify-between gap-4 transition-all hover:bg-[#2b3137]">
+                                    <div class="flex-1 min-w-0 text-center md:text-left">
+                                        <div class="text-xs text-slate-400 font-mono mb-1"><%= new Date(match.played_at).toLocaleDateString('hu-HU') %></div>
+                                        <div class="font-bold text-white text-lg tracking-wide truncate"><%= match.lobby_name %></div>
+                                        <div class="text-sm font-bold tracking-widest mt-1 uppercase <%= match.final_position === 1 ? 'text-yellow-400' : 'text-amber-600' %>">
+                                            <%= match.final_position === 1 ? '🏆 Bajnok' : `Helyezés: ${match.final_position}.` %>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-2 bg-[#010a13] p-2 rounded-sm border border-[#c8aa6e]/20">
+                                        <img src="https://ui-avatars.com/api/?name=<%= encodeURIComponent(match.roster_summary.top) %>&background=1e2328&color=c8aa6e&bold=true&size=64" class="w-10 h-10 rounded-sm border border-[#c8aa6e]/50" title="<%= match.roster_summary.top %> (Top)">
+                                        <img src="https://ui-avatars.com/api/?name=<%= encodeURIComponent(match.roster_summary.jng) %>&background=1e2328&color=c8aa6e&bold=true&size=64" class="w-10 h-10 rounded-sm border border-[#c8aa6e]/50" title="<%= match.roster_summary.jng %> (Jungle)">
+                                        <img src="https://ui-avatars.com/api/?name=<%= encodeURIComponent(match.roster_summary.mid) %>&background=1e2328&color=c8aa6e&bold=true&size=64" class="w-10 h-10 rounded-sm border border-[#c8aa6e]/50" title="<%= match.roster_summary.mid %> (Mid)">
+                                        <img src="https://ui-avatars.com/api/?name=<%= encodeURIComponent(match.roster_summary.adc) %>&background=1e2328&color=c8aa6e&bold=true&size=64" class="w-10 h-10 rounded-sm border border-[#c8aa6e]/50" title="<%= match.roster_summary.adc %> (ADC)">
+                                        <img src="https://ui-avatars.com/api/?name=<%= encodeURIComponent(match.roster_summary.sup) %>&background=1e2328&color=c8aa6e&bold=true&size=64" class="w-10 h-10 rounded-sm border border-[#c8aa6e]/50" title="<%= match.roster_summary.sup %> (Support)">
+                                    </div>
+                                </div>
+                            <% }) %>
+                        </div>
+                    <% } %>
                 </div>
             </div>
 
-            <div class="bg-slate-800/50 rounded-xl border border-slate-700/50 p-6 shadow-lg flex flex-col" style="min-height: 200px;">
-                <h2 class="text-xl font-bold text-white/50 mb-4 border-b border-slate-700/50 pb-2">Közösség (Hamarosan)</h2>
+            <div class="xl:col-span-3 space-y-6">
+                <div class="bg-[#091428] rounded-sm border border-[#c8aa6e]/30 p-5 shadow-xl">
+                    <h2 class="text-lg font-bold text-[#c8aa6e] uppercase tracking-widest border-b border-[#c8aa6e]/30 pb-2 mb-4">Globális ranglista</h2>
+                    <div class="space-y-2">
+                        <% leaderboard.forEach((user, index) => { 
+                            let rankColor = 'text-slate-400';
+                            let bgClass = 'bg-[#1e2328] border-[#c8aa6e]/20';
+                            if(index === 0) { rankColor = 'text-yellow-400 font-black'; bgClass = 'bg-gradient-to-r from-amber-900/40 to-transparent border-amber-500'; }
+                            else if(index === 1) { rankColor = 'text-slate-300 font-bold'; bgClass = 'bg-gradient-to-r from-slate-600/40 to-transparent border-slate-400'; }
+                            else if(index === 2) { rankColor = 'text-orange-500 font-bold'; bgClass = 'bg-gradient-to-r from-orange-900/40 to-transparent border-orange-700'; }
+                        %>
+                            <div class="border <%= bgClass %> p-2.5 rounded-sm flex justify-between items-center">
+                                <div class="flex items-center gap-3">
+                                    <span class="font-mono w-6 text-center <%= rankColor %>"><%= index + 1 %>.</span>
+                                    <span class="text-sm font-bold text-slate-200 truncate max-w-[120px]"><%= user.username %></span>
+                                </div>
+                                <span class="text-amber-500 font-bold text-sm tracking-wider">🏆 <%= user.trophies_count %></span>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
             </div>
-        </div>
+
+        </main>
     </div>
 
     <script>
         const socket = io();
         const USER_ID = '<%= userId %>';
 
+        socket.emit('identify', { userId: USER_ID });
+
+        socket.on('friend_update', () => { refreshFriendsUI(); });
+
+        async function refreshFriendsUI() {
+            try {
+                const res = await fetch('/api/friends/all');
+                if (!res.ok) return;
+                const friends = await res.json();
+                
+                const accepted = friends.filter(f => f.status === 'ACCEPTED');
+                const pendingRequests = friends.filter(f => f.status === 'PENDING' && f.action_user_id !== USER_ID);
+
+                const pendingContainer = document.getElementById('pendingRequestsContainer');
+                if (pendingRequests.length > 0) {
+                    let html = '<h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Bejövő jelölések</h3><div class="space-y-2 mb-6">';
+                    pendingRequests.forEach(req => {
+                        html += `
+                            <div class="bg-[#1e2328] border border-blue-500/30 p-2 rounded-sm flex justify-between items-center">
+                                <span class="text-sm font-bold text-white">${req.friend_name}</span>
+                                <div class="flex gap-1">
+                                    <button onclick="handleFriendAction('accept', '${req.friend_id}')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-2 py-1 rounded-sm">✓</button>
+                                    <button onclick="handleFriendAction('remove', '${req.friend_id}')" class="bg-red-600 hover:bg-red-500 text-white text-xs px-2 py-1 rounded-sm">✕</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                    pendingContainer.innerHTML = html;
+                    pendingContainer.classList.remove('hidden');
+                } else {
+                    pendingContainer.innerHTML = '';
+                    pendingContainer.classList.add('hidden');
+                }
+
+                const acceptedContainer = document.getElementById('acceptedFriendsContainer');
+                let acceptedHtml = `<h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Barátaim (${accepted.length})</h3><div class="space-y-2">`;
+                
+                if (accepted.length === 0) {
+                    acceptedHtml += '<p class="text-slate-500 text-xs italic">Még nincsenek barátaid.</p>';
+                } else {
+                    accepted.forEach(friend => {
+                        acceptedHtml += `
+                            <div class="bg-[#1e2328] border border-[#c8aa6e]/20 p-2 rounded-sm flex justify-between items-center group">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_5px_#10b981]"></div>
+                                    <span class="text-sm font-bold text-slate-200">${friend.friend_name}</span>
+                                    <span class="text-[0.6rem] text-amber-500 font-bold ml-1">🏆 ${friend.trophies_count}</span>
+                                </div>
+                                <button onclick="handleFriendAction('remove', '${friend.friend_id}')" class="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-400 text-xs transition-opacity">Törlés</button>
+                            </div>
+                        `;
+                    });
+                }
+                acceptedHtml += '</div>';
+                acceptedContainer.innerHTML = acceptedHtml;
+            } catch (error) { console.error("Hiba történt a felület frissítése közben:", error); }
+        }
+
+        socket.on('lobby_invite_received', (data) => {
+            showToast('Új meghívó!', `<span class="font-bold text-emerald-400">${data.fromUser}</span> meghívott egy Draft Lobbiba!`, 'invite', data);
+        });
+
+        function showToast(title, message, type, extraData = null) {
+            const toast = document.createElement('div');
+            toast.className = 'bg-[#091428] border border-[#c8aa6e] p-4 rounded-sm shadow-2xl min-w-[300px] transform transition-all translate-x-full opacity-0';
+            
+            let actionHtml = '';
+            if (type === 'invite') {
+                actionHtml = `<div class="mt-3 flex gap-2">
+                    <button onclick="acceptInvite('${extraData.inviteCode}')" class="flex-1 bg-[#c8aa6e] text-[#010a13] px-3 py-1.5 text-sm font-bold rounded-sm hover:bg-[#f0e6d2] transition-colors">Csatlakozás</button>
+                    <button onclick="this.parentElement.parentElement.remove()" class="flex-1 bg-[#1e2328] text-slate-300 px-3 py-1.5 text-sm rounded-sm border border-[#c8aa6e]/30 hover:bg-[#2b3137]">Bezárás</button>
+                </div>`;
+            }
+
+            toast.innerHTML = `<h4 class="text-[#c8aa6e] font-bold text-sm tracking-wider uppercase">${title}</h4><p class="text-white text-sm mt-1">${message}</p>${actionHtml}`;
+            document.getElementById('toastContainer').appendChild(toast);
+            setTimeout(() => { toast.classList.remove('translate-x-full', 'opacity-0'); }, 50);
+
+            if (type !== 'invite') {
+                setTimeout(() => { toast.classList.add('translate-x-full', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, 5000);
+            }
+        }
+
+        function acceptInvite(code) {
+            socket.emit('join_lobby', { userId: USER_ID, inviteCode: code }, (response) => {
+                if (response.status === 'success') { window.location.href = `/lobby/${response.lobbyId}`; } 
+                else { alert(response.message); }
+            });
+        }
+
         document.getElementById('createLobbyBtn').addEventListener('click', () => {
             document.getElementById('createLobbyBtn').innerText = 'Létrehozás...';
             socket.emit('create_lobby', { userId: USER_ID }, (response) => {
-                if (response.status === 'success') {
-                    window.location.href = `/lobby/${response.lobbyId}`;
-                } else {
-                    alert(response.message);
-                    document.getElementById('createLobbyBtn').innerText = 'Lobbi Létrehozása';
-                }
+                if (response.status === 'success') { window.location.href = `/lobby/${response.lobbyId}`; } 
+                else { alert(response.message); document.getElementById('createLobbyBtn').innerText = 'Létrehozás'; }
             });
         });
 
         document.getElementById('joinLobbyBtn').addEventListener('click', () => {
             const code = document.getElementById('inviteCodeInput').value.trim().toUpperCase();
             if (code.length !== 6) return alert('A kódnak pontosan 6 karakternek kell lennie!');
-            
-            socket.emit('join_lobby', { userId: USER_ID, inviteCode: code }, (response) => {
-                if (response.status === 'success') {
-                    window.location.href = `/lobby/${response.lobbyId}`;
-                } else {
-                    alert(response.message);
-                }
-            });
+            acceptInvite(code);
         });
 
-        async function logout() {
-            await fetch('/api/auth/logout', { method: 'POST' });
-            window.location.href = '/login';
+        async function logout() { await fetch('/api/auth/logout', { method: 'POST' }); window.location.href = '/login'; }
+
+        async function searchFriends() {
+            const q = document.getElementById('friendSearchInput').value.trim();
+            if(q.length < 3) return alert('A kereséshez minimum 3 karakter szükséges!');
+            try {
+                const res = await fetch(`/api/friends/search?q=${encodeURIComponent(q)}`);
+                const data = await res.json();
+                const resultsContainer = document.getElementById('searchResults');
+                resultsContainer.innerHTML = '';
+                if (data.length === 0) { resultsContainer.innerHTML = '<p class="text-xs text-slate-500 italic">Nincs találat.</p>'; return; }
+                data.forEach(user => {
+                    resultsContainer.innerHTML += `
+                        <div class="bg-[#010a13] border border-[#c8aa6e]/30 p-2 rounded-sm flex justify-between items-center">
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-white">${user.username}</span>
+                                <span class="text-[0.65rem] text-amber-500 font-bold">🏆 ${user.trophies_count}</span>
+                            </div>
+                            <button onclick="handleFriendAction('request', '${user.id}')" class="bg-[#1e2328] hover:bg-[#2b3137] border border-[#c8aa6e]/50 text-[#c8aa6e] text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-sm transition-colors">Jelölés</button>
+                        </div>`;
+                });
+            } catch (error) { alert('Hiba történt a keresés során.'); }
+        }
+
+        async function handleFriendAction(action, targetId) {
+            try {
+                const res = await fetch(`/api/friends/${action}`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ targetUserId: targetId })
+                });
+                const data = await res.json();
+                if (data.status !== 'success') { alert(data.error || 'Hiba történt a művelet során.'); }
+            } catch (error) { alert('Hálózati hiba.'); }
         }
     </script>
 </body>

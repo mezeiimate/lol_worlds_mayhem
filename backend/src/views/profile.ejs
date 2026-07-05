@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> 
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap');
+        body { background-color: #010a13; color: #f0e6d2; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; } 
+        .esport-font { font-family: 'Oswald', sans-serif; text-transform: uppercase; }
+        .hex-border { border: 1px solid #c8aa6e; }
+    </style>
+</head>
+<body class="p-4 md:p-8 min-h-screen">
+
+    <div class="max-w-4xl mx-auto">
+        <header class="bg-[#091428] rounded-sm border border-[#c8aa6e]/50 p-6 shadow-xl mb-8 flex flex-col md:flex-row justify-between items-center gap-4 relative overflow-hidden">
+            <div class="z-10 flex items-center gap-4">
+                <button onclick="window.location.href='/dashboard'" class="bg-[#1e2328] hover:bg-[#2b3137] border border-[#c8aa6e]/50 px-4 py-2 rounded-sm text-sm font-bold text-white transition-colors">← Vissza</button>
+                <div>
+                    <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-wider esport-font">Fiók beállításai</h1>
+                    <p class="text-slate-400 mt-1 uppercase tracking-widest text-xs font-bold">Menedzseri profil kezelése</p>
+                </div>
+            </div>
+            <div class="absolute right-0 top-0 w-64 h-full bg-gradient-to-l from-[#c8aa6e]/10 to-transparent pointer-events-none"></div>
+        </header>
+
+        <div id="globalMessage" class="hidden mb-6 px-4 py-3 rounded-sm text-sm text-center font-bold tracking-wide shadow-inner border"></div>
+
+        <main class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <div class="bg-[#091428] rounded-sm hex-border p-6 shadow-xl h-fit">
+                <h2 class="text-lg font-bold text-[#c8aa6e] uppercase tracking-widest border-b border-[#c8aa6e]/30 pb-2 mb-6">Menedzser adatok</h2>
+                
+                <div class="mb-6">
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">E-mail cím (Nem módosítható)</label>
+                    <input type="text" disabled value="<%= email %>" class="w-full bg-[#010a13] border border-slate-700 rounded-sm px-4 py-3 text-slate-500 cursor-not-allowed">
+                </div>
+
+                <form id="usernameForm" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-[#c8aa6e] uppercase tracking-widest mb-2">Menedzser név</label>
+                        <input type="text" id="newUsername" value="<%= username %>" required minlength="3" class="w-full bg-[#1e2328] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#f0e6d2] transition-colors">
+                    </div>
+                    <button type="submit" id="btnUsername" class="bg-[#c8aa6e] hover:bg-[#f0e6d2] text-[#010a13] font-bold uppercase tracking-widest text-sm px-6 py-2.5 rounded-sm transition-colors shadow-lg">Név mentése</button>
+                </form>
+            </div>
+
+            <div class="space-y-8">
+                <div class="bg-[#091428] rounded-sm hex-border p-6 shadow-xl">
+                    <h2 class="text-lg font-bold text-[#c8aa6e] uppercase tracking-widest border-b border-[#c8aa6e]/30 pb-2 mb-6">Biztonság</h2>
+                    
+                    <form id="passwordForm" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-[#c8aa6e] uppercase tracking-widest mb-2">Jelenlegi jelszó</label>
+                            <div class="relative">
+                                <input type="password" id="currentPassword" required class="w-full bg-[#1e2328] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 pr-12 text-white focus:outline-none focus:border-[#f0e6d2] transition-colors">
+                                <button type="button" onclick="toggleVisibility('currentPassword', 'eyeCurrent')" class="absolute inset-y-0 right-0 px-4 flex items-center text-slate-400 hover:text-[#c8aa6e] focus:outline-none">
+                                    <svg id="eyeCurrent" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-[#c8aa6e] uppercase tracking-widest mb-2">Új jelszó</label>
+                            <div class="relative">
+                                <input type="password" id="newPassword" required minlength="6" class="w-full bg-[#1e2328] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 pr-12 text-white focus:outline-none focus:border-[#f0e6d2] transition-colors">
+                                <button type="button" onclick="toggleVisibility('newPassword', 'eyeNew')" class="absolute inset-y-0 right-0 px-4 flex items-center text-slate-400 hover:text-[#c8aa6e] focus:outline-none">
+                                    <svg id="eyeNew" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <button type="submit" id="btnPassword" class="bg-[#c8aa6e] hover:bg-[#f0e6d2] text-[#010a13] font-bold uppercase tracking-widest text-sm px-6 py-2.5 rounded-sm transition-colors shadow-lg">Jelszó cseréje</button>
+                    </form>
+                </div>
+
+                <div class="bg-red-950/20 rounded-sm border border-red-900/50 p-6 shadow-xl">
+                    <h2 class="text-lg font-bold text-red-500 uppercase tracking-widest border-b border-red-900/50 pb-2 mb-4">Veszélyes zóna</h2>
+                    <p class="text-slate-400 text-xs mb-4">A fiók törlése véglegesíti a baráti kapcsolatok elvesztését. A korábbi versenyeredményeid anonimizálva maradnak meg.</p>
+                    <div id="deleteConfirmation" class="hidden mb-4 p-4 border border-red-500/50 bg-red-900/30">
+                        <p class="text-red-400 text-sm font-bold mb-3">Biztosan törölni szeretnéd a fiókodat?</p>
+                        <div class="flex gap-2">
+                            <button onclick="executeDelete()" class="bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase tracking-widest px-4 py-2 rounded-sm">Igen, véglegesen</button>
+                            <button onclick="cancelDelete()" class="bg-[#1e2328] hover:bg-[#2b3137] border border-slate-500 text-slate-300 font-bold text-xs uppercase tracking-widest px-4 py-2 rounded-sm">Mégsem</button>
+                        </div>
+                    </div>
+                    <button id="btnInitDelete" onclick="initDelete()" class="bg-red-900/50 border border-red-500/50 hover:bg-red-600 text-red-200 hover:text-white font-bold uppercase tracking-widest text-sm px-6 py-2.5 rounded-sm transition-colors">Fiók törlése</button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        const messageBox = document.getElementById('globalMessage');
+
+        function showMessage(text, type) {
+            messageBox.innerHTML = text;
+            messageBox.classList.remove('hidden', 'bg-red-950/40', 'border-red-500/50', 'text-red-400', 'bg-emerald-950/40', 'border-emerald-500/50', 'text-emerald-400');
+            if (type === 'error') { messageBox.classList.add('bg-red-950/40', 'border-red-500/50', 'text-red-400'); } 
+            else { messageBox.classList.add('bg-emerald-950/40', 'border-emerald-500/50', 'text-emerald-400'); }
+        }
+
+        function toggleVisibility(inputId, iconId) {
+            const input = document.getElementById(inputId); const icon = document.getElementById(iconId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />`;
+            } else {
+                input.type = 'password';
+                icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />`;
+            }
+        }
+
+        document.getElementById('usernameForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnUsername'); btn.disabled = true; btn.innerText = 'Mentés...';
+            try {
+                const res = await fetch('/api/user/update-username', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ newUsername: document.getElementById('newUsername').value.trim() }) });
+                const data = await res.json();
+                if (!res.ok) { showMessage(data.message || data.errors.map(err => err.message).join('<br>'), 'error'); } 
+                else { showMessage(data.message, 'success'); }
+            } catch(err) { showMessage('Hálózati hiba.', 'error'); } 
+            finally { btn.disabled = false; btn.innerText = 'Név mentése'; }
+        });
+
+        document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnPassword'); btn.disabled = true; btn.innerText = 'Csere...';
+            try {
+                const res = await fetch('/api/user/update-password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ currentPassword: document.getElementById('currentPassword').value, newPassword: document.getElementById('newPassword').value }) });
+                const data = await res.json();
+                if (!res.ok) { showMessage(data.message || data.errors.map(err => err.message).join('<br>'), 'error'); btn.disabled = false; btn.innerText = 'Jelszó cseréje'; } 
+                else { showMessage(data.message, 'success'); setTimeout(() => window.location.href = '/login', 2500); }
+            } catch(err) { showMessage('Hálózati hiba.', 'error'); btn.disabled = false; btn.innerText = 'Jelszó cseréje'; }
+        });
+
+        function initDelete() {
+            document.getElementById('btnInitDelete').classList.add('hidden');
+            document.getElementById('deleteConfirmation').classList.remove('hidden');
+        }
+
+        function cancelDelete() {
+            document.getElementById('deleteConfirmation').classList.add('hidden');
+            document.getElementById('btnInitDelete').classList.remove('hidden');
+        }
+
+        async function executeDelete() {
+            try {
+                const res = await fetch('/api/user/delete-account', { method: 'POST' });
+                const data = await res.json();
+                if (res.ok) { window.location.href = '/login'; } 
+                else { showMessage(data.message, 'error'); cancelDelete(); }
+            } catch(err) { showMessage('Hálózati hiba.', 'error'); cancelDelete(); }
+        }
+    </script>
+</body>
+</html>

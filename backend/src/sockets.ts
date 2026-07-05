@@ -2,6 +2,9 @@ import { Server, Socket } from 'socket.io';
 import { pool } from './db';
 import { z } from 'zod';
 
+const IdentifySchema = z.object({ userId: z.string().uuid() });
+const SendInviteSchema = z.object({ userId: z.string().uuid(), targetUserId: z.string().uuid(), lobbyId: z.string().uuid() });
+
 const CreateLobbySchema = z.object({ userId: z.string().uuid() });
 const JoinLobbySchema = z.object({ userId: z.string().uuid(), inviteCode: z.string().length(6).toUpperCase() });
 const RollSchema = z.object({ lobbyId: z.string().uuid(), userId: z.string().uuid() });
@@ -173,6 +176,38 @@ async function executeMatchSimulation(client: any, currentMatch: any, io: Server
 export const setupSockets = (io: Server) => {
   io.on('connection', (socket: Socket) => {
     
+    // Felhasználó azonosítása a "Presence" funkcióhoz
+    socket.on('identify', (payload) => {
+        try {
+            const data = IdentifySchema.parse(payload);
+            socket.join(data.userId);
+        } catch (e) { }
+    });
+
+    socket.on('send_lobby_invite', async (payload, callback) => {
+        const client = await pool.connect();
+        try {
+            const data = SendInviteSchema.parse(payload);
+            const userRes = await client.query('SELECT username FROM public.users WHERE id = $1', [data.userId]);
+            const lobbyRes = await client.query('SELECT invite_code FROM public.lobbies WHERE id = $1', [data.lobbyId]);
+            
+            if ((userRes.rowCount ?? 0) > 0 && (lobbyRes.rowCount ?? 0) > 0) {
+                io.to(data.targetUserId).emit('lobby_invite_received', {
+                    lobbyId: data.lobbyId,
+                    inviteCode: lobbyRes.rows[0].invite_code,
+                    fromUser: userRes.rows[0].username
+                });
+                callback({ status: 'success' });
+            } else {
+                throw new Error('Érvénytelen adatok a meghíváshoz.');
+            }
+        } catch (e: any) {
+            callback({ status: 'error', message: e.message });
+        } finally {
+            client.release();
+        }
+    });
+
     socket.on('create_lobby', async (payload, callback) => {
         const client = await pool.connect();
         try {
@@ -180,7 +215,7 @@ export const setupSockets = (io: Server) => {
             const res = await client.query(`INSERT INTO public.lobbies (host_id, name, invite_code) VALUES ($1::uuid, $2, $3) RETURNING id`, [data.userId, 'Worlds Mayhem Draft', code]);
             await client.query(`INSERT INTO public.lobby_teams (lobby_id, user_id, rerolls_left, current_offer) VALUES ($1::uuid, $2::uuid, 3, '[]'::jsonb)`, [res.rows[0].id, data.userId]);
             await client.query('COMMIT'); socket.join(res.rows[0].id); callback({ status: 'success', lobbyId: res.rows[0].id });
-        } catch(e: any) { await client.query('ROLLBACK'); console.error(e); callback({status: 'error', message: e.message}); } finally { client.release(); }
+        } catch(e: any) { await client.query('ROLLBACK'); callback({status: 'error', message: e.message}); } finally { client.release(); }
     });
 
     socket.on('join_lobby', async (payload, callback) => {
@@ -188,10 +223,10 @@ export const setupSockets = (io: Server) => {
         try {
             const data = JoinLobbySchema.parse(payload); await client.query('BEGIN');
             const lobbyRes = await client.query('SELECT id FROM public.lobbies WHERE invite_code = $1::varchar', [data.inviteCode]);
-            if (!lobbyRes.rowCount) throw new Error('Érvénytelen kód.');
+            if ((lobbyRes.rowCount ?? 0) === 0) throw new Error('Érvénytelen kód.');
             const lId = lobbyRes.rows[0].id;
             const tCheck = await client.query('SELECT id FROM public.lobby_teams WHERE lobby_id = $1::uuid AND user_id = $2::uuid', [lId, data.userId]);
-            if (!tCheck.rowCount) await client.query(`INSERT INTO public.lobby_teams (lobby_id, user_id, rerolls_left, current_offer) VALUES ($1::uuid, $2::uuid, 3, '[]'::jsonb)`, [lId, data.userId]);
+            if ((tCheck.rowCount ?? 0) === 0) await client.query(`INSERT INTO public.lobby_teams (lobby_id, user_id, rerolls_left, current_offer) VALUES ($1::uuid, $2::uuid, 3, '[]'::jsonb)`, [lId, data.userId]);
             await client.query('COMMIT'); socket.join(lId); callback({ status: 'success', lobbyId: lId }); await broadcastLobbyState(io, lId);
         } catch(e:any) { await client.query('ROLLBACK'); callback({status: 'error', message: e.message}); } finally { client.release(); }
     });
@@ -302,7 +337,21 @@ export const setupSockets = (io: Server) => {
                 }
                 else if (currentPhase === 'FINAL') {
                     await client.query(`UPDATE public.lobbies SET status = 'FINISHED' WHERE id = $1::uuid`, [data.lobbyId]);
-                    const allTeamsRes = await client.query(`SELECT lt.id, lt.bot_name, u.username, lt.group_wins FROM public.lobby_teams lt LEFT JOIN public.users u ON lt.user_id = u.id WHERE lt.lobby_id = $1::uuid ORDER BY lt.group_wins DESC, lt.group_losses ASC, lt.id ASC`, [data.lobbyId]);
+                    
+                    const allTeamsRes = await client.query(`
+                        SELECT lt.id, lt.user_id, lt.bot_name, u.username, lt.group_wins,
+                               p_top.name AS top_name, p_jng.name AS jng_name, p_mid.name AS mid_name, p_adc.name AS adc_name, p_sup.name AS sup_name
+                        FROM public.lobby_teams lt 
+                        LEFT JOIN public.users u ON lt.user_id = u.id 
+                        LEFT JOIN public.esport_players p_top ON lt.top_player_id = p_top.id
+                        LEFT JOIN public.esport_players p_jng ON lt.jng_player_id = p_jng.id
+                        LEFT JOIN public.esport_players p_mid ON lt.mid_player_id = p_mid.id
+                        LEFT JOIN public.esport_players p_adc ON lt.adc_player_id = p_adc.id
+                        LEFT JOIN public.esport_players p_sup ON lt.sup_player_id = p_sup.id
+                        WHERE lt.lobby_id = $1::uuid 
+                        ORDER BY lt.group_wins DESC, lt.group_losses ASC, lt.id ASC
+                    `, [data.lobbyId]);
+                    
                     const allTeams = allTeamsRes.rows;
                     const bMatchesRes = await client.query(`SELECT team1_id, team2_id, winner_id, match_type FROM public.matches WHERE lobby_id = $1::uuid AND match_type IN ('QUARTER', 'SEMI', 'FINAL')`, [data.lobbyId]);
                     const bMatches = bMatchesRes.rows;
@@ -320,6 +369,40 @@ export const setupSockets = (io: Server) => {
                     const qfLosers = qfTeams.filter(id => !semiTeams.includes(id));
 
                     const groupLosers = allTeams.filter(t => !qfTeams.includes(t.id));
+                    
+                    const lobbyInfo = await client.query(`SELECT name FROM public.lobbies WHERE id = $1::uuid`, [data.lobbyId]);
+                    const lobbyName = lobbyInfo.rows[0].name;
+
+                    for (const team of allTeams) {
+                        if (team.user_id) {
+                            let rank = 16;
+                            if (team.id === champId) {
+                                rank = 1;
+                                await client.query(`UPDATE public.users SET trophies_count = trophies_count + 1 WHERE id = $1::uuid`, [team.user_id]);
+                            }
+                            else if (team.id === runnerUpId) rank = 2;
+                            else if (semiLosers.includes(team.id)) rank = 3;
+                            else if (qfLosers.includes(team.id)) rank = 5;
+                            else {
+                                const idx = groupLosers.findIndex(t => t.id === team.id);
+                                rank = 9 + idx;
+                            }
+
+                            const rosterSummary = {
+                                top: team.top_name || 'Ismeretlen',
+                                jng: team.jng_name || 'Ismeretlen',
+                                mid: team.mid_name || 'Ismeretlen',
+                                adc: team.adc_name || 'Ismeretlen',
+                                sup: team.sup_name || 'Ismeretlen'
+                            };
+
+                            await client.query(`
+                                INSERT INTO public.match_history (user_id, lobby_name, final_position, roster_summary)
+                                VALUES ($1::uuid, $2, $3, $4::jsonb)
+                            `, [team.user_id, lobbyName, rank, JSON.stringify(rosterSummary)]);
+                        }
+                    }
+
                     const getTName = (id: string) => { const t = allTeams.find(x=>x.id===id); return t ? (t.username || t.bot_name) : 'Ismeretlen'; };
 
                     const standings = [
