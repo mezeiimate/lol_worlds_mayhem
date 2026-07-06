@@ -89,20 +89,19 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
              return;
         }
 
+        // A hiba itt volt: id helyett userId kell, hogy a Dashboard felismerje!
         const token = jwt.sign(
-            { id: user.id, username: user.username },
+            { userId: user.id, username: user.username },
             process.env.JWT_SECRET as string,
             { expiresIn: '24h' }
         );
 
-        // Nyers HTTP fejléc beállítása (Raw Header Injection) a biztonsági házirend alapján
-        // Ezt a böngésző és a Render hálózata sem tudja ignorálni.
         const cookieString = `auth_token=${token}; HttpOnly; Path=/; Max-Age=86400; SameSite=Lax; Secure`;
         res.setHeader('Set-Cookie', cookieString);
         
         console.log(JSON.stringify({ event: 'AUTH_LOGIN_SUCCESS', userId: user.id, cookieSent: true }));
         
-        res.status(200).json({ message: 'Sikeres bejelentkezés!', user: { id: user.id, username: user.username } });
+        res.status(200).json({ message: 'Sikeres bejelentkezés!', user: { userId: user.id, username: user.username } });
 
     } catch (error: any) {
         res.status(500).json({ error: 'Belső szerverhiba történt a bejelentkezés során.' });
@@ -134,7 +133,6 @@ router.get('/verify', async (req: Request, res: Response): Promise<void> => {
 });
 
 router.post('/logout', (req: Request, res: Response) => {
-    // Kijelentkezésnél is a nyers fejlécet használjuk a süti azonnali megsemmisítésére
     res.setHeader('Set-Cookie', 'auth_token=; HttpOnly; Path=/; Max-Age=0; SameSite=Lax; Secure');
     res.status(200).json({ message: 'Sikeres kijelentkezés.' });
 });
