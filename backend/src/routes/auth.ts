@@ -7,18 +7,20 @@ import { query } from '../db';
 
 const router = Router();
 
+// Típus-kényszerítés alkalmazása az alacsony szintű 'family' socket beállítás miatt
 const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
+    host: process.env.SMTP_HOST || 'smtp.gmail.com',
     port: parseInt(process.env.SMTP_PORT || '465', 10),
     secure: process.env.SMTP_PORT === '465',
     auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        user: process.env.SMTP_USER || '',
+        pass: process.env.SMTP_PASS || '',
     },
+    family: 4, 
     connectionTimeout: 10000,
     greetingTimeout: 10000,
     socketTimeout: 10000,
-});
+} as any);
 
 router.post('/register', async (req: Request, res: Response): Promise<void> => {
     try {
@@ -52,7 +54,6 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
         const newUser = insertResult.rows[0];
         const confirmUrl = `${process.env.APP_URL}/api/auth/verify?token=${verificationToken}`;
         
-        // Kiterjesztett SMTP logolás a nyomon követhetőségért
         transporter.sendMail({
             from: process.env.SMTP_FROM,
             to: email,
