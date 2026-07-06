@@ -7,15 +7,19 @@ import { query } from '../db';
 
 const router = Router();
 
-// E-mail küldő (Brevo) konfigurálása
+// E-mail küldő (Brevo) konfigurálása profi Timeout beállításokkal
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
-    port: parseInt(process.env.SMTP_PORT || '587', 10),
-    secure: false, // TLS-t használ a Brevo az 587-es porton
+    port: parseInt(process.env.SMTP_PORT || '465', 10),
+    secure: process.env.SMTP_PORT === '465', // 465-ös portnál kötelező a true
     auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
     },
+    // Szigorú időkorlátok a végtelen lógás ellen (10 másodperc)
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 10000,
 });
 
 // Regisztráció
@@ -23,7 +27,6 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
     try {
         const { username, email, password } = req.body;
 
-        // PII-mentes, strukturált JSON logolás a megfigyelhetőségért
         console.log(JSON.stringify({ event: 'AUTH_REGISTER_ATTEMPT', timestamp: new Date().toISOString() }));
 
         if (!username || !email || !password) {
@@ -42,14 +45,11 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        // Jelszó hashelése (bcrypt)
         const saltRounds = 10;
         const passwordHash = await bcrypt.hash(password, saltRounds);
         
-        // Megerősítő token generálása
         const verificationToken = crypto.randomBytes(32).toString('hex');
 
-        // Felhasználó mentése
         const insertResult = await query(
             `INSERT INTO users (email, password_hash, username, is_verified, verification_token)
              VALUES ($1, $2, $3, false, $4) RETURNING id, username`,
@@ -59,24 +59,22 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
         const newUser = insertResult.rows[0];
         console.log(JSON.stringify({ event: 'AUTH_REGISTER_SUCCESS', userId: newUser.id }));
 
-        // Megerősítő e-mail küldése
         const confirmUrl = `${process.env.APP_URL}/api/auth/verify?token=${verificationToken}`;
         
-        try {
-            await transporter.sendMail({
-                from: process.env.SMTP_FROM,
-                to: email,
-                subject: 'Worlds Mayhem - Fiók megerősítése',
-                html: `<h1>Üdv a Worlds Mayhemben, ${newUser.username}!</h1><p>Kattints az alábbi linkre a fiókod megerősítéséhez:</p><a href="${confirmUrl}">Fiók megerősítése</a>`
-            });
+        // Aszinkron e-mail küldés (Fire and Forget) - Nem blokkolja a válaszadást!
+        transporter.sendMail({
+            from: process.env.SMTP_FROM,
+            to: email,
+            subject: 'Worlds Mayhem - Fiók megerősítése',
+            html: `<h1>Üdv a Worlds Mayhemben, ${newUser.username}!</h1><p>Kattints az alábbi linkre a fiókod megerősítéséhez:</p><a href="${confirmUrl}">Fiók megerősítése</a>`
+        }).then(() => {
             console.log(JSON.stringify({ event: 'EMAIL_SEND_SUCCESS', type: 'VERIFICATION' }));
-        } catch (emailError: any) {
+        }).catch((emailError: any) => {
             console.error(JSON.stringify({ event: 'EMAIL_SEND_ERROR', error: emailError.message }));
-            res.status(500).json({ error: 'A fiók létrejött, de a megerősítő e-mailt nem sikerült kiküldeni. Ellenőrizd a Brevo SMTP beállításokat!' });
-            return;
-        }
+        });
 
-        res.status(201).json({ message: 'Sikeres regisztráció! Kérjük, erősítsd meg az e-mail címedet.' });
+        // Azonnal visszatérünk a klienshez 201-es kóddal
+        res.status(201).json({ message: 'Sikeres regisztráció! Kérjük, erősítsd meg az e-mail címedet (ellenőrizd a Spam mappát is).' });
 
     } catch (error: any) {
         console.error(JSON.stringify({ event: 'AUTH_REGISTER_CRITICAL_ERROR', error: error.message, stack: error.stack }));
@@ -112,14 +110,12 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
              return;
         }
 
-        // JWT generálás
         const token = jwt.sign(
             { id: user.id, username: user.username },
             process.env.JWT_SECRET as string,
             { expiresIn: '24h' }
         );
 
-        // Szigorú munkamenet-kezelés (HttpOnly, Secure, SameSite=Strict)
         res.cookie('auth_token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
