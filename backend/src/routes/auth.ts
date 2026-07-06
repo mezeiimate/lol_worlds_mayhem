@@ -7,11 +7,12 @@ import { query } from '../db';
 
 const router = Router();
 
-// Típus-kényszerítés alkalmazása az alacsony szintű 'family' socket beállítás miatt
+// A port dinamikus kezelése: 465 -> true, 587 -> false (ez szükséges a STARTTLS-hez)
+const smtpPort = parseInt(process.env.SMTP_PORT || '587', 10);
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: parseInt(process.env.SMTP_PORT || '465', 10),
-    secure: process.env.SMTP_PORT === '465',
+    port: smtpPort,
+    secure: smtpPort === 465,
     auth: {
         user: process.env.SMTP_USER || '',
         pass: process.env.SMTP_PASS || '',
