@@ -52,12 +52,17 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
         const newUser = insertResult.rows[0];
         const confirmUrl = `${process.env.APP_URL}/api/auth/verify?token=${verificationToken}`;
         
+        // Kiterjesztett SMTP logolás a nyomon követhetőségért
         transporter.sendMail({
             from: process.env.SMTP_FROM,
             to: email,
             subject: 'Worlds Mayhem - Fiók megerősítése',
             html: `<h1>Üdv a Worlds Mayhemben, ${newUser.username}!</h1><p>Kattints az alábbi linkre a fiókod megerősítéséhez:</p><a href="${confirmUrl}">Fiók megerősítése</a>`
-        }).catch(err => console.error('Email hiba:', err));
+        }).then(info => {
+            console.log(`✅ SIKERES EMAIL KÜLDÉS! MessageID: ${info.messageId} | Google válasz: ${info.response}`);
+        }).catch(err => {
+            console.error(`❌ EMAIL SMTP HIBA: ${err.message}`, err);
+        });
 
         res.status(201).json({ message: 'Sikeres regisztráció! Kérjük, erősítsd meg az e-mail címedet.' });
 
@@ -89,7 +94,6 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
              return;
         }
 
-        // A hiba itt volt: id helyett userId kell, hogy a Dashboard felismerje!
         const token = jwt.sign(
             { userId: user.id, username: user.username },
             process.env.JWT_SECRET as string,
