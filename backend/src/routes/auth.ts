@@ -1,27 +1,34 @@
 import { Router, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import nodemailer from 'nodemailer';
 import crypto from 'crypto';
 import { query } from '../db';
 
 const router = Router();
 
-// A port dinamikus kezelése: 465 -> true, 587 -> false (ez szükséges a STARTTLS-hez)
-const smtpPort = parseInt(process.env.SMTP_PORT || '587', 10);
-const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: smtpPort,
-    secure: smtpPort === 465,
-    auth: {
-        user: process.env.SMTP_USER || '',
-        pass: process.env.SMTP_PASS || '',
-    },
-    family: 4, 
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 10000,
-} as any);
+// Segédfüggvény az e-mail küldéshez a Google Apps Script relay-en keresztül
+const sendEmailViaRelay = async (to: string, subject: string, html: string): Promise<boolean> => {
+    try {
+        const response = await fetch(process.env.EMAIL_RELAY_URL as string, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                secret: process.env.EMAIL_RELAY_SECRET,
+                to,
+                subject,
+                html
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Google Relay hiba: ${response.statusText}`);
+        }
+        return true;
+    } catch (error) {
+        console.error('❌ EMAIL RELAY HIBA:', error);
+        return false;
+    }
+};
 
 router.post('/register', async (req: Request, res: Response): Promise<void> => {
     try {
@@ -55,15 +62,13 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
         const newUser = insertResult.rows[0];
         const confirmUrl = `${process.env.APP_URL}/api/auth/verify?token=${verificationToken}`;
         
-        transporter.sendMail({
-            from: process.env.SMTP_FROM,
-            to: email,
-            subject: 'Worlds Mayhem - Fiók megerősítése',
-            html: `<h1>Üdv a Worlds Mayhemben, ${newUser.username}!</h1><p>Kattints az alábbi linkre a fiókod megerősítéséhez:</p><a href="${confirmUrl}">Fiók megerősítése</a>`
-        }).then(info => {
-            console.log(`✅ SIKERES EMAIL KÜLDÉS! MessageID: ${info.messageId} | Google válasz: ${info.response}`);
-        }).catch(err => {
-            console.error(`❌ EMAIL SMTP HIBA: ${err.message}`, err);
+        // E-mail küldés a relay-en keresztül
+        sendEmailViaRelay(
+            email, 
+            'Worlds Mayhem - Fiók megerősítése', 
+            `<h1>Üdv a Worlds Mayhemben, ${newUser.username}!</h1><p>Kattints az alábbi linkre a fiókod megerősítéséhez:</p><a href="${confirmUrl}">Fiók megerősítése</a>`
+        ).then(success => {
+            if (success) console.log(`✅ SIKERES EMAIL KÜLDÉS: ${email}`);
         });
 
         res.status(201).json({ message: 'Sikeres regisztráció! Kérjük, erősítsd meg az e-mail címedet.' });
