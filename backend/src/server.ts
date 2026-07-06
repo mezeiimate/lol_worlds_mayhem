@@ -1,5 +1,4 @@
 import dns from 'dns';
-// A hálózati hiba (ENETUNREACH) elkerülése érdekében kényszerítjük az IPv4 használatát
 dns.setDefaultResultOrder('ipv4first');
 
 import express from 'express';
@@ -19,8 +18,7 @@ dotenv.config();
 
 const app = express();
 
-// Kiberbiztonsági alapelv: Proxy megbízhatóságának beállítása a Render miatt.
-// E nélkül az Express nem küldi ki a 'Secure' flaggel ellátott sütiket a frontendnek!
+// KÖTELEZŐ RENDER BEÁLLÍTÁS A SÜTIKHEZ
 app.set('trust proxy', 1);
 
 const httpServer = createServer(app);
