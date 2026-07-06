@@ -7,16 +7,14 @@ import { query } from '../db';
 
 const router = Router();
 
-// E-mail küldő (Brevo) konfigurálása profi Timeout beállításokkal
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: parseInt(process.env.SMTP_PORT || '465', 10),
-    secure: process.env.SMTP_PORT === '465', // 465-ös portnál kötelező a true
+    secure: process.env.SMTP_PORT === '465',
     auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
     },
-    // Szigorú időkorlátok a végtelen lógás ellen (10 másodperc)
     connectionTimeout: 10000,
     greetingTimeout: 10000,
     socketTimeout: 10000,
@@ -61,7 +59,6 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
 
         const confirmUrl = `${process.env.APP_URL}/api/auth/verify?token=${verificationToken}`;
         
-        // Aszinkron e-mail küldés (Fire and Forget) - Nem blokkolja a válaszadást!
         transporter.sendMail({
             from: process.env.SMTP_FROM,
             to: email,
@@ -73,8 +70,7 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
             console.error(JSON.stringify({ event: 'EMAIL_SEND_ERROR', error: emailError.message }));
         });
 
-        // Azonnal visszatérünk a klienshez 201-es kóddal
-        res.status(201).json({ message: 'Sikeres regisztráció! Kérjük, erősítsd meg az e-mail címedet (ellenőrizd a Spam mappát is).' });
+        res.status(201).json({ message: 'Sikeres regisztráció! Kérjük, erősítsd meg az e-mail címedet.' });
 
     } catch (error: any) {
         console.error(JSON.stringify({ event: 'AUTH_REGISTER_CRITICAL_ERROR', error: error.message, stack: error.stack }));
@@ -116,10 +112,11 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
             { expiresIn: '24h' }
         );
 
+        // KÖZPONTI JAVÍTÁS: Lax beállítás a Render redirect miatt + kényszerített HTTPS védelem
         res.cookie('auth_token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            secure: true, 
+            sameSite: 'lax',
             maxAge: 24 * 60 * 60 * 1000 // 1 nap
         });
 
