@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import path from 'path';
-import { authRouter } from './routes/auth';
+import authRouter from './routes/auth';
 import { userRouter } from './routes/user';
 import { requireAuth, AuthRequest } from './middleware/authMiddleware';
 import { pool } from './db';
