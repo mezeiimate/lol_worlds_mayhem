@@ -1,3 +1,7 @@
+import dns from 'dns';
+// A hálózati hiba (ENETUNREACH) elkerülése érdekében kényszerítjük az IPv4 használatát
+dns.setDefaultResultOrder('ipv4first');
+
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
