@@ -23,17 +23,26 @@ function calculateSynergyBonus(players: any[]) {
     let bonus = 0;
     const teamCounts: Record<string, number> = {};
     const countryCounts: Record<string, number> = {};
+    
     players.forEach(p => {
-        teamCounts[p.team_name] = (teamCounts[p.team_name] || 0) + 1;
+        const exactTeamKey = `${p.team_name}_${p.season}`; // Az igazi "Tökéletes Roster" szinergia
+        teamCounts[exactTeamKey] = (teamCounts[exactTeamKey] || 0) + 1;
         countryCounts[p.country] = (countryCounts[p.country] || 0) + 1;
     });
+    
     Object.values(teamCounts).forEach(count => {
-        if (count === 2) bonus += 3; else if (count === 3) bonus += 6; else if (count === 4) bonus += 10; else if (count === 5) bonus += 15;
+        if (count === 2) bonus += 5; else if (count === 3) bonus += 12; else if (count === 4) bonus += 20; else if (count === 5) bonus += 30;
     });
     Object.values(countryCounts).forEach(count => {
-        if (count === 3) bonus += 4; else if (count === 4) bonus += 7; else if (count === 5) bonus += 10;
+        if (count === 3) bonus += 4; else if (count === 4) bonus += 8; else if (count === 5) bonus += 12;
     });
+    
     return bonus;
+}
+
+// Elo-alapú győzelmi esély számító (0.0 - 1.0)
+function getWinProbability(power1: number, power2: number, scaleFactor: number = 50): number {
+    return 1 / (1 + Math.pow(10, (power2 - power1) / scaleFactor));
 }
 
 async function getLobbyStateData(client: any, lobbyId: string) {
@@ -93,54 +102,90 @@ async function executeMatchSimulation(client: any, currentMatch: any, io: Server
 
     const getDetailedTeamStats = async (teamId: string) => {
         const r = await client.query(`
-            SELECT p.name, p.season, p.player_rating, p.cspm, p.dpm, p.vspm, p.kda, p.kp_percentage, p.gd15, p.dtpm, p.damage_share, p.team_name, p.country, p.ingame_role
+            SELECT p.name, p.season, p.player_rating, p.cspm, p.dpm, p.vspm, p.kda, p.kp_percentage, 
+                   p.gd15, p.dtpm, p.damage_share, p.team_name, p.country, p.ingame_role,
+                   p.gd10, p.xpd10, p.fb_kills, p.enemy_jng_kills, p.wards_killed
             FROM public.lobby_teams lt
             JOIN public.esport_players p ON p.id IN (lt.top_player_id, lt.jng_player_id, lt.mid_player_id, lt.adc_player_id, lt.sup_player_id)
             WHERE lt.id = $1::uuid
         `, [teamId]);
         
-        let totalOvr = 0; let earlyPower = 0; let midPower = 0; let latePower = 0;
+        let totalOvr = 0; let earlyStats = 0; let midStats = 0; let lateStats = 0;
+        
         r.rows.forEach((p: any) => {
-            totalOvr += parseInt(p.player_rating);
-            const gd15 = parseFloat(p.gd15) || 0; const cspm = parseFloat(p.cspm) || 0; const vspm = parseFloat(p.vspm) || 0;
-            const kp = parseFloat(p.kp_percentage) || 0; const dpm = parseFloat(p.dpm) || 0; const dtpm = parseFloat(p.dtpm) || 0;
-            earlyPower += (gd15 * 0.1) + (cspm * 4); midPower += (vspm * 8) + (kp * 0.5); latePower += (dpm * 0.4) + (dtpm * 0.4);
+            totalOvr += parseInt(p.player_rating) || 70;
+            // Early (Ösvényfázis, FB, Aranyelőny)
+            earlyStats += (parseFloat(p.gd10) * 0.02) + (parseFloat(p.xpd10) * 0.02) + (parseFloat(p.fb_kills) * 25) + (parseFloat(p.enemy_jng_kills) * 5);
+            // Mid (Objektíva kontroll, Vision, Rotálás)
+            midStats += (parseFloat(p.vspm) * 12) + (parseFloat(p.wards_killed) * 15) + (parseFloat(p.kp_percentage) * 0.6);
+            // Late (Csapatharc sebzés, Frontvonal)
+            lateStats += (parseFloat(p.dpm) * 0.05) + (parseFloat(p.dtpm) * 0.02) + (parseFloat(p.damage_share) * 60);
         });
+        
         const synergy = calculateSynergyBonus(r.rows);
-        return { totalOvr: totalOvr + synergy, earlyPower, midPower, latePower, synergy, players: r.rows };
+        const basePower = totalOvr + (synergy * 1.5);
+
+        return { 
+            earlyPower: basePower + earlyStats, 
+            midPower: basePower + midStats, 
+            latePower: basePower + lateStats, 
+            players: r.rows 
+        };
     };
 
     const team1Stats = await getDetailedTeamStats(currentMatch.team1_id);
     const team2Stats = await getDetailedTeamStats(currentMatch.team2_id);
 
-    const p1WinnerId = (team1Stats.earlyPower + Math.random() * 20) > (team2Stats.earlyPower + Math.random() * 20) ? currentMatch.team1_id : currentMatch.team2_id;
+    // --- 1. FÁZIS: EARLY GAME ---
+    const earlyProb = getWinProbability(team1Stats.earlyPower, team2Stats.earlyPower, 40);
+    const p1WinnerId = Math.random() < earlyProb ? currentMatch.team1_id : currentMatch.team2_id;
     const p1WinnerName = p1WinnerId === currentMatch.team1_id ? name1 : name2;
+    
+    // Snowball effektus beállítása
+    const t1MomentumMid = p1WinnerId === currentMatch.team1_id ? 25 : 0;
+    const t2MomentumMid = p1WinnerId === currentMatch.team2_id ? 25 : 0;
 
-    const p2WinnerId = (team1Stats.midPower + Math.random() * 20) > (team2Stats.midPower + Math.random() * 20) ? currentMatch.team1_id : currentMatch.team2_id;
+    // --- 2. FÁZIS: MID GAME ---
+    const midProb = getWinProbability(team1Stats.midPower + t1MomentumMid, team2Stats.midPower + t2MomentumMid, 45);
+    const p2WinnerId = Math.random() < midProb ? currentMatch.team1_id : currentMatch.team2_id;
     const p2WinnerName = p2WinnerId === currentMatch.team1_id ? name1 : name2;
 
-    const p3WinnerId = (team1Stats.latePower + Math.random() * 20) > (team2Stats.latePower + Math.random() * 20) ? currentMatch.team1_id : currentMatch.team2_id;
-    const p3WinnerName = p3WinnerId === currentMatch.team1_id ? name1 : name2;
+    const t1MomentumLate = (p2WinnerId === currentMatch.team1_id ? 30 : 0) + t1MomentumMid;
+    const t2MomentumLate = (p2WinnerId === currentMatch.team2_id ? 30 : 0) + t2MomentumMid;
 
-    const finalScore1 = team1Stats.totalOvr + (team1Stats.earlyPower * 0.2) + (team1Stats.midPower * 0.2) + (team1Stats.latePower * 0.2) + (Math.random() * 30 - 10);
-    const finalScore2 = team2Stats.totalOvr + (team2Stats.earlyPower * 0.2) + (team2Stats.midPower * 0.2) + (team2Stats.latePower * 0.2) + (Math.random() * 30 - 10);
-    
-    const gameWinnerId = finalScore1 > finalScore2 ? currentMatch.team1_id : currentMatch.team2_id;
-    const gameWinnerName = finalScore1 > finalScore2 ? name1 : name2;
+    // --- 3. FÁZIS: LATE GAME (VÉGEREDMÉNY) ---
+    const lateProb = getWinProbability(team1Stats.latePower + t1MomentumLate, team2Stats.latePower + t2MomentumLate, 50);
+    const gameWinnerId = Math.random() < lateProb ? currentMatch.team1_id : currentMatch.team2_id;
+    const gameWinnerName = gameWinnerId === currentMatch.team1_id ? name1 : name2;
 
+    // Dinamikus log generálás
     const logsArray = [];
-    logsArray.push({ text: `Kezdődik a mérkőzés! Mindkét menedzser magabiztosan küldte harcba a csapatát.`, favoredTeamId: null });
-    logsArray.push({ text: `[Early Game] Az ösvényfázis lezárult. ${p1WinnerName} dominálta a korai szakaszt a kiemelkedő ösvényelőny és farmolás révén.`, favoredTeamId: p1WinnerId });
-    logsArray.push({ text: `[Mid Game] Csata az objektívákért! ${p2WinnerName} átvette az irányítást a térképen a zseniális látótér-kontroll segítségével.`, favoredTeamId: p2WinnerId });
-    logsArray.push({ text: `[Late Game] Hatalmas ütközet a Baron veremnél! ${p3WinnerName} frontvonala kőkeményen elnyelte a sebzést, utat nyitva a carryknek.`, favoredTeamId: p3WinnerId });
-    logsArray.push({ text: `Nexus ostrom! A stratégiai és statisztikai dominancia eldöntötte a futamot: a meccset végül ${gameWinnerName} nyerte!`, favoredTeamId: gameWinnerId });
+    logsArray.push({ text: `Kezdődik a mérkőzés! ${name1} és ${name2} csapnak össze az Idézők Szurdokában.`, favoredTeamId: null });
+    
+    if (p1WinnerId === currentMatch.team1_id) {
+        logsArray.push({ text: `[10. perc] ${p1WinnerName} letarolta az ösvényeket! Hatalmas farm és XP előnyt építettek ki a korai gyilkosságoknak köszönhetően.`, favoredTeamId: p1WinnerId });
+    } else {
+        logsArray.push({ text: `[10. perc] Briliáns korai játék a(z) ${p1WinnerName} részéről! A dzsungelesük folyamatosan büntette az ellenfél hibáit.`, favoredTeamId: p1WinnerId });
+    }
+
+    if (p2WinnerId === p1WinnerId) {
+        logsArray.push({ text: `[20. perc] Lenyűgöző hógolyó-effektus! A(z) ${p2WinnerName} a korai előnyből tökéletes látótér-kontrollt épített, és elhozta a sárkányokat.`, favoredTeamId: p2WinnerId });
+    } else {
+        logsArray.push({ text: `[20. perc] Remek válasz! A(z) ${p2WinnerName} okos rotálásokkal és stabil Wardinggal visszahozta a meccset a középső szakaszban.`, favoredTeamId: p2WinnerId });
+    }
+
+    if (gameWinnerId === p2WinnerId) {
+        logsArray.push({ text: `[Végjáték] Nem volt esély a fordításra. A(z) ${gameWinnerName} nyers sebzése (DPM) felőrölte az ellenfél frontvonalát a végső csapatharcban!`, favoredTeamId: gameWinnerId });
+    } else {
+        logsArray.push({ text: `[Végjáték] ELKÉPESZTŐ FORDÍTÁS! A(z) ${gameWinnerName} hátrányból skálázódott be, és egy tökéletes late-game csapatharccal ellopta a győzelmet!`, favoredTeamId: gameWinnerId });
+    }
 
     const dbLogs = typeof currentMatch.match_logs === 'string' ? JSON.parse(currentMatch.match_logs) : (currentMatch.match_logs || []);
     let wins1 = 0; let wins2 = 0;
     for (const log of dbLogs) { if (log.winnerId === currentMatch.team1_id) wins1++; else wins2++; }
     if (gameWinnerId === currentMatch.team1_id) wins1++; else wins2++;
     
-    dbLogs.push({ winnerId: gameWinnerId, text: `${gameWinnerName} behúzta a győzelmet.` });
+    dbLogs.push({ winnerId: gameWinnerId, text: `${gameWinnerName} behúzta a győzelmet a sorozatban.` });
     const gameNumber = wins1 + wins2;
     let isSeriesFinished = false; let seriesWinnerId = null;
 
@@ -176,7 +221,6 @@ async function executeMatchSimulation(client: any, currentMatch: any, io: Server
 export const setupSockets = (io: Server) => {
   io.on('connection', (socket: Socket) => {
     
-    // Felhasználó azonosítása a "Presence" funkcióhoz
     socket.on('identify', (payload) => {
         try {
             const data = IdentifySchema.parse(payload);

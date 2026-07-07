@@ -249,17 +249,29 @@
 
         function showToast(title, message, type, extraData = null) {
             const toast = document.createElement('div');
-            toast.className = 'bg-[#091428] border border-[#c8aa6e] p-4 rounded-sm shadow-2xl min-w-[300px] transform transition-all translate-x-full opacity-0';
             
-            let actionHtml = '';
-            if (type === 'invite') {
-                actionHtml = `<div class="mt-3 flex gap-2">
-                    <button onclick="acceptInvite('${extraData.inviteCode}')" class="flex-1 bg-[#c8aa6e] text-[#010a13] px-3 py-1.5 text-sm font-bold rounded-sm hover:bg-[#f0e6d2] transition-colors">Csatlakozás</button>
-                    <button onclick="this.parentElement.parentElement.remove()" class="flex-1 bg-[#1e2328] text-slate-300 px-3 py-1.5 text-sm rounded-sm border border-[#c8aa6e]/30 hover:bg-[#2b3137]">Bezárás</button>
-                </div>`;
+            // Ha zöld toast-ot akarunk (siker), akkor Hextech/Arany stílusra formázzuk, különben az eredeti invite stílus marad.
+            if (type === 'success') {
+                toast.className = 'bg-[#091428] border border-[#10b981] p-4 rounded-sm shadow-[0_0_15px_rgba(16,185,129,0.3)] min-w-[300px] transform transition-all translate-x-full opacity-0 flex items-center gap-3';
+                toast.innerHTML = `
+                    <svg class="w-6 h-6 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <div>
+                        <h4 class="text-emerald-500 font-bold text-sm tracking-wider uppercase">${title}</h4>
+                        <p class="text-white text-xs mt-0.5">${message}</p>
+                    </div>
+                `;
+            } else {
+                toast.className = 'bg-[#091428] border border-[#c8aa6e] p-4 rounded-sm shadow-2xl min-w-[300px] transform transition-all translate-x-full opacity-0';
+                let actionHtml = '';
+                if (type === 'invite') {
+                    actionHtml = `<div class="mt-3 flex gap-2">
+                        <button onclick="acceptInvite('${extraData.inviteCode}')" class="flex-1 bg-[#c8aa6e] text-[#010a13] px-3 py-1.5 text-sm font-bold rounded-sm hover:bg-[#f0e6d2] transition-colors">Csatlakozás</button>
+                        <button onclick="this.parentElement.parentElement.remove()" class="flex-1 bg-[#1e2328] text-slate-300 px-3 py-1.5 text-sm rounded-sm border border-[#c8aa6e]/30 hover:bg-[#2b3137]">Bezárás</button>
+                    </div>`;
+                }
+                toast.innerHTML = `<h4 class="text-[#c8aa6e] font-bold text-sm tracking-wider uppercase">${title}</h4><p class="text-white text-sm mt-1">${message}</p>${actionHtml}`;
             }
 
-            toast.innerHTML = `<h4 class="text-[#c8aa6e] font-bold text-sm tracking-wider uppercase">${title}</h4><p class="text-white text-sm mt-1">${message}</p>${actionHtml}`;
             document.getElementById('toastContainer').appendChild(toast);
             setTimeout(() => { toast.classList.remove('translate-x-full', 'opacity-0'); }, 50);
 
@@ -307,10 +319,37 @@
                                 <span class="text-sm font-bold text-white">${user.username}</span>
                                 <span class="text-[0.65rem] text-amber-500 font-bold">🏆 ${user.trophies_count}</span>
                             </div>
-                            <button onclick="handleFriendAction('request', '${user.id}')" class="bg-[#1e2328] hover:bg-[#2b3137] border border-[#c8aa6e]/50 text-[#c8aa6e] text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-sm transition-colors">Jelölés</button>
+                            <button id="addBtn_${user.id}" onclick="sendFriendRequest('${user.id}')" class="bg-[#1e2328] hover:bg-[#2b3137] border border-[#c8aa6e]/50 text-[#c8aa6e] text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-sm transition-colors">Jelölés</button>
                         </div>`;
                 });
             } catch (error) { alert('Hiba történt a keresés során.'); }
+        }
+
+        // Dedikált, visszajelzést adó barátjelölő funkció
+        async function sendFriendRequest(targetId) {
+            const btn = document.getElementById(`addBtn_${targetId}`);
+            if(btn) { btn.innerText = 'Küldés...'; btn.disabled = true; }
+            
+            try {
+                const res = await fetch('/api/friends/request', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ targetUserId: targetId })
+                });
+                const data = await res.json();
+                
+                if (data.status !== 'success') { 
+                    alert(data.error || 'Hiba történt.');
+                    if(btn) { btn.innerText = 'Jelölés'; btn.disabled = false; }
+                } else {
+                    if(btn) {
+                        btn.innerText = 'Elküldve ✓';
+                        btn.className = 'bg-emerald-600/20 border border-emerald-500/50 text-emerald-400 text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-sm cursor-not-allowed';
+                    }
+                    showToast('Jelölés elküldve!', 'A barátkérelem sikeresen elment.', 'success');
+                }
+            } catch (error) { 
+                alert('Hálózati hiba.');
+                if(btn) { btn.innerText = 'Jelölés'; btn.disabled = false; }
+            }
         }
 
         async function handleFriendAction(action, targetId) {
