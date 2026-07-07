@@ -62,11 +62,25 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
         const newUser = insertResult.rows[0];
         const confirmUrl = `${process.env.APP_URL}/api/auth/verify?token=${verificationToken}`;
         
+        // Formázott HTML e-mail sablon
+        const emailHtmlTemplate = `
+            <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #010a13; padding: 40px 20px;">
+                <div style="max-width: 600px; margin: 0 auto; background-color: #091428; border: 1px solid #c8aa6e; padding: 40px; box-shadow: 0 0 20px rgba(200, 170, 110, 0.2);">
+                    <h1 style="color: #c8aa6e; font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 2px; margin-top: 0;">Üdvözlünk a Worlds Mayhem rendszerében, ${newUser.username}!</h1>
+                    <p style="color: #f0e6d2; font-size: 16px; line-height: 1.6;">A fiókod sikeresen létrejött. A belépéshez kérlek, erősítsd meg az e-mail címedet az alábbi gombra kattintva:</p>
+                    <div style="text-align: left; margin: 40px 0;">
+                        <a href="${confirmUrl}" style="background-color: #c8aa6e; color: #010a13; padding: 14px 28px; text-decoration: none; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; display: inline-block;">E-mail cím megerősítése</a>
+                    </div>
+                    <p style="color: #888888; font-size: 12px; margin-top: 30px; border-top: 1px solid rgba(200, 170, 110, 0.2); padding-top: 20px;">Ha nem te regisztráltál a Worlds Mayhembe, kérjük, hagyd figyelmen kívül ezt a levelet.</p>
+                </div>
+            </div>
+        `;
+
         // E-mail küldés a relay-en keresztül
         sendEmailViaRelay(
             email, 
             'Worlds Mayhem - Fiók megerősítése', 
-            `<h1>Üdv a Worlds Mayhemben, ${newUser.username}!</h1><p>Kattints az alábbi linkre a fiókod megerősítéséhez:</p><a href="${confirmUrl}">Fiók megerősítése</a>`
+            emailHtmlTemplate
         ).then(success => {
             if (success) console.log(`✅ SIKERES EMAIL KÜLDÉS: ${email}`);
         });
