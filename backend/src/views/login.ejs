@@ -23,6 +23,8 @@
 </head>
 <body class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
     
+    <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col gap-3 pointer-events-none w-80 max-w-full"></div>
+
     <div class="absolute top-[-15%] left-[-10%] w-[500px] h-[500px] bg-[#c8aa6e]/10 rounded-full blur-[100px] pointer-events-none"></div>
     <div class="absolute bottom-[-15%] right-[-10%] w-[500px] h-[500px] bg-[#091428] rounded-full blur-[100px] pointer-events-none"></div>
 
@@ -30,11 +32,8 @@
         <div class="bg-[#010a13] p-8 md:p-10 h-full w-full">
             
             <div class="text-center border-b border-[#c8aa6e]/30 pb-6 mb-8">
-                <h1 class="text-4xl text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-widest font-black esport-font drop-shadow-lg">Worlds Mayhem</h1>
-                <p class="text-[#c8aa6e] mt-2 text-[0.65rem] uppercase tracking-[0.2em] font-bold">Menedzseri hitelesítés</p>
+                <h1 class="text-4xl text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-widest font-black esport-font drop-shadow-lg">LoL Worlds Mayhem</h1>
             </div>
-
-            <div id="messageBox" class="hidden mb-6 px-4 py-3 rounded-sm text-sm text-center font-bold tracking-wide shadow-inner border"></div>
 
             <form id="authForm" class="space-y-6">
                 <div id="usernameField" class="hidden transform transition-all duration-300">
@@ -44,7 +43,7 @@
                 
                 <div>
                     <label class="block text-xs font-bold text-[#c8aa6e] uppercase tracking-widest mb-2">E-mail cím</label>
-                    <input type="email" id="email" required class="w-full bg-[#1e2328] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#f0e6d2] transition-colors shadow-inner" placeholder="hello@worldsmayhem.com">
+                    <input type="email" id="email" required class="w-full bg-[#1e2328] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#f0e6d2] transition-colors shadow-inner" placeholder="hello@lolworldsmayhem.com">
                 </div>
                 
                 <div>
@@ -76,22 +75,43 @@
 
     <script>
         let currentMode = 'login';
-        const messageBox = document.getElementById('messageBox');
 
         if (window.location.search.includes('verified=true')) {
-            showMessage('Sikeres e-mail megerősítés! Most már beléphetsz.', 'success');
+            showToast('Sikeres megerősítés! Beléphetsz.', 'success');
             window.history.replaceState({}, document.title, window.location.pathname);
         }
 
-        function showMessage(text, type) {
-            messageBox.innerHTML = text;
-            messageBox.classList.remove('hidden', 'bg-red-950/40', 'border-red-500/50', 'text-red-400', 'bg-emerald-950/40', 'border-emerald-500/50', 'text-emerald-400');
+        // Új, hextech stílusú Toaster rendszer
+        function showToast(message, type) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
             
-            if (type === 'error') {
-                messageBox.classList.add('bg-red-950/40', 'border-red-500/50', 'text-red-400');
-            } else {
-                messageBox.classList.add('bg-emerald-950/40', 'border-emerald-500/50', 'text-emerald-400');
-            }
+            const isSuccess = type === 'success';
+            const borderColor = isSuccess ? 'border-[#c8aa6e]' : 'border-red-500';
+            const bgColor = isSuccess ? 'bg-[#091428]' : 'bg-red-950';
+            const textColor = isSuccess ? 'text-[#c8aa6e]' : 'text-red-400';
+            const glow = isSuccess ? 'shadow-[0_0_15px_rgba(200,170,110,0.4)]' : 'shadow-[0_0_15px_rgba(239,68,68,0.4)]';
+            const icon = isSuccess 
+                ? '<svg class="w-6 h-6 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
+                : '<svg class="w-6 h-6 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
+
+            toast.className = `flex items-center p-4 border ${borderColor} ${bgColor} ${textColor} ${glow} rounded-sm transform transition-all duration-300 translate-x-full opacity-0 pointer-events-auto`;
+            toast.innerHTML = `${icon} <span class="font-bold tracking-wide text-[0.8rem] uppercase">${message}</span>`;
+            
+            container.appendChild(toast);
+            
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    toast.classList.remove('translate-x-full', 'opacity-0');
+                });
+            });
+
+            setTimeout(() => {
+                toast.classList.add('translate-x-full', 'opacity-0');
+                setTimeout(() => {
+                    if (container.contains(toast)) container.removeChild(toast);
+                }, 300);
+            }, 6000);
         }
 
         function togglePasswordVisibility() {
@@ -110,8 +130,6 @@
             const usernameField = document.getElementById('usernameField');
             const submitBtn = document.getElementById('submitBtn');
             const toggleBtn = document.getElementById('toggleBtn');
-            
-            messageBox.classList.add('hidden');
             
             if (currentMode === 'login') {
                 currentMode = 'register';
@@ -132,7 +150,6 @@
             e.preventDefault();
             const submitBtn = document.getElementById('submitBtn');
             
-            messageBox.classList.add('hidden');
             submitBtn.disabled = true;
             submitBtn.innerText = 'Kérlek várj...';
             
@@ -151,22 +168,22 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload),
-                    credentials: 'include' // Ez a kulcsfontosságú sor, ami eddig hiányzott
+                    credentials: 'include'
                 });
 
                 const data = await response.json();
 
                 if (!response.ok) {
                     if (data.errors) {
-                        showMessage(data.errors.map(err => `<div>${err.message}</div>`).join(''), 'error');
+                        showToast(data.errors[0].message, 'error');
                     } else {
-                        showMessage(data.message || data.error || 'Ismeretlen hiba történt.', 'error');
+                        showToast(data.message || data.error || 'Ismeretlen hiba történt.', 'error');
                     }
                     return;
                 }
 
                 if (currentMode === 'register') {
-                    showMessage('Sikeres regisztráció! Kérlek, erősítsd meg az e-mail címedet a fiókodba érkezett levéllel.', 'success');
+                    showToast(data.message, 'success');
                     document.getElementById('authForm').reset();
                     toggleMode(); 
                 } else {
@@ -174,7 +191,7 @@
                 }
 
             } catch (error) {
-                showMessage('Hálózati hiba. Nem sikerült kapcsolódni a szerverhez.', 'error');
+                showToast('Hálózati hiba. Nem sikerült kapcsolódni.', 'error');
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerText = currentMode === 'login' ? 'Belépés' : 'Regisztráció';

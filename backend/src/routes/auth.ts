@@ -6,7 +6,49 @@ import { query } from '../db';
 
 const router = Router();
 
-// Segédfüggvény az e-mail küldéshez a Google Apps Script relay-en keresztül
+// Dinamikus HTML generátor a szép Hextech megerősítő / hiba oldalhoz
+const getHextechHtml = (title: string, headline: string, message: string, isError: boolean = false) => {
+    const color = isError ? 'ef4444' : 'c8aa6e';
+    const colorClass = isError ? 'text-red-500' : 'text-[#c8aa6e]';
+    const icon = isError 
+        ? `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>`
+        : `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>`;
+        
+    return `
+    <!DOCTYPE html>
+    <html lang="hu">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${title} | Worlds Mayhem</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap');
+            body { background-color: #010a13; color: #f0e6d2; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+            .esport-font { font-family: 'Oswald', sans-serif; text-transform: uppercase; }
+            .hex-border { border: 1px solid #${color}; }
+        </style>
+    </head>
+    <body class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+        <div class="absolute top-[-15%] left-[-10%] w-[500px] h-[500px] bg-[#${color}]/10 rounded-full blur-[100px] pointer-events-none"></div>
+        <div class="absolute bottom-[-15%] right-[-10%] w-[500px] h-[500px] bg-[#091428] rounded-full blur-[100px] pointer-events-none"></div>
+        
+        <div class="max-w-md w-full bg-[#091428] p-1 hex-border shadow-[0_0_50px_rgba(200,170,110,0.15)] relative z-10">
+            <div class="bg-[#010a13] p-10 text-center border border-[#${color}]/20">
+                <svg class="w-16 h-16 mx-auto mb-6 ${colorClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    ${icon}
+                </svg>
+                <h1 class="text-3xl text-transparent bg-clip-text bg-gradient-to-r from-[#${color}] to-[#f0e6d2] tracking-widest font-black esport-font mb-4">${headline}</h1>
+                <p class="text-[#f0e6d2] mb-8 font-semibold">${message}</p>
+                <div class="border-t border-[#${color}]/30 pt-6">
+                    <p class="${colorClass} text-sm uppercase tracking-widest font-bold animate-pulse">Ezt az ablakot most már bezárhatod.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>`;
+};
+
 const sendEmailViaRelay = async (to: string, subject: string, html: string): Promise<boolean> => {
     try {
         const response = await fetch(process.env.EMAIL_RELAY_URL as string, {
@@ -60,9 +102,11 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
         );
 
         const newUser = insertResult.rows[0];
-        const confirmUrl = `${process.env.APP_URL}/api/auth/verify?token=${verificationToken}`;
         
-        // Formázott HTML e-mail sablon
+        // Dupla perjel (//) biztonságos kivédése
+        const baseUrl = (process.env.APP_URL || '').replace(/\/+$/, '');
+        const confirmUrl = `${baseUrl}/api/auth/verify?token=${verificationToken}`;
+        
         const emailHtmlTemplate = `
             <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #010a13; padding: 40px 20px;">
                 <div style="max-width: 600px; margin: 0 auto; background-color: #091428; border: 1px solid #c8aa6e; padding: 40px; box-shadow: 0 0 20px rgba(200, 170, 110, 0.2);">
@@ -76,7 +120,6 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
             </div>
         `;
 
-        // E-mail küldés a relay-en keresztül
         sendEmailViaRelay(
             email, 
             'Worlds Mayhem - Fiók megerősítése', 
@@ -85,7 +128,7 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
             if (success) console.log(`✅ SIKERES EMAIL KÜLDÉS: ${email}`);
         });
 
-        res.status(201).json({ message: 'Sikeres regisztráció! Kérjük, erősítsd meg az e-mail címedet.' });
+        res.status(201).json({ message: 'Sikeres regisztráció! Kérlek, erősítsd meg az e-mail címedet a fiókodba érkezett levéllel.' });
 
     } catch (error: any) {
         res.status(500).json({ error: 'Belső szerverhiba történt a regisztráció során.' });
@@ -137,7 +180,7 @@ router.get('/verify', async (req: Request, res: Response): Promise<void> => {
     try {
         const { token } = req.query;
         if (!token) {
-            res.status(400).send('Hiányzó token.');
+            res.status(400).send(getHextechHtml('Hiba', 'Hiányzó azonosító!', 'Nem található érvényes megerősítő token a kérésben.', true));
             return;
         }
 
@@ -147,13 +190,13 @@ router.get('/verify', async (req: Request, res: Response): Promise<void> => {
         );
         
         if (result.rowCount === 0) {
-            res.status(400).send('Érvénytelen vagy már felhasznált token.');
+            res.status(400).send(getHextechHtml('Hiba', 'Érvénytelen token!', 'A link már lejárt, vagy a fiókot korábban már megerősítették.', true));
             return;
         }
 
-        res.send('<h1>Sikeres megerősítés!</h1><p>Most már bejelentkezhetsz a játékba.</p>');
+        res.send(getHextechHtml('Sikeres megerősítés', 'Sikeres megerősítés!', 'A fiókod hitelesítése sikeresen befejeződött.'));
     } catch (error: any) {
-        res.status(500).send('Hiba történt a megerősítés során.');
+        res.status(500).send(getHextechHtml('Hiba', 'Szerverhiba!', 'Váratlan hiba történt a megerősítés során. Kérjük, próbáld újra később.', true));
     }
 });
 
