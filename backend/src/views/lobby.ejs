@@ -310,7 +310,6 @@
             const cOrder = data.currentMatchOrder;
             const phase = data.currentPhase;
             
-            // Ha a lobbi elindult szimulálni, eltüntetjük a meghívó gombot
             if (data.status === 'SIMULATING' || data.status === 'FINISHED') {
                 const inviteBtn = document.getElementById('inviteFriendBtn');
                 if (inviteBtn && !inviteBtn.classList.contains('hidden')) {
@@ -324,23 +323,32 @@
                 document.getElementById('hostControls').classList.add('flex');
                 document.getElementById('nextMatchBtn').classList.remove('hidden');
                 document.getElementById('nextMatchBtn').disabled = false;
-                document.getElementById('fastForwardGroup').classList.remove('hidden');
-                document.getElementById('fastForwardGroup').classList.add('flex');
-
-                const btnAll = document.getElementById('ffAllBtn');
-                const btnGroup = document.getElementById('ffGroupBtn');
-                const btnBo5 = document.getElementById('ffBo5Btn');
                 
-                if (phase === 'GROUP') {
-                    btnAll.classList.remove('hidden');
-                    btnGroup.classList.remove('hidden'); 
-                    btnBo5.classList.add('hidden');
-                } else if (phase === 'QUARTER' || phase === 'SEMI' || phase === 'FINAL') {
-                    btnAll.classList.add('hidden');
-                    btnGroup.classList.add('hidden'); 
-                    btnBo5.classList.remove('hidden');
-                } else { 
+                // Hibajavítás: Döntő után gomb átváltása Eredményhirdetésre és ff rejtése
+                if (phase === 'FINAL' && cOrder === null) {
+                    document.getElementById('nextMatchBtn').innerText = "🏆 EREDMÉNYHIRDETÉS";
                     document.getElementById('fastForwardGroup').classList.add('hidden');
+                    document.getElementById('fastForwardGroup').classList.remove('flex');
+                } else {
+                    document.getElementById('nextMatchBtn').innerText = "KÖVETKEZŐ MECCS";
+                    document.getElementById('fastForwardGroup').classList.remove('hidden');
+                    document.getElementById('fastForwardGroup').classList.add('flex');
+                    
+                    const btnAll = document.getElementById('ffAllBtn');
+                    const btnGroup = document.getElementById('ffGroupBtn');
+                    const btnBo5 = document.getElementById('ffBo5Btn');
+                    
+                    if (phase === 'GROUP') {
+                        btnAll.classList.remove('hidden');
+                        btnGroup.classList.remove('hidden'); 
+                        btnBo5.classList.add('hidden');
+                    } else if (phase === 'QUARTER' || phase === 'SEMI' || phase === 'FINAL') {
+                        btnAll.classList.add('hidden');
+                        btnGroup.classList.add('hidden'); 
+                        btnBo5.classList.remove('hidden');
+                    } else { 
+                        document.getElementById('fastForwardGroup').classList.add('hidden');
+                    }
                 }
             }
 
@@ -610,12 +618,10 @@
             });
         }
 
-        // TÖKÉLETESÍTETT ÁGRAJZ RENDERELŐ FÜGGVÉNY TBD HELYKITÖLTŐKKEL
         function renderBracket(matches) {
             const area = document.getElementById('bracketArea');
             const container = document.getElementById('bracketContainer');
             
-            // Flex és láthatóság biztosítása a Tailwind konfliktusok elkerülésére
             area.classList.remove('hidden');
             area.classList.add('flex');
             
@@ -645,7 +651,6 @@
                     </div>`;
             };
 
-            // Fix felépítés, amely üres adatoknál is megtartja a 3 oszlopos fát
             let html = `<div class="flex-1 space-y-3 flex flex-col justify-around">`;
             for(let i=0; i<4; i++) html += getMatchBox(quarters[i]);
             html += `</div><div class="flex flex-col justify-around gap-4 flex-1">`;
@@ -786,7 +791,6 @@
             document.getElementById('finalGroupTablesArea').classList.add('flex');
             renderGroupTables(data.newState.players, 'finalGroupTablesContainer', 'final');
             
-            // Ágrajz frissítése a Bajnokkal
             if (data.newState && data.newState.bracket) {
                 renderBracket(data.newState.bracket);
             }
@@ -810,6 +814,7 @@
             }
         }
 
+        // Hibajavítás: Gombnyomásra visszajelzést ad, ha a szerver oldalán elszáll a kód
         function triggerNextMatch() {
             const btn = document.getElementById('nextMatchBtn');
             btn.disabled = true; btn.classList.add('hidden'); document.getElementById('fastForwardGroup').classList.add('hidden');
@@ -821,6 +826,9 @@
                     
                     ['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT'].forEach(r => document.getElementById(`node-${r}-2`).classList.add('hidden'));
                     document.getElementById('mapTitle').innerText = "SAJÁT FELÁLLÁS";
+                } else if (res.status === 'error') {
+                    alert('Hiba történt a szerveren: ' + res.message);
+                    btn.classList.remove('hidden'); btn.disabled = false;
                 }
             });
         }
