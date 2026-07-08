@@ -69,7 +69,7 @@
                 <h1 id="lobbyTitle" class="text-3xl tracking-widest text-gold esport-font">WORLDS DRAFT</h1>
             </div>
             <div class="flex items-center gap-4">
-                <button onclick="openInviteModal()" class="bg-[#1e2328] hover:bg-[#2b3137] border border-[#c8aa6e]/50 px-4 py-1.5 rounded-sm text-sm font-bold text-gold transition-colors mr-2">BARÁT MEGHÍVÁSA</button>
+                <button id="inviteFriendBtn" onclick="openInviteModal()" class="bg-[#1e2328] hover:bg-[#2b3137] border border-[#c8aa6e]/50 px-4 py-1.5 rounded-sm text-sm font-bold text-gold transition-colors mr-2">BARÁT MEGHÍVÁSA</button>
                 <div class="text-right">
                     <p class="text-[0.65rem] text-slate-400 uppercase tracking-widest mb-0.5">SZOBA KÓD</p>
                     <div class="bg-[#010a13] border border-[#c8aa6e]/50 px-4 py-1 rounded-sm font-mono text-lg font-bold text-gold-light tracking-widest"><%= inviteCode %></div>
@@ -310,6 +310,15 @@
             const cOrder = data.currentMatchOrder;
             const phase = data.currentPhase;
             
+            // Ha a lobbi elindult szimulálni, eltüntetjük a meghívó gombot
+            if (data.status === 'SIMULATING' || data.status === 'FINISHED') {
+                const inviteBtn = document.getElementById('inviteFriendBtn');
+                if (inviteBtn && !inviteBtn.classList.contains('hidden')) {
+                    inviteBtn.classList.add('opacity-0', 'pointer-events-none');
+                    setTimeout(() => inviteBtn.classList.add('hidden'), 300);
+                }
+            }
+            
             if (USER_ID === data.hostId && !isTournamentEnded && data.status === 'SIMULATING') {
                 document.getElementById('hostControls').classList.remove('hidden');
                 document.getElementById('hostControls').classList.add('flex');
@@ -365,7 +374,6 @@
                 teamObj.players.forEach(p => {
                     const isFilled = filledRoles.has(p.ingame_role);
                     const icon = ROLE_ICONS[p.ingame_role] || '•';
-                    // Csak szürkítve, áthúzás nélkül
                     const opacityClass = isFilled ? "opacity-30 grayscale" : "";
                     
                     playersHtml += `
@@ -380,7 +388,6 @@
                 list.innerHTML += `
                     <div class="hex-bg hex-border corner-borders cursor-pointer hex-bg-hover p-4" onclick="selectTeam(${index})">
                         <div class="flex items-center gap-4">
-                            <!-- Nincs keret, csak a fallback eseten -->
                             <img src="${getEsportImage(teamObj.team, true, teamObj.season)}" onerror="this.onerror=null; this.src='/League_of_Legends_icon.svg';" class="w-14 h-14 object-contain" alt="logo">
                             <div>
                                 <div class="flex items-center">
@@ -405,7 +412,6 @@
             const teamObj = currentOffer[selectedTeamIndex];
             
             document.getElementById('phase2Header').innerHTML = `
-                <!-- Nincs keret a csapat logojanal -->
                 <img src="${getEsportImage(teamObj.team, true, teamObj.season)}" onerror="this.onerror=null; this.src='/League_of_Legends_icon.svg';" class="w-12 h-12 object-contain">
                 <div>
                     <div class="flex items-center">
@@ -771,22 +777,6 @@
             document.getElementById('fastForwardGroup').classList.add('hidden');
             document.getElementById('nextMatchBtn').classList.add('hidden');
             socket.emit('fast_forward_matches', { lobbyId: LOBBY_ID, userId: USER_ID, mode: mode }, (res) => {});
-        }
-        
-        function renderBracket(matches) {
-            const area = document.getElementById('bracketArea');
-            const container = document.getElementById('bracketContainer');
-            area.classList.remove('hidden'); container.innerHTML = '';
-            const quarters = matches.filter(m => m.match_type === 'QUARTER');
-            const semis = matches.filter(m => m.match_type === 'SEMI'); const final = matches.filter(m => m.match_type === 'FINAL');
-            
-            let html = `<div class="flex-1 space-y-2">`;
-            quarters.forEach(m => { html += `<div class="hex-bg hex-border p-2 rounded-sm text-center text-[0.65rem] font-bold"><span class="${m.winner_name === m.team1_name ? 'text-emerald-400': 'text-slate-300'}">${m.team1_name}</span> vs <span class="${m.winner_name === m.team2_name ? 'text-emerald-400': 'text-slate-300'}">${m.team2_name}</span></div>`; });
-            html += `</div><div class="flex flex-col justify-center gap-4 flex-1">`;
-            semis.forEach(m => { html += `<div class="hex-bg border border-blue-500/50 p-2 rounded-sm text-center text-[0.7rem] font-bold"><span class="${m.winner_name === m.team1_name ? 'text-emerald-400': 'text-slate-300'}">${m.team1_name || '?'}</span> vs <span class="${m.winner_name === m.team2_name ? 'text-emerald-400': 'text-slate-300'}">${m.team2_name || '?'}</span></div>`; });
-            html += `</div><div class="flex flex-col justify-center flex-1">`;
-            final.forEach(m => { html += `<div class="hex-bg border border-gold p-4 rounded-sm text-center text-sm font-bold"><span class="${m.winner_name === m.team1_name ? 'text-emerald-400': 'text-slate-300'}">${m.team1_name || '?'}</span> vs <span class="${m.winner_name === m.team2_name ? 'text-emerald-400': 'text-slate-300'}">${m.team2_name || '?'}</span></div>`; });
-            html += `</div>`; container.innerHTML = html;
         }
     </script>
 </body>
