@@ -79,19 +79,28 @@ async function getLobbyStateData(client: any, lobbyId: string) {
     
     let currentOrder = null;
     let currentPhase = null;
+    let hasPendingMatches = false;
 
     if ((currentMatchRes.rowCount ?? 0) > 0) {
         currentOrder = parseInt(currentMatchRes.rows[0].match_order);
         currentPhase = currentMatchRes.rows[0].match_type;
+        hasPendingMatches = true;
     } else {
-        // Ha nincs PENDING meccs (pl. befejeződött a Döntő), nézzük meg mi volt az utolsó fázis
         const lastMatchRes = await client.query(`SELECT match_type FROM public.matches WHERE lobby_id = $1::uuid ORDER BY match_order DESC LIMIT 1`, [lobbyId]);
         if ((lastMatchRes.rowCount ?? 0) > 0) {
             currentPhase = lastMatchRes.rows[0].match_type;
         }
     }
 
-    return { players: res.rows, hostId: lobbyRes.rows[0].host_id, status: lobbyRes.rows[0].status, bracket: bracketRes.rows, currentMatchOrder: currentOrder, currentPhase: currentPhase };
+    return { 
+        players: res.rows, 
+        hostId: lobbyRes.rows[0].host_id, 
+        status: lobbyRes.rows[0].status, 
+        bracket: bracketRes.rows, 
+        currentMatchOrder: currentOrder, 
+        currentPhase: currentPhase,
+        hasPendingMatches: hasPendingMatches
+    };
 }
 
 async function broadcastLobbyState(io: Server, lobbyId: string) {
@@ -338,9 +347,11 @@ export const setupSockets = (io: Server) => {
                 WHERE m.lobby_id = $1::uuid AND m.status = 'PENDING' ORDER BY m.match_order ASC LIMIT 1
             `, [data.lobbyId]);
 
+            // HA NINCS FOLYAMATBAN LÉVŐ MECCS (Lezárt fázis)
             if ((matchRes.rowCount ?? 0) === 0) {
                 const phaseRes = await client.query(`SELECT match_type, MAX(match_order) as max_order FROM public.matches WHERE lobby_id=$1::uuid GROUP BY match_type ORDER BY max_order DESC LIMIT 1`, [data.lobbyId]);
                 if ((phaseRes.rowCount ?? 0) === 0) throw new Error("Nincsenek meccsek az adatbázisban.");
+                
                 const currentPhase = phaseRes.rows[0].match_type;
                 let nextOrder = parseInt(phaseRes.rows[0].max_order) + 1;
 
@@ -453,6 +464,7 @@ export const setupSockets = (io: Server) => {
                     callback({ status: 'finished' }); return;
                 }
             }
+            // Van még lejátszandó meccs, szimuláljuk le
             await executeMatchSimulation(client, matchRes.rows[0], io, data.lobbyId, true);
             await client.query('COMMIT'); callback({ status: 'success' });
         } catch (error: any) { 
