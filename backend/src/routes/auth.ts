@@ -67,7 +67,8 @@ router.post('/register', async (req: express.Request, res: express.Response) => 
         res.status(201).json({ status: 'success', message: 'Sikeres regisztráció!' });
     } catch (error: any) {
         if (error instanceof z.ZodError) {
-            return res.status(400).json({ message: error.errors[0].message });
+            // as any típuskonverzió a TypeScript build hiba elkerülésére
+            return res.status(400).json({ message: (error as any).errors[0].message });
         }
         res.status(500).json({ message: 'Belső szerverhiba történt.' });
     }
@@ -106,7 +107,8 @@ router.post('/login', async (req: express.Request, res: express.Response) => {
         res.status(200).json({ status: 'success', message: 'Sikeres bejelentkezés!' });
     } catch (error: any) {
         if (error instanceof z.ZodError) {
-            return res.status(400).json({ message: error.errors[0].message });
+            // as any típuskonverzió a TypeScript build hiba elkerülésére
+            return res.status(400).json({ message: (error as any).errors[0].message });
         }
         res.status(500).json({ message: 'Belső szerverhiba történt.' });
     }
@@ -119,7 +121,6 @@ router.post('/forgot-password', async (req: express.Request, res: express.Respon
         
         const userRes = await pool.query('SELECT id FROM public.users WHERE email = $1', [data.email]);
         if ((userRes.rowCount ?? 0) === 0) {
-            // Biztonsági okokból nem áruljuk el, hogy nincs ilyen e-mail, csak sikert dobunk
             return res.json({ status: 'success', message: 'Ha az e-mail cím létezik a rendszerünkben, elküldtük a visszaállító linket.' });
         }
 
@@ -188,7 +189,8 @@ router.post('/reset-password', async (req: express.Request, res: express.Respons
         res.json({ status: 'success', message: 'A jelszavad sikeresen megváltozott! Most már bejelentkezhetsz.' });
     } catch (error: any) {
         if (error instanceof z.ZodError) {
-            return res.status(400).json({ message: error.errors[0].message });
+            // as any típuskonverzió a TypeScript build hiba elkerülésére
+            return res.status(400).json({ message: (error as any).errors[0].message });
         }
         res.status(500).json({ message: 'Belső szerverhiba.' });
     }
