@@ -4,202 +4,230 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
-    
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
+    <style> 
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap');
-        
-        body { background-color: #010a13; color: #f0e6d2; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #010a13; color: #f0e6d2; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; } 
         .esport-font { font-family: 'Oswald', sans-serif; text-transform: uppercase; }
-        
-        .hex-border { border: 1px solid #c8aa6e; }
-        .corner-borders { position: relative; }
-        .corner-borders::before, .corner-borders::after { 
-            content: ''; position: absolute; width: 12px; height: 12px; border: 2px solid #c8aa6e; transition: all 0.3s ease; 
-        }
-        .corner-borders::before { top: -2px; left: -2px; border-right: none; border-bottom: none; }
-        .corner-borders::after { bottom: -2px; right: -2px; border-left: none; border-top: none; }
-        .corner-borders:hover::before, .corner-borders:hover::after { border-color: #f0e6d2; width: 16px; height: 16px; }
+        .hex-bg { background-image: radial-gradient(circle at center, #091428 0%, #010a13 100%); }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-    
-    <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col gap-3 pointer-events-none w-80 max-w-full"></div>
+<body class="hex-bg min-h-screen flex items-center justify-center p-4">
 
-    <div class="absolute top-[-15%] left-[-10%] w-[500px] h-[500px] bg-[#c8aa6e]/10 rounded-full blur-[100px] pointer-events-none"></div>
-    <div class="absolute bottom-[-15%] right-[-10%] w-[500px] h-[500px] bg-[#091428] rounded-full blur-[100px] pointer-events-none"></div>
+    <div class="max-w-md w-full bg-[#091428] border border-[#c8aa6e]/50 p-8 rounded-sm shadow-[0_0_50px_rgba(200,170,110,0.15)] relative overflow-hidden">
+        
+        <div class="absolute -top-10 -right-10 w-40 h-40 bg-[#c8aa6e] opacity-5 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-500 opacity-5 rounded-full blur-3xl pointer-events-none"></div>
 
-    <div class="max-w-md w-full bg-[#091428] p-1 hex-border shadow-[0_0_50px_rgba(200,170,110,0.15)] relative z-10 corner-borders">
-        <div class="bg-[#010a13] p-8 md:p-10 h-full w-full">
-            
-            <div class="text-center border-b border-[#c8aa6e]/30 pb-6 mb-8">
-                <h1 class="text-4xl text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-widest font-black esport-font drop-shadow-lg">LOL Worlds Mayhem</h1>
+        <div id="alertBox" class="hidden mb-6 p-4 rounded-sm border text-sm text-center font-bold tracking-wide transition-all duration-300"></div>
+
+        <!-- BEJELENTKEZÉS -->
+        <div id="loginSection" class="block">
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-wider esport-font">Worlds Mayhem</h1>
+                <p class="text-slate-400 mt-2 uppercase tracking-widest text-xs font-bold">Menedzseri hozzáférés</p>
             </div>
 
-            <form id="authForm" class="space-y-6">
-                <div id="usernameField" class="hidden transform transition-all duration-300">
-                    <label class="block text-xs font-bold text-[#c8aa6e] uppercase tracking-widest mb-2">Felhasználónév</label>
-                    <input type="text" id="username" class="w-full bg-[#1e2328] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#f0e6d2] transition-colors shadow-inner" placeholder="Menedzser neved">
-                </div>
-                
+            <form id="loginForm" class="space-y-5">
                 <div>
-                    <label class="block text-xs font-bold text-[#c8aa6e] uppercase tracking-widest mb-2">E-mail cím</label>
-                    <input type="email" id="email" required class="w-full bg-[#1e2328] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#f0e6d2] transition-colors shadow-inner" placeholder="hello@worldsmayhem.com">
+                    <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">E-mail cím</label>
+                    <input type="email" id="loginEmail" required class="w-full bg-[#010a13] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#c8aa6e] transition-colors placeholder-slate-600" placeholder="menedzser@lolesports.com">
                 </div>
-                
                 <div>
-                    <label class="block text-xs font-bold text-[#c8aa6e] uppercase tracking-widest mb-2">Jelszó</label>
-                    <div class="relative">
-                        <input type="password" id="password" required class="w-full bg-[#1e2328] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 pr-12 text-white focus:outline-none focus:border-[#f0e6d2] transition-colors shadow-inner" placeholder="••••••••">
-                        <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 px-4 flex items-center text-slate-400 hover:text-[#c8aa6e] focus:outline-none">
-                            <svg id="eyeIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                        </button>
+                    <div class="flex justify-between items-center mb-1.5">
+                        <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest">Jelszó</label>
+                        <a href="#" onclick="showSection('forgotSection')" class="text-[0.65rem] text-slate-400 hover:text-[#c8aa6e] uppercase tracking-widest font-bold transition-colors">Elfelejtett jelszó?</a>
                     </div>
+                    <input type="password" id="loginPassword" required class="w-full bg-[#010a13] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#c8aa6e] transition-colors">
                 </div>
-
-                <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-[#c8aa6e] to-[#e6d09c] hover:from-[#f0e6d2] hover:to-[#c8aa6e] text-[#010a13] font-black uppercase tracking-widest text-lg py-3.5 rounded-sm transition-all shadow-[0_0_20px_rgba(200,170,110,0.3)] hover:shadow-[0_0_30px_rgba(240,230,210,0.6)] mt-2 esport-font">
-                    Belépés
-                </button>
+                <button type="submit" id="btnLogin" class="w-full bg-[#c8aa6e] hover:bg-[#f0e6d2] text-[#010a13] font-black uppercase tracking-widest text-lg px-6 py-3.5 rounded-sm transition-all shadow-lg hover:shadow-[0_0_15px_rgba(200,170,110,0.4)] mt-4">Belépés az arénába</button>
             </form>
 
-            <div class="mt-8 text-center border-t border-[#c8aa6e]/20 pt-6">
-                <button type="button" id="toggleBtn" onclick="toggleMode()" class="text-[0.7rem] text-slate-400 hover:text-[#c8aa6e] font-bold uppercase tracking-widest transition-colors">
-                    Nincs még fiókod? Regisztráció
-                </button>
-            </div>
-            
+            <p class="text-center text-slate-400 text-sm mt-6">Nincs még fiókod? <a href="#" onclick="showSection('registerSection')" class="text-[#c8aa6e] hover:text-[#f0e6d2] font-bold transition-colors">Regisztráció</a></p>
         </div>
+
+        <!-- REGISZTRÁCIÓ -->
+        <div id="registerSection" class="hidden">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-wider esport-font">Új menedzser</h1>
+                <p class="text-slate-400 mt-2 uppercase tracking-widest text-xs font-bold">Készítsd el a fiókod</p>
+            </div>
+
+            <form id="registerForm" class="space-y-4">
+                <div>
+                    <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">Kívánt felhasználónév</label>
+                    <input type="text" id="regUsername" required minlength="3" class="w-full bg-[#010a13] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#c8aa6e] transition-colors" placeholder="Faker123">
+                </div>
+                <div>
+                    <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">E-mail cím</label>
+                    <input type="email" id="regEmail" required class="w-full bg-[#010a13] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#c8aa6e] transition-colors">
+                </div>
+                <div>
+                    <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">Jelszó</label>
+                    <input type="password" id="regPassword" required minlength="6" class="w-full bg-[#010a13] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#c8aa6e] transition-colors">
+                </div>
+                <div>
+                    <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">Jelszó megerősítése</label>
+                    <input type="password" id="regConfirmPassword" required minlength="6" class="w-full bg-[#010a13] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#c8aa6e] transition-colors">
+                </div>
+                <button type="submit" id="btnRegister" class="w-full bg-[#c8aa6e] hover:bg-[#f0e6d2] text-[#010a13] font-black uppercase tracking-widest text-lg px-6 py-3.5 rounded-sm transition-all shadow-lg hover:shadow-[0_0_15px_rgba(200,170,110,0.4)] mt-4">Fiók létrehozása</button>
+            </form>
+
+            <p class="text-center text-slate-400 text-sm mt-6">Már van fiókod? <a href="#" onclick="showSection('loginSection')" class="text-[#c8aa6e] hover:text-[#f0e6d2] font-bold transition-colors">Belépés</a></p>
+        </div>
+
+        <!-- ELFELEJTETT JELSZÓ -->
+        <div id="forgotSection" class="hidden">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-black text-[#c8aa6e] tracking-wider esport-font">Elfelejtett jelszó</h1>
+                <p class="text-slate-400 mt-2 text-sm">Add meg az e-mail címed, és küldünk egy linket a jelszavad visszaállításához.</p>
+            </div>
+
+            <form id="forgotForm" class="space-y-5">
+                <div>
+                    <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">E-mail cím</label>
+                    <input type="email" id="forgotEmail" required class="w-full bg-[#010a13] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#c8aa6e] transition-colors">
+                </div>
+                <button type="submit" id="btnForgot" class="w-full bg-[#c8aa6e] hover:bg-[#f0e6d2] text-[#010a13] font-black uppercase tracking-widest text-lg px-6 py-3.5 rounded-sm transition-all shadow-lg hover:shadow-[0_0_15px_rgba(200,170,110,0.4)] mt-4">Link küldése</button>
+            </form>
+
+            <p class="text-center text-slate-400 text-sm mt-6"><a href="#" onclick="showSection('loginSection')" class="text-slate-500 hover:text-[#f0e6d2] font-bold transition-colors">← Vissza a belépéshez</a></p>
+        </div>
+
+        <!-- JELSZÓ VISSZAÁLLÍTÁSA (ÚJ JELSZÓ) -->
+        <div id="resetSection" class="hidden">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-black text-[#c8aa6e] tracking-wider esport-font">Új jelszó megadása</h1>
+                <p class="text-slate-400 mt-2 text-sm">Állítsd be a fiókod új jelszavát.</p>
+            </div>
+
+            <form id="resetForm" class="space-y-5">
+                <input type="hidden" id="resetTokenInput">
+                <div>
+                    <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">Új jelszó</label>
+                    <input type="password" id="resetNewPassword" required minlength="6" class="w-full bg-[#010a13] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#c8aa6e] transition-colors">
+                </div>
+                <button type="submit" id="btnReset" class="w-full bg-[#c8aa6e] hover:bg-[#f0e6d2] text-[#010a13] font-black uppercase tracking-widest text-lg px-6 py-3.5 rounded-sm transition-all shadow-lg hover:shadow-[0_0_15px_rgba(200,170,110,0.4)] mt-4">Jelszó frissítése</button>
+            </form>
+        </div>
+
     </div>
 
     <script>
-        let currentMode = 'login';
+        const alertBox = document.getElementById('alertBox');
 
-        if (window.location.search.includes('verified=true')) {
-            showToast('Sikeres megerősítés! Beléphetsz.', 'success');
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }
-
-        // Új, hextech stílusú Toaster rendszer
-        function showToast(message, type) {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            
-            const isSuccess = type === 'success';
-            const borderColor = isSuccess ? 'border-[#c8aa6e]' : 'border-red-500';
-            const bgColor = isSuccess ? 'bg-[#091428]' : 'bg-red-950';
-            const textColor = isSuccess ? 'text-[#c8aa6e]' : 'text-red-400';
-            const glow = isSuccess ? 'shadow-[0_0_15px_rgba(200,170,110,0.4)]' : 'shadow-[0_0_15px_rgba(239,68,68,0.4)]';
-            const icon = isSuccess 
-                ? '<svg class="w-6 h-6 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
-                : '<svg class="w-6 h-6 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
-
-            toast.className = `flex items-center p-4 border ${borderColor} ${bgColor} ${textColor} ${glow} rounded-sm transform transition-all duration-300 translate-x-full opacity-0 pointer-events-auto`;
-            toast.innerHTML = `${icon} <span class="font-bold tracking-wide text-[0.8rem] uppercase">${message}</span>`;
-            
-            container.appendChild(toast);
-            
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    toast.classList.remove('translate-x-full', 'opacity-0');
-                });
-            });
-
-            setTimeout(() => {
-                toast.classList.add('translate-x-full', 'opacity-0');
-                setTimeout(() => {
-                    if (container.contains(toast)) container.removeChild(toast);
-                }, 300);
-            }, 6000);
-        }
-
-        function togglePasswordVisibility() {
-            const pwdInput = document.getElementById('password');
-            const eyeIcon = document.getElementById('eyeIcon');
-            if (pwdInput.type === 'password') {
-                pwdInput.type = 'text';
-                eyeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />`;
+        function showAlert(msg, isError = false) {
+            alertBox.innerHTML = msg;
+            alertBox.classList.remove('hidden', 'bg-red-950/40', 'border-red-500/50', 'text-red-400', 'bg-emerald-950/40', 'border-emerald-500/50', 'text-emerald-400');
+            if (isError) {
+                alertBox.classList.add('bg-red-950/40', 'border-red-500/50', 'text-red-400');
             } else {
-                pwdInput.type = 'password';
-                eyeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />`;
+                alertBox.classList.add('bg-emerald-950/40', 'border-emerald-500/50', 'text-emerald-400');
             }
         }
 
-        function toggleMode() {
-            const usernameField = document.getElementById('usernameField');
-            const submitBtn = document.getElementById('submitBtn');
-            const toggleBtn = document.getElementById('toggleBtn');
+        function showSection(sectionId) {
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('registerSection').classList.add('hidden');
+            document.getElementById('forgotSection').classList.add('hidden');
+            document.getElementById('resetSection').classList.add('hidden');
+            alertBox.classList.add('hidden');
             
-            if (currentMode === 'login') {
-                currentMode = 'register';
-                usernameField.classList.remove('hidden');
-                submitBtn.innerText = 'Regisztráció';
-                toggleBtn.innerText = 'Már van fiókod? Belépés';
-            } else {
-                currentMode = 'login';
-                usernameField.classList.add('hidden');
-                submitBtn.innerText = 'Belépés';
-                toggleBtn.innerText = 'Nincs még fiókod? Regisztráció';
-            }
+            document.getElementById(sectionId).classList.remove('hidden');
         }
 
-        document.getElementById('authForm').addEventListener('submit', handleAuth);
+        // URL vizsgálata reset token miatt
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('reset_token');
+            if (token) {
+                document.getElementById('resetTokenInput').value = token;
+                showSection('resetSection');
+            }
+        });
 
-        async function handleAuth(e) {
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const submitBtn = document.getElementById('submitBtn');
-            
-            submitBtn.disabled = true;
-            submitBtn.innerText = 'Kérlek várj...';
-            
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value.trim();
-            
-            const payload = { email, password };
-            if (currentMode === 'register') {
-                payload.username = document.getElementById('username').value.trim();
-            }
-
-            const endpoint = currentMode === 'login' ? '/api/auth/login' : '/api/auth/register';
-
+            const btn = document.getElementById('btnLogin'); btn.disabled = true; btn.innerText = 'Betöltés...';
             try {
-                const response = await fetch(endpoint, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload),
-                    credentials: 'include'
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: document.getElementById('loginEmail').value, password: document.getElementById('loginPassword').value })
                 });
+                const data = await res.json();
+                if (!res.ok) { showAlert(data.message, true); btn.disabled = false; btn.innerText = 'Belépés az arénába'; } 
+                else { window.location.href = '/dashboard'; }
+            } catch(err) { showAlert('Hálózati hiba történt.', true); btn.disabled = false; btn.innerText = 'Belépés az arénába'; }
+        });
 
-                const data = await response.json();
-
-                if (!response.ok) {
-                    if (data.errors) {
-                        showToast(data.errors[0].message, 'error');
-                    } else {
-                        showToast(data.message || data.error || 'Ismeretlen hiba történt.', 'error');
-                    }
-                    return;
-                }
-
-                if (currentMode === 'register') {
-                    showToast(data.message, 'success');
-                    document.getElementById('authForm').reset();
-                    toggleMode(); 
-                } else {
-                    window.location.href = '/dashboard';
-                }
-
-            } catch (error) {
-                showToast('Hálózati hiba. Nem sikerült kapcsolódni.', 'error');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerText = currentMode === 'login' ? 'Belépés' : 'Regisztráció';
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                return showAlert('A megadott jelszavak nem egyeznek!', true);
             }
-        }
+
+            const btn = document.getElementById('btnRegister'); btn.disabled = true; btn.innerText = 'Betöltés...';
+            try {
+                const res = await fetch('/api/auth/register', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: document.getElementById('regUsername').value,
+                        email: document.getElementById('regEmail').value,
+                        password: password,
+                        confirmPassword: confirmPassword
+                    })
+                });
+                const data = await res.json();
+                if (!res.ok) { showAlert(data.message, true); btn.disabled = false; btn.innerText = 'Fiók létrehozása'; } 
+                else { window.location.href = '/dashboard'; }
+            } catch(err) { showAlert('Hálózati hiba történt.', true); btn.disabled = false; btn.innerText = 'Fiók létrehozása'; }
+        });
+
+        document.getElementById('forgotForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnForgot'); btn.disabled = true; btn.innerText = 'Küldés...';
+            try {
+                const res = await fetch('/api/auth/forgot-password', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: document.getElementById('forgotEmail').value })
+                });
+                const data = await res.json();
+                if (!res.ok) { 
+                    showAlert(data.message, true); 
+                    btn.disabled = false; btn.innerText = 'Link küldése';
+                } else { 
+                    showAlert(data.message, false);
+                    document.getElementById('forgotForm').reset();
+                    btn.disabled = false; btn.innerText = 'Link küldése';
+                }
+            } catch(err) { showAlert('Hálózati hiba történt.', true); btn.disabled = false; btn.innerText = 'Link küldése'; }
+        });
+
+        document.getElementById('resetForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnReset'); btn.disabled = true; btn.innerText = 'Frissítés...';
+            try {
+                const res = await fetch('/api/auth/reset-password', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        token: document.getElementById('resetTokenInput').value,
+                        newPassword: document.getElementById('resetNewPassword').value
+                    })
+                });
+                const data = await res.json();
+                if (!res.ok) { 
+                    showAlert(data.message, true); 
+                    btn.disabled = false; btn.innerText = 'Jelszó frissítése';
+                } else { 
+                    showAlert(data.message, false);
+                    setTimeout(() => window.location.href = '/login', 2500);
+                }
+            } catch(err) { showAlert('Hálózati hiba történt.', true); btn.disabled = false; btn.innerText = 'Jelszó frissítése'; }
+        });
     </script>
 </body>
 </html>
