@@ -192,7 +192,7 @@
                     </div>
                 </div>
 
-                <div id="bracketArea" class="w-full mt-8 hidden flex flex-col gap-4">
+                <div id="bracketArea" class="w-full mt-8 hidden flex-col gap-4">
                     <h3 class="text-center text-gold-light text-lg esport-font tracking-widest border-b border-[#c8aa6e]/30 pb-2">Kieséses ágrajz</h3>
                     <div class="flex justify-between gap-2" id="bracketContainer"></div>
                 </div>
@@ -610,6 +610,53 @@
             });
         }
 
+        // TÖKÉLETESÍTETT ÁGRAJZ RENDERELŐ FÜGGVÉNY TBD HELYKITÖLTŐKKEL
+        function renderBracket(matches) {
+            const area = document.getElementById('bracketArea');
+            const container = document.getElementById('bracketContainer');
+            
+            // Flex és láthatóság biztosítása a Tailwind konfliktusok elkerülésére
+            area.classList.remove('hidden');
+            area.classList.add('flex');
+            
+            const quarters = matches.filter(m => m.match_type === 'QUARTER');
+            const semis = matches.filter(m => m.match_type === 'SEMI'); 
+            const final = matches.filter(m => m.match_type === 'FINAL');
+            
+            const getMatchBox = (m, isFinal = false) => {
+                if (!m) {
+                    return `
+                        <div class="hex-bg border border-[#c8aa6e]/20 p-${isFinal ? '4' : '2'} rounded-sm text-center text-${isFinal ? 'sm' : '[0.65rem]'} font-bold flex flex-col justify-center shadow-md">
+                            <span class="text-slate-600">TBD</span>
+                            <span class="text-[0.55rem] text-slate-700 italic font-normal my-0.5">vs</span>
+                            <span class="text-slate-600">TBD</span>
+                        </div>`;
+                }
+                const t1 = m.team1_name || 'TBD';
+                const t2 = m.team2_name || 'TBD';
+                const c1 = m.winner_name === t1 ? 'text-emerald-400' : (m.winner_name ? 'text-slate-500' : 'text-slate-300');
+                const c2 = m.winner_name === t2 ? 'text-emerald-400' : (m.winner_name ? 'text-slate-500' : 'text-slate-300');
+                const borderColor = isFinal ? 'border-gold shadow-[0_0_15px_rgba(200,170,110,0.2)]' : (m.match_type === 'SEMI' ? 'border-blue-500/50' : 'hex-border');
+                return `
+                    <div class="hex-bg border ${borderColor} p-${isFinal ? '4' : '2'} rounded-sm text-center text-${isFinal ? 'sm' : '[0.65rem]'} font-bold flex flex-col justify-center shadow-md">
+                        <span class="${c1} truncate">${t1}</span>
+                        <span class="text-[0.55rem] text-slate-500 italic font-normal my-0.5">vs</span>
+                        <span class="${c2} truncate">${t2}</span>
+                    </div>`;
+            };
+
+            // Fix felépítés, amely üres adatoknál is megtartja a 3 oszlopos fát
+            let html = `<div class="flex-1 space-y-3 flex flex-col justify-around">`;
+            for(let i=0; i<4; i++) html += getMatchBox(quarters[i]);
+            html += `</div><div class="flex flex-col justify-around gap-4 flex-1">`;
+            for(let i=0; i<2; i++) html += getMatchBox(semis[i]);
+            html += `</div><div class="flex flex-col justify-center flex-1">`;
+            html += getMatchBox(final[0], true);
+            html += `</div>`;
+            
+            container.innerHTML = html;
+        }
+
         socket.on('match_simulated_event', (data) => {
             if (isTournamentEnded) return;
             document.getElementById('matchStatusText').classList.add('hidden');
@@ -738,6 +785,11 @@
             document.getElementById('finalGroupTablesArea').classList.remove('hidden');
             document.getElementById('finalGroupTablesArea').classList.add('flex');
             renderGroupTables(data.newState.players, 'finalGroupTablesContainer', 'final');
+            
+            // Ágrajz frissítése a Bajnokkal
+            if (data.newState && data.newState.bracket) {
+                renderBracket(data.newState.bracket);
+            }
         });
 
         function transitionToSimulation() {
