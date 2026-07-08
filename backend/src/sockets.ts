@@ -25,7 +25,7 @@ function calculateSynergyBonus(players: any[]) {
     const countryCounts: Record<string, number> = {};
     
     players.forEach(p => {
-        const exactTeamKey = `${p.team_name}_${p.season}`; // Az igazi "Tökéletes Roster" szinergia
+        const exactTeamKey = `${p.team_name}_${p.season}`;
         teamCounts[exactTeamKey] = (teamCounts[exactTeamKey] || 0) + 1;
         countryCounts[p.country] = (countryCounts[p.country] || 0) + 1;
     });
@@ -40,7 +40,6 @@ function calculateSynergyBonus(players: any[]) {
     return bonus;
 }
 
-// Elo-alapú győzelmi esély számító (0.0 - 1.0)
 function getWinProbability(power1: number, power2: number, scaleFactor: number = 50): number {
     return 1 / (1 + Math.pow(10, (power2 - power1) / scaleFactor));
 }
@@ -77,10 +76,31 @@ async function getLobbyStateData(client: any, lobbyId: string) {
     `, [lobbyId]);
 
     const currentMatchRes = await client.query(`SELECT match_order, match_type FROM public.matches WHERE lobby_id = $1::uuid AND status = 'PENDING' ORDER BY match_order ASC LIMIT 1`, [lobbyId]);
-    const currentOrder = (currentMatchRes.rowCount ?? 0) > 0 ? parseInt(currentMatchRes.rows[0].match_order) : null;
-    const currentPhase = (currentMatchRes.rowCount ?? 0) > 0 ? currentMatchRes.rows[0].match_type : null;
+    
+    let currentOrder = null;
+    let currentPhase = null;
+    let hasPendingMatches = false;
 
-    return { players: res.rows, hostId: lobbyRes.rows[0].host_id, status: lobbyRes.rows[0].status, bracket: bracketRes.rows, currentMatchOrder: currentOrder, currentPhase: currentPhase };
+    if ((currentMatchRes.rowCount ?? 0) > 0) {
+        currentOrder = parseInt(currentMatchRes.rows[0].match_order);
+        currentPhase = currentMatchRes.rows[0].match_type;
+        hasPendingMatches = true;
+    } else {
+        const lastMatchRes = await client.query(`SELECT match_type FROM public.matches WHERE lobby_id = $1::uuid ORDER BY match_order DESC LIMIT 1`, [lobbyId]);
+        if ((lastMatchRes.rowCount ?? 0) > 0) {
+            currentPhase = lastMatchRes.rows[0].match_type;
+        }
+    }
+
+    return { 
+        players: res.rows, 
+        hostId: lobbyRes.rows[0].host_id, 
+        status: lobbyRes.rows[0].status, 
+        bracket: bracketRes.rows, 
+        currentMatchOrder: currentOrder, 
+        currentPhase: currentPhase,
+        hasPendingMatches: hasPendingMatches
+    };
 }
 
 async function broadcastLobbyState(io: Server, lobbyId: string) {
@@ -89,7 +109,7 @@ async function broadcastLobbyState(io: Server, lobbyId: string) {
     catch (error) { console.error('[Socket] Broadcast error:', error); } finally { client.release(); }
 }
 
-async function executeMatchSimulation(client: any, currentMatch: any, io: Server, lobbyId: string, emitEvent: boolean) {
+async function executeMatchSimulation(client: any, currentMatch: any, io: Server, lobbyId: string, isFastForward: boolean) {
     const name1 = currentMatch.t1_user || currentMatch.t1_bot;
     const name2 = currentMatch.t2_user || currentMatch.t2_bot;
     const isBO5 = currentMatch.match_type !== 'GROUP';
@@ -114,38 +134,27 @@ async function executeMatchSimulation(client: any, currentMatch: any, io: Server
         
         r.rows.forEach((p: any) => {
             totalOvr += parseInt(p.player_rating) || 70;
-            // Early (Ösvényfázis, FB, Aranyelőny)
-            earlyStats += (parseFloat(p.gd10) * 0.02) + (parseFloat(p.xpd10) * 0.02) + (parseFloat(p.fb_kills) * 25) + (parseFloat(p.enemy_jng_kills) * 5);
-            // Mid (Objektíva kontroll, Vision, Rotálás)
-            midStats += (parseFloat(p.vspm) * 12) + (parseFloat(p.wards_killed) * 15) + (parseFloat(p.kp_percentage) * 0.6);
-            // Late (Csapatharc sebzés, Frontvonal)
-            lateStats += (parseFloat(p.dpm) * 0.05) + (parseFloat(p.dtpm) * 0.02) + (parseFloat(p.damage_share) * 60);
+            earlyStats += (parseFloat(p.gd10 || 0) * 0.02) + (parseFloat(p.xpd10 || 0) * 0.02) + (parseFloat(p.fb_kills || 0) * 25) + (parseFloat(p.enemy_jng_kills || 0) * 5);
+            midStats += (parseFloat(p.vspm || 0) * 12) + (parseFloat(p.wards_killed || 0) * 15) + (parseFloat(p.kp_percentage || 0) * 0.6);
+            lateStats += (parseFloat(p.dpm || 0) * 0.05) + (parseFloat(p.dtpm || 0) * 0.02) + (parseFloat(p.damage_share || 0) * 60);
         });
         
         const synergy = calculateSynergyBonus(r.rows);
         const basePower = totalOvr + (synergy * 1.5);
 
-        return { 
-            earlyPower: basePower + earlyStats, 
-            midPower: basePower + midStats, 
-            latePower: basePower + lateStats, 
-            players: r.rows 
-        };
+        return { earlyPower: basePower + earlyStats, midPower: basePower + midStats, latePower: basePower + lateStats, players: r.rows };
     };
 
     const team1Stats = await getDetailedTeamStats(currentMatch.team1_id);
     const team2Stats = await getDetailedTeamStats(currentMatch.team2_id);
 
-    // --- 1. FÁZIS: EARLY GAME ---
     const earlyProb = getWinProbability(team1Stats.earlyPower, team2Stats.earlyPower, 40);
     const p1WinnerId = Math.random() < earlyProb ? currentMatch.team1_id : currentMatch.team2_id;
     const p1WinnerName = p1WinnerId === currentMatch.team1_id ? name1 : name2;
     
-    // Snowball effektus beállítása
     const t1MomentumMid = p1WinnerId === currentMatch.team1_id ? 25 : 0;
     const t2MomentumMid = p1WinnerId === currentMatch.team2_id ? 25 : 0;
 
-    // --- 2. FÁZIS: MID GAME ---
     const midProb = getWinProbability(team1Stats.midPower + t1MomentumMid, team2Stats.midPower + t2MomentumMid, 45);
     const p2WinnerId = Math.random() < midProb ? currentMatch.team1_id : currentMatch.team2_id;
     const p2WinnerName = p2WinnerId === currentMatch.team1_id ? name1 : name2;
@@ -153,32 +162,21 @@ async function executeMatchSimulation(client: any, currentMatch: any, io: Server
     const t1MomentumLate = (p2WinnerId === currentMatch.team1_id ? 30 : 0) + t1MomentumMid;
     const t2MomentumLate = (p2WinnerId === currentMatch.team2_id ? 30 : 0) + t2MomentumMid;
 
-    // --- 3. FÁZIS: LATE GAME (VÉGEREDMÉNY) ---
     const lateProb = getWinProbability(team1Stats.latePower + t1MomentumLate, team2Stats.latePower + t2MomentumLate, 50);
     const gameWinnerId = Math.random() < lateProb ? currentMatch.team1_id : currentMatch.team2_id;
     const gameWinnerName = gameWinnerId === currentMatch.team1_id ? name1 : name2;
 
-    // Dinamikus log generálás
     const logsArray = [];
     logsArray.push({ text: `Kezdődik a mérkőzés! ${name1} és ${name2} csapnak össze az Idézők Szurdokában.`, favoredTeamId: null });
     
-    if (p1WinnerId === currentMatch.team1_id) {
-        logsArray.push({ text: `[10. perc] ${p1WinnerName} letarolta az ösvényeket! Hatalmas farm és XP előnyt építettek ki a korai gyilkosságoknak köszönhetően.`, favoredTeamId: p1WinnerId });
-    } else {
-        logsArray.push({ text: `[10. perc] Briliáns korai játék a(z) ${p1WinnerName} részéről! A dzsungelesük folyamatosan büntette az ellenfél hibáit.`, favoredTeamId: p1WinnerId });
-    }
+    if (p1WinnerId === currentMatch.team1_id) { logsArray.push({ text: `[10. perc] ${p1WinnerName} letarolta az ösvényeket! Hatalmas farm és XP előnyt építettek ki.`, favoredTeamId: p1WinnerId }); } 
+    else { logsArray.push({ text: `[10. perc] Briliáns korai játék a(z) ${p1WinnerName} részéről! A dzsungelesük folyamatosan büntetett.`, favoredTeamId: p1WinnerId }); }
 
-    if (p2WinnerId === p1WinnerId) {
-        logsArray.push({ text: `[20. perc] Lenyűgöző hógolyó-effektus! A(z) ${p2WinnerName} a korai előnyből tökéletes látótér-kontrollt épített, és elhozta a sárkányokat.`, favoredTeamId: p2WinnerId });
-    } else {
-        logsArray.push({ text: `[20. perc] Remek válasz! A(z) ${p2WinnerName} okos rotálásokkal és stabil Wardinggal visszahozta a meccset a középső szakaszban.`, favoredTeamId: p2WinnerId });
-    }
+    if (p2WinnerId === p1WinnerId) { logsArray.push({ text: `[20. perc] Lenyűgöző hógolyó-effektus! A(z) ${p2WinnerName} elhozta a sárkányokat a korai előnyből.`, favoredTeamId: p2WinnerId }); } 
+    else { logsArray.push({ text: `[20. perc] Remek válasz! A(z) ${p2WinnerName} okos rotálásokkal visszahozta a meccset.`, favoredTeamId: p2WinnerId }); }
 
-    if (gameWinnerId === p2WinnerId) {
-        logsArray.push({ text: `[Végjáték] Nem volt esély a fordításra. A(z) ${gameWinnerName} nyers sebzése (DPM) felőrölte az ellenfél frontvonalát a végső csapatharcban!`, favoredTeamId: gameWinnerId });
-    } else {
-        logsArray.push({ text: `[Végjáték] ELKÉPESZTŐ FORDÍTÁS! A(z) ${gameWinnerName} hátrányból skálázódott be, és egy tökéletes late-game csapatharccal ellopta a győzelmet!`, favoredTeamId: gameWinnerId });
-    }
+    if (gameWinnerId === p2WinnerId) { logsArray.push({ text: `[Végjáték] Nem volt esély a fordításra. A(z) ${gameWinnerName} felőrölte az ellenfél frontvonalát!`, favoredTeamId: gameWinnerId }); } 
+    else { logsArray.push({ text: `[Végjáték] ELKÉPESZTŐ FORDÍTÁS! A(z) ${gameWinnerName} egy tökéletes csapatharccal ellopta a győzelmet!`, favoredTeamId: gameWinnerId }); }
 
     const dbLogs = typeof currentMatch.match_logs === 'string' ? JSON.parse(currentMatch.match_logs) : (currentMatch.match_logs || []);
     let wins1 = 0; let wins2 = 0;
@@ -202,57 +200,42 @@ async function executeMatchSimulation(client: any, currentMatch: any, io: Server
         await client.query(`UPDATE public.lobby_teams SET group_losses = group_losses + 1 WHERE id = $1::uuid`, [loseId]);
     }
 
-    if (emitEvent) {
-        const newState = await getLobbyStateData(client, lobbyId);
-        io.to(lobbyId).emit('match_simulated_event', { 
-            group: matchTypeTranslated, team1: name1, team2: name2,
-            team1_id: currentMatch.team1_id, team2_id: currentMatch.team2_id,
-            t1_user_id: currentMatch.t1_user_id, t2_user_id: currentMatch.t2_user_id,
-            t1_players: team1Stats.players, t2_players: team2Stats.players,
-            winner: gameWinnerName, isBO5: isBO5, gameNumber: gameNumber, score1: wins1, score2: wins2,
-            isSeriesFinished: isSeriesFinished, actionLogs: logsArray,
-            matchPhase: currentMatch.match_type,
-            newState: newState 
-        });
-    }
-    return { isSeriesFinished };
+    const payload: any = {
+        group: matchTypeTranslated, team1: name1, team2: name2,
+        team1_id: currentMatch.team1_id, team2_id: currentMatch.team2_id,
+        t1_user_id: currentMatch.t1_user_id, t2_user_id: currentMatch.t2_user_id,
+        t1_players: team1Stats.players, t2_players: team2Stats.players,
+        winner: gameWinnerName, isBO5: isBO5, gameNumber: gameNumber, score1: wins1, score2: wins2,
+        isSeriesFinished: isSeriesFinished, actionLogs: logsArray,
+        matchPhase: currentMatch.match_type,
+        isFastForward: isFastForward,
+        newState: null
+    };
+
+    return { isSeriesFinished, payload };
 }
 
 export const setupSockets = (io: Server) => {
   io.on('connection', (socket: Socket) => {
     
-    socket.on('identify', (payload) => {
-        try {
-            const data = IdentifySchema.parse(payload);
-            socket.join(data.userId);
-        } catch (e) { }
+    socket.on('identify', (payload: any) => {
+        try { const data = IdentifySchema.parse(payload); socket.join(data.userId); } catch (e) { }
     });
 
-    socket.on('send_lobby_invite', async (payload, callback) => {
+    socket.on('send_lobby_invite', async (payload: any, callback: any) => {
         const client = await pool.connect();
         try {
             const data = SendInviteSchema.parse(payload);
             const userRes = await client.query('SELECT username FROM public.users WHERE id = $1', [data.userId]);
             const lobbyRes = await client.query('SELECT invite_code FROM public.lobbies WHERE id = $1', [data.lobbyId]);
-            
             if ((userRes.rowCount ?? 0) > 0 && (lobbyRes.rowCount ?? 0) > 0) {
-                io.to(data.targetUserId).emit('lobby_invite_received', {
-                    lobbyId: data.lobbyId,
-                    inviteCode: lobbyRes.rows[0].invite_code,
-                    fromUser: userRes.rows[0].username
-                });
+                io.to(data.targetUserId).emit('lobby_invite_received', { lobbyId: data.lobbyId, inviteCode: lobbyRes.rows[0].invite_code, fromUser: userRes.rows[0].username });
                 callback({ status: 'success' });
-            } else {
-                throw new Error('Érvénytelen adatok a meghíváshoz.');
-            }
-        } catch (e: any) {
-            callback({ status: 'error', message: e.message });
-        } finally {
-            client.release();
-        }
+            } else { throw new Error('Érvénytelen adatok a meghíváshoz.'); }
+        } catch (e: any) { callback({ status: 'error', message: e.message }); } finally { client.release(); }
     });
 
-    socket.on('create_lobby', async (payload, callback) => {
+    socket.on('create_lobby', async (payload: any, callback: any) => {
         const client = await pool.connect();
         try {
             const data = CreateLobbySchema.parse(payload); const code = generateInviteCode(); await client.query('BEGIN');
@@ -262,7 +245,7 @@ export const setupSockets = (io: Server) => {
         } catch(e: any) { await client.query('ROLLBACK'); callback({status: 'error', message: e.message}); } finally { client.release(); }
     });
 
-    socket.on('join_lobby', async (payload, callback) => {
+    socket.on('join_lobby', async (payload: any, callback: any) => {
         const client = await pool.connect();
         try {
             const data = JoinLobbySchema.parse(payload); await client.query('BEGIN');
@@ -275,7 +258,7 @@ export const setupSockets = (io: Server) => {
         } catch(e:any) { await client.query('ROLLBACK'); callback({status: 'error', message: e.message}); } finally { client.release(); }
     });
 
-    socket.on('roll_teams', async (payload, callback) => {
+    socket.on('roll_teams', async (payload: any, callback: any) => {
         const client = await pool.connect();
         try {
             const data = RollSchema.parse(payload); await client.query('BEGIN');
@@ -294,7 +277,7 @@ export const setupSockets = (io: Server) => {
         } catch(e:any) { await client.query('ROLLBACK'); callback({status: 'error', message: e.message}); } finally { client.release(); }
     });
 
-    socket.on('pick_player', async (payload, callback) => {
+    socket.on('pick_player', async (payload: any, callback: any) => {
         const client = await pool.connect();
         try {
             const data = PickSchema.parse(payload); const col = RoleColumnMap[data.role]; await client.query('BEGIN');
@@ -305,7 +288,7 @@ export const setupSockets = (io: Server) => {
         } catch(e:any) { await client.query('ROLLBACK'); callback({status: 'error', message: e.message}); } finally { client.release(); }
     });
 
-    socket.on('toggle_ready', async (payload, callback) => {
+    socket.on('toggle_ready', async (payload: any, callback: any) => {
         const client = await pool.connect();
         try {
             const data = ReadySchema.parse(payload); await client.query('BEGIN');
@@ -331,7 +314,7 @@ export const setupSockets = (io: Server) => {
         } catch(e:any) { await client.query('ROLLBACK'); callback({status:'error', message: e.message}); } finally { client.release(); }
     });
 
-    socket.on('next_match_step', async (payload, callback) => {
+    socket.on('next_match_step', async (payload: any, callback: any) => {
         const client = await pool.connect();
         try {
             const data = NextMatchSchema.parse(payload);
@@ -351,7 +334,8 @@ export const setupSockets = (io: Server) => {
 
             if ((matchRes.rowCount ?? 0) === 0) {
                 const phaseRes = await client.query(`SELECT match_type, MAX(match_order) as max_order FROM public.matches WHERE lobby_id=$1::uuid GROUP BY match_type ORDER BY max_order DESC LIMIT 1`, [data.lobbyId]);
-                if ((phaseRes.rowCount ?? 0) === 0) throw new Error("Nincsenek meccsek.");
+                if ((phaseRes.rowCount ?? 0) === 0) throw new Error("Nincsenek meccsek az adatbázisban.");
+                
                 const currentPhase = phaseRes.rows[0].match_type;
                 let nextOrder = parseInt(phaseRes.rows[0].max_order) + 1;
 
@@ -361,7 +345,7 @@ export const setupSockets = (io: Server) => {
                     const gC = tRes.rows.filter(t=>t.group_name==='C'); const gD = tRes.rows.filter(t=>t.group_name==='D');
                     const pairs = [[gA[0].id, gB[1].id], [gC[0].id, gD[1].id], [gB[0].id, gA[1].id], [gD[0].id, gC[1].id]];
                     for (const p of pairs) await client.query(`INSERT INTO public.matches (lobby_id, team1_id, team2_id, match_type, match_order) VALUES ($1::uuid,$2::uuid,$3::uuid,'QUARTER',$4::integer)`, [data.lobbyId, p[0], p[1], nextOrder++]);
-                    await client.query('COMMIT'); callback({ status: 'phase_changed', message: 'Kezdődik a negyeddöntő!' });
+                    await client.query('COMMIT'); callback({ status: 'phase_changed', message: 'TOVÁBB A RÁJÁTSZÁSRA' });
                     await broadcastLobbyState(io, data.lobbyId); return;
                 }
                 else if (currentPhase === 'QUARTER') {
@@ -369,14 +353,14 @@ export const setupSockets = (io: Server) => {
                     const w = qRes.rows.map(r=>r.winner_id);
                     await client.query(`INSERT INTO public.matches (lobby_id, team1_id, team2_id, match_type, match_order) VALUES ($1::uuid,$2::uuid,$3::uuid,'SEMI',$4::integer)`, [data.lobbyId, w[0], w[1], nextOrder++]);
                     await client.query(`INSERT INTO public.matches (lobby_id, team1_id, team2_id, match_type, match_order) VALUES ($1::uuid,$2::uuid,$3::uuid,'SEMI',$4::integer)`, [data.lobbyId, w[2], w[3], nextOrder++]);
-                    await client.query('COMMIT'); callback({ status: 'phase_changed', message: 'Kezdődik az elődöntő!' });
+                    await client.query('COMMIT'); callback({ status: 'phase_changed', message: 'TOVÁBB AZ ELŐDÖNTŐKRE' });
                     await broadcastLobbyState(io, data.lobbyId); return;
                 }
                 else if (currentPhase === 'SEMI') {
                     const sRes = await client.query(`SELECT winner_id FROM public.matches WHERE lobby_id=$1::uuid AND match_type='SEMI' ORDER BY match_order ASC`, [data.lobbyId]);
                     const w = sRes.rows.map(r=>r.winner_id);
                     await client.query(`INSERT INTO public.matches (lobby_id, team1_id, team2_id, match_type, match_order) VALUES ($1::uuid,$2::uuid,$3::uuid,'FINAL',$4::integer)`, [data.lobbyId, w[0], w[1], nextOrder++]);
-                    await client.query('COMMIT'); callback({ status: 'phase_changed', message: 'Kezdődik a nagydöntő!' });
+                    await client.query('COMMIT'); callback({ status: 'phase_changed', message: 'TOVÁBB A NAGYDÖNTŐRE' });
                     await broadcastLobbyState(io, data.lobbyId); return;
                 }
                 else if (currentPhase === 'FINAL') {
@@ -464,12 +448,22 @@ export const setupSockets = (io: Server) => {
                     callback({ status: 'finished' }); return;
                 }
             }
-            await executeMatchSimulation(client, matchRes.rows[0], io, data.lobbyId, true);
-            await client.query('COMMIT'); callback({ status: 'success' });
-        } catch (error: any) { await client.query('ROLLBACK'); callback({ status: 'error', message: error.message }); } finally { client.release(); }
+
+            const { isSeriesFinished, payload: simPayload } = await executeMatchSimulation(client, matchRes.rows[0], io, data.lobbyId, false);
+            simPayload.newState = await getLobbyStateData(client, data.lobbyId);
+            
+            await client.query('COMMIT'); 
+            
+            io.to(data.lobbyId).emit('match_simulated_event', simPayload);
+            callback({ status: 'success' });
+        } catch (error: any) { 
+            await client.query('ROLLBACK'); 
+            console.error('[next_match_step] Hiba:', error);
+            callback({ status: 'error', message: error.message }); 
+        } finally { client.release(); }
     });
 
-    socket.on('fast_forward_matches', async (payload, callback) => {
+    socket.on('fast_forward_matches', async (payload: any, callback: any) => {
         const client = await pool.connect();
         try {
             const data = FastForwardSchema.parse(payload);
@@ -494,10 +488,12 @@ export const setupSockets = (io: Server) => {
 
                 let currentMatch = matchRes.rows[0];
                 let isFinished = false;
+                let lastPayload: any = null;
                 
                 while (!isFinished) {
-                    const simRes = await executeMatchSimulation(client, currentMatch, io, data.lobbyId, false);
+                    const simRes = await executeMatchSimulation(client, currentMatch, io, data.lobbyId, true);
                     isFinished = simRes.isSeriesFinished;
+                    lastPayload = simRes.payload;
                     if (!isFinished) {
                         const updatedMatch = await client.query(`SELECT match_logs FROM public.matches WHERE id = $1::uuid`, [currentMatch.id]);
                         currentMatch.match_logs = updatedMatch.rows[0].match_logs;
@@ -505,8 +501,10 @@ export const setupSockets = (io: Server) => {
                 }
                 
                 await client.query('COMMIT');
-                const newState = await getLobbyStateData(client, data.lobbyId);
-                io.to(data.lobbyId).emit('fast_forward_complete', { message: `Teljes BO5 széria sikeresen lejátszva!`, newState: newState });
+                if (lastPayload) {
+                    lastPayload.newState = await getLobbyStateData(client, data.lobbyId);
+                    io.to(data.lobbyId).emit('match_simulated_event', lastPayload);
+                }
                 callback({ status: 'success' });
             } else {
                 let limit = 24;
@@ -539,11 +537,17 @@ export const setupSockets = (io: Server) => {
                 if ((matchRes.rowCount ?? 0) === 0) throw new Error("Nincs több szimulálható csoportmérkőzés.");
 
                 const toSimulate = matchRes.rows;
-                for (const match of toSimulate) { await executeMatchSimulation(client, match, io, data.lobbyId, false); }
+                let lastPayload: any = null;
+                for (const match of toSimulate) { 
+                    const res = await executeMatchSimulation(client, match, io, data.lobbyId, true); 
+                    lastPayload = res.payload;
+                }
                 await client.query('COMMIT');
                 
-                const newState = await getLobbyStateData(client, data.lobbyId);
-                io.to(data.lobbyId).emit('fast_forward_complete', { message: `${toSimulate.length} csoportmérkőzés sikeresen szimulálva.`, newState: newState });
+                if (lastPayload) {
+                    lastPayload.newState = await getLobbyStateData(client, data.lobbyId);
+                    io.to(data.lobbyId).emit('match_simulated_event', lastPayload);
+                }
                 callback({ status: 'success' });
             }
         } catch (error: any) { await client.query('ROLLBACK'); callback({ status: 'error', message: error.message }); } finally { client.release(); }

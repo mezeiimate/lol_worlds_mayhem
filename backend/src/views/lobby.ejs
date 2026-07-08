@@ -168,7 +168,7 @@
                         <div id="fastForwardGroup" class="flex gap-2 w-full mt-2">
                             <button id="ffGroupBtn" onclick="fastForward('group')" class="flex-1 bg-[#1e2328] hover:bg-[#2b3137] text-slate-300 text-xs font-bold tracking-widest py-2 border border-[#c8aa6e]/50">GYORSÍTÁS: CSOPORT</button>
                             <button id="ffAllBtn" onclick="fastForward('all')" class="flex-1 bg-[#1e2328] hover:bg-[#2b3137] text-slate-300 text-xs font-bold tracking-widest py-2 border border-[#c8aa6e]/50">GYORSÍTÁS: ÖSSZES</button>
-                            <button id="ffBo5Btn" onclick="fastForward('bo5')" class="hidden flex-1 bg-[#1e2328] hover:bg-[#2b3137] text-slate-300 text-xs font-bold tracking-widest py-2 border border-[#c8aa6e]/50">TELJES BO5</button>
+                            <button id="ffBo5Btn" onclick="fastForward('bo5')" class="hidden flex-1 bg-[#1e2328] hover:bg-[#2b3137] text-slate-300 text-xs font-bold tracking-widest py-2 border border-[#c8aa6e]/50">TELJES BO5 LEJÁTSZÁSA</button>
                         </div>
                     </div>
                 </div>
@@ -192,7 +192,7 @@
                     </div>
                 </div>
 
-                <div id="bracketArea" class="w-full mt-8 hidden flex flex-col gap-4">
+                <div id="bracketArea" class="w-full mt-8 hidden flex-col gap-4">
                     <h3 class="text-center text-gold-light text-lg esport-font tracking-widest border-b border-[#c8aa6e]/30 pb-2">Kieséses ágrajz</h3>
                     <div class="flex justify-between gap-2" id="bracketContainer"></div>
                 </div>
@@ -200,7 +200,7 @@
             </div>
 
             <div class="xl:col-span-1 bg-[#091428] hex-border rounded-sm p-5 shadow-xl h-fit flex flex-col" id="sidebarContainer">
-                <h2 id="sidebarTitle" class="text-lg font-bold mb-4 border-b border-[#c8aa6e]/30 pb-2 text-gold esport-font tracking-widest">Menedzserek</h2>
+                <h2 id="sidebarTitle" class="text-lg font-bold mb-4 border-b border-[#c8aa6e]/30 pb-2 text-gold esport-font tracking-widest">Felhasználók</h2>
                 <div id="sidebarContent" class="space-y-4 flex-1"></div>
             </div>
 
@@ -309,8 +309,8 @@
         function updateLobbyStateUI(data) {
             const cOrder = data.currentMatchOrder;
             const phase = data.currentPhase;
+            const hasPending = data.hasPendingMatches;
             
-            // Ha a lobbi elindult szimulálni, eltüntetjük a meghívó gombot
             if (data.status === 'SIMULATING' || data.status === 'FINISHED') {
                 const inviteBtn = document.getElementById('inviteFriendBtn');
                 if (inviteBtn && !inviteBtn.classList.contains('hidden')) {
@@ -319,28 +319,49 @@
                 }
             }
             
+            // Itt állítjuk be a gombok állapotát és feliratait, ha Host a felhasználó
             if (USER_ID === data.hostId && !isTournamentEnded && data.status === 'SIMULATING') {
                 document.getElementById('hostControls').classList.remove('hidden');
                 document.getElementById('hostControls').classList.add('flex');
-                document.getElementById('nextMatchBtn').classList.remove('hidden');
-                document.getElementById('nextMatchBtn').disabled = false;
-                document.getElementById('fastForwardGroup').classList.remove('hidden');
-                document.getElementById('fastForwardGroup').classList.add('flex');
-
+                
+                const nextMatchBtn = document.getElementById('nextMatchBtn');
+                const fastForwardGroup = document.getElementById('fastForwardGroup');
                 const btnAll = document.getElementById('ffAllBtn');
                 const btnGroup = document.getElementById('ffGroupBtn');
                 const btnBo5 = document.getElementById('ffBo5Btn');
-                
-                if (phase === 'GROUP') {
-                    btnAll.classList.remove('hidden');
-                    btnGroup.classList.remove('hidden'); 
-                    btnBo5.classList.add('hidden');
-                } else if (phase === 'QUARTER' || phase === 'SEMI' || phase === 'FINAL') {
-                    btnAll.classList.add('hidden');
-                    btnGroup.classList.add('hidden'); 
-                    btnBo5.classList.remove('hidden');
-                } else { 
-                    document.getElementById('fastForwardGroup').classList.add('hidden');
+
+                nextMatchBtn.classList.remove('hidden');
+                nextMatchBtn.disabled = false;
+                fastForwardGroup.classList.remove('hidden');
+                fastForwardGroup.classList.add('flex');
+
+                // Ha NINCS több PENDING meccs az aktuális fázisban, akkor a gomb a következő szakaszra ugrást jelzi
+                if (!hasPending) {
+                    fastForwardGroup.classList.add('hidden');
+                    fastForwardGroup.classList.remove('flex');
+
+                    if (phase === 'GROUP') {
+                        nextMatchBtn.innerText = "TOVÁBB A RÁJÁTSZÁSRA";
+                    } else if (phase === 'QUARTER') {
+                        nextMatchBtn.innerText = "TOVÁBB AZ ELŐDÖNTŐKRE";
+                    } else if (phase === 'SEMI') {
+                        nextMatchBtn.innerText = "TOVÁBB A NAGYDÖNTŐRE";
+                    } else if (phase === 'FINAL') {
+                        nextMatchBtn.innerText = "🏆 EREDMÉNYHIRDETÉS";
+                    }
+                } else {
+                    // Ha VAN PENDING meccs, akkor normál meccsléptetés vagy gyorsítás jön
+                    nextMatchBtn.innerText = "KÖVETKEZŐ MECCS";
+
+                    if (phase === 'GROUP') {
+                        btnAll.classList.remove('hidden');
+                        btnGroup.classList.remove('hidden'); 
+                        btnBo5.classList.add('hidden');
+                    } else if (phase === 'QUARTER' || phase === 'SEMI' || phase === 'FINAL') {
+                        btnAll.classList.add('hidden');
+                        btnGroup.classList.add('hidden'); 
+                        btnBo5.classList.remove('hidden');
+                    }
                 }
             }
 
@@ -610,6 +631,50 @@
             });
         }
 
+        function renderBracket(matches) {
+            const area = document.getElementById('bracketArea');
+            const container = document.getElementById('bracketContainer');
+            
+            area.classList.remove('hidden');
+            area.classList.add('flex');
+            
+            const quarters = matches.filter(m => m.match_type === 'QUARTER');
+            const semis = matches.filter(m => m.match_type === 'SEMI'); 
+            const final = matches.filter(m => m.match_type === 'FINAL');
+            
+            const getMatchBox = (m, isFinal = false) => {
+                if (!m) {
+                    return `
+                        <div class="hex-bg border border-[#c8aa6e]/20 p-${isFinal ? '4' : '2'} rounded-sm text-center text-${isFinal ? 'sm' : '[0.65rem]'} font-bold flex flex-col justify-center shadow-md">
+                            <span class="text-slate-600">TBD</span>
+                            <span class="text-[0.55rem] text-slate-700 italic font-normal my-0.5">vs</span>
+                            <span class="text-slate-600">TBD</span>
+                        </div>`;
+                }
+                const t1 = m.team1_name || 'TBD';
+                const t2 = m.team2_name || 'TBD';
+                const c1 = m.winner_name === t1 ? 'text-emerald-400' : (m.winner_name ? 'text-slate-500' : 'text-slate-300');
+                const c2 = m.winner_name === t2 ? 'text-emerald-400' : (m.winner_name ? 'text-slate-500' : 'text-slate-300');
+                const borderColor = isFinal ? 'border-gold shadow-[0_0_15px_rgba(200,170,110,0.2)]' : (m.match_type === 'SEMI' ? 'border-blue-500/50' : 'hex-border');
+                return `
+                    <div class="hex-bg border ${borderColor} p-${isFinal ? '4' : '2'} rounded-sm text-center text-${isFinal ? 'sm' : '[0.65rem]'} font-bold flex flex-col justify-center shadow-md">
+                        <span class="${c1} truncate">${t1}</span>
+                        <span class="text-[0.55rem] text-slate-500 italic font-normal my-0.5">vs</span>
+                        <span class="${c2} truncate">${t2}</span>
+                    </div>`;
+            };
+
+            let html = `<div class="flex-1 space-y-3 flex flex-col justify-around">`;
+            for(let i=0; i<4; i++) html += getMatchBox(quarters[i]);
+            html += `</div><div class="flex flex-col justify-around gap-4 flex-1">`;
+            for(let i=0; i<2; i++) html += getMatchBox(semis[i]);
+            html += `</div><div class="flex flex-col justify-center flex-1">`;
+            html += getMatchBox(final[0], true);
+            html += `</div>`;
+            
+            container.innerHTML = html;
+        }
+
         socket.on('match_simulated_event', (data) => {
             if (isTournamentEnded) return;
             document.getElementById('matchStatusText').classList.add('hidden');
@@ -652,12 +717,16 @@
                 ['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT'].forEach(r => document.getElementById(`node-${r}-2`).classList.add('hidden'));
             }
 
+            // Ha gyorsításról van szó, 0 lesz a delay, így azonnal kirajzolja a teljes felületet és gombokat
             let delay = 0;
+            let stepDelay = data.isFastForward ? 0 : 1500;
+
             data.actionLogs.forEach((logObj, index) => {
                 setTimeout(() => {
                     if (isTournamentEnded) return;
                     const p = document.createElement('p');
-                    p.className = 'opacity-0 transition-opacity duration-500 font-medium tracking-wide flex gap-2 items-start';
+                    p.className = 'transition-opacity duration-500 font-medium tracking-wide flex gap-2 items-start';
+                    if (!data.isFastForward) p.classList.add('opacity-0');
                     
                     let colorClass = 'text-[#c8aa6e]';
                     if (isMyTeamInvolved && logObj.favoredTeamId) { colorClass = (logObj.favoredTeamId === myTeamId) ? 'text-emerald-400' : 'text-red-400'; } 
@@ -665,7 +734,9 @@
 
                     p.classList.add(colorClass); 
                     p.innerHTML = `<span class="mt-1 flex-shrink-0"><svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 12l10 10 10-10L12 2zm0 3.8l6.2 6.2-6.2 6.2-6.2-6.2L12 5.8z"/></svg></span> <span>${logObj.text}</span>`;
-                    logEl.appendChild(p); setTimeout(() => p.classList.remove('opacity-0'), 50);
+                    logEl.appendChild(p); 
+                    
+                    if (!data.isFastForward) setTimeout(() => p.classList.remove('opacity-0'), 50);
 
                     if (index === data.actionLogs.length - 1) {
                         setTimeout(() => {
@@ -679,28 +750,14 @@
                                 document.getElementById('winnerTextLabel').innerText = "🏆 GYŐZTES:";
                                 if (data.team1 === data.winner) { t1El.classList.add('text-emerald-400'); t2El.classList.add('text-slate-600'); } 
                                 else { t1El.classList.add('text-slate-600'); t2El.classList.add('text-emerald-400'); }
-                                
-                                if (data.matchPhase === 'FINAL' && USER_ID === CURRENT_HOST_ID) {
-                                    document.getElementById('nextMatchBtn').innerText = "🏆 EREDMÉNYHIRDETÉS";
-                                }
                             } else { document.getElementById('winnerTextLabel').innerText = "Game győztes:"; }
 
                             if (data.newState) { updateLobbyStateUI(data.newState); }
-                        }, 1000);
+                        }, data.isFastForward ? 0 : 1000);
                     }
                 }, delay);
-                delay += 1500; 
+                delay += stepDelay; 
             });
-        });
-
-        socket.on('fast_forward_complete', (data) => {
-            if (isTournamentEnded) return;
-            const logEl = document.getElementById('playByPlayLog');
-            logEl.innerHTML = `<p class="text-emerald-400 font-bold text-lg text-center py-4">⏳ ${data.message}</p>`;
-            logEl.classList.remove('hidden');
-            document.getElementById('matchStatusText').classList.add('hidden'); document.getElementById('matchTeamsDisplay').classList.add('hidden'); document.getElementById('matchWinnerDisplay').classList.add('hidden'); document.getElementById('bo5ScoreDisplay').classList.add('hidden');
-            
-            if (data.newState) { updateLobbyStateUI(data.newState); }
         });
 
         socket.on('tournament_winner', (data) => {
@@ -738,6 +795,10 @@
             document.getElementById('finalGroupTablesArea').classList.remove('hidden');
             document.getElementById('finalGroupTablesArea').classList.add('flex');
             renderGroupTables(data.newState.players, 'finalGroupTablesContainer', 'final');
+            
+            if (data.newState && data.newState.bracket) {
+                renderBracket(data.newState.bracket);
+            }
         });
 
         function transitionToSimulation() {
@@ -769,6 +830,9 @@
                     
                     ['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT'].forEach(r => document.getElementById(`node-${r}-2`).classList.add('hidden'));
                     document.getElementById('mapTitle').innerText = "SAJÁT FELÁLLÁS";
+                } else if (res.status === 'error') {
+                    alert('Hiba történt a szerveren: ' + res.message);
+                    btn.classList.remove('hidden'); btn.disabled = false;
                 }
             });
         }
