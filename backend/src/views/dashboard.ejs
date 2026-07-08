@@ -34,9 +34,21 @@
                         <span class="text-[0.65rem] uppercase tracking-widest text-slate-300 font-bold mt-1">Trófea</span>
                     </div>
                 </div>
-                <div class="flex flex-col gap-2">
-                    <button onclick="window.location.href='/profile'" class="bg-[#1e2328] hover:bg-[#2b3137] border border-[#c8aa6e]/50 text-[#c8aa6e] font-bold uppercase tracking-widest text-[0.7rem] px-4 py-1.5 rounded-sm transition-colors text-center">Beállítások</button>
-                    <button onclick="logout()" class="text-red-400 hover:text-red-300 font-bold uppercase tracking-widest text-[0.7rem] transition-colors text-right">Kilépés</button>
+                
+                <div class="flex items-center gap-3">
+                    <button onclick="window.location.href='/profile'" class="relative group overflow-hidden bg-[#010a13] border border-[#c8aa6e]/50 px-5 py-2.5 rounded-sm transition-all hover:border-[#f0e6d2] hover:shadow-[0_0_15px_rgba(200,170,110,0.3)]">
+                        <span class="relative z-10 text-[#c8aa6e] group-hover:text-[#f0e6d2] font-bold uppercase tracking-widest text-[0.7rem] transition-colors flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            Beállítások
+                        </span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-[#c8aa6e]/0 via-[#c8aa6e]/10 to-[#c8aa6e]/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+                    </button>
+                    <button onclick="logout()" class="relative group overflow-hidden bg-red-950/30 border border-red-500/30 px-5 py-2.5 rounded-sm transition-all hover:bg-red-900/50 hover:border-red-500 hover:shadow-[0_0_15px_rgba(239,68,68,0.3)]">
+                        <span class="relative z-10 text-red-400 group-hover:text-red-300 font-bold uppercase tracking-widest text-[0.7rem] transition-colors flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                            Kilépés
+                        </span>
+                    </button>
                 </div>
             </div>
             <div class="absolute right-0 top-0 w-64 h-full bg-gradient-to-l from-[#c8aa6e]/10 to-transparent pointer-events-none"></div>
@@ -117,34 +129,43 @@
                 </div>
 
                 <div class="bg-[#091428] rounded-sm border border-[#c8aa6e]/30 p-6 shadow-xl">
-                    <h2 class="text-lg font-bold text-[#c8aa6e] uppercase tracking-widest border-b border-[#c8aa6e]/30 pb-2 mb-6">Előző tornáim</h2>
+                    <div class="flex justify-between items-center border-b border-[#c8aa6e]/30 pb-2 mb-4 cursor-pointer" onclick="toggleHistory()">
+                        <h2 class="text-lg font-bold text-[#c8aa6e] uppercase tracking-widest">Előző tornáim (Utolsó 10)</h2>
+                        <span id="historyToggleIcon" class="text-[#c8aa6e] transition-transform duration-300">▼</span>
+                    </div>
                     
-                    <% if (matchHistory.length === 0) { %>
-                        <div class="text-center py-8 border border-dashed border-slate-700">
-                            <p class="text-slate-500 text-sm tracking-widest uppercase font-bold">Még nem fejeztél be egyetlen tornát sem.</p>
-                        </div>
-                    <% } else { %>
-                        <div class="space-y-4">
-                            <% matchHistory.forEach(match => { %>
-                                <div class="bg-[#1e2328] border <%= match.final_position === 1 ? 'border-yellow-500 shadow-[0_0_15px_rgba(234,179,8,0.2)]' : 'border-[#c8aa6e]/20' %> p-4 rounded-sm flex flex-col md:flex-row items-center justify-between gap-4 transition-all hover:bg-[#2b3137]">
-                                    <div class="flex-1 min-w-0 text-center md:text-left">
-                                        <div class="text-xs text-slate-400 font-mono mb-1"><%= new Date(match.played_at).toLocaleDateString('hu-HU') %></div>
-                                        <div class="font-bold text-white text-lg tracking-wide truncate"><%= match.lobby_name %></div>
-                                        <div class="text-sm font-bold tracking-widest mt-1 uppercase <%= match.final_position === 1 ? 'text-yellow-400' : 'text-amber-600' %>">
-                                            <%= match.final_position === 1 ? '🏆 Bajnok' : `Helyezés: ${match.final_position}.` %>
+                    <div id="historyContainer" class="hidden">
+                        <% 
+                        // A filterrel eltüntetjük a null/undefined adatokat, majd a slice(0, 10)-zel csak az első 10-et kérjük le.
+                        const validMatches = matchHistory ? matchHistory.slice(0, 10) : []; 
+                        %>
+                        <% if (validMatches.length === 0) { %>
+                            <div class="text-center py-8 border border-dashed border-slate-700">
+                                <p class="text-slate-500 text-sm tracking-widest uppercase font-bold">Még nem fejeztél be egyetlen tornát sem.</p>
+                            </div>
+                        <% } else { %>
+                            <div class="space-y-4">
+                                <% validMatches.forEach(match => { %>
+                                    <div class="bg-[#1e2328] border <%= match.final_position === 1 ? 'border-yellow-500 shadow-[0_0_15px_rgba(234,179,8,0.2)]' : 'border-[#c8aa6e]/20' %> p-4 rounded-sm flex flex-col md:flex-row items-center justify-between gap-4 transition-all hover:bg-[#2b3137]">
+                                        <div class="flex-1 min-w-0 text-center md:text-left">
+                                            <div class="text-xs text-slate-400 font-mono mb-1"><%= new Date(match.played_at).toLocaleDateString('hu-HU') %></div>
+                                            <div class="font-bold text-white text-lg tracking-wide truncate"><%= match.lobby_name %></div>
+                                            <div class="text-sm font-bold tracking-widest mt-1 uppercase <%= match.final_position === 1 ? 'text-yellow-400' : 'text-amber-600' %>">
+                                                <%= match.final_position === 1 ? '🏆 Bajnok' : `Helyezés: ${match.final_position}.` %>
+                                            </div>
+                                        </div>
+                                        <div class="flex gap-2 bg-[#010a13] p-2 rounded-sm border border-[#c8aa6e]/20">
+                                            <img src="/images/players/<%= match.roster_summary.top.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg'; this.classList.remove('border', 'border-[#c8aa6e]/50');" class="w-10 h-10 rounded-sm object-cover object-top border border-[#c8aa6e]/50" title="<%= match.roster_summary.top %> (Top)">
+                                            <img src="/images/players/<%= match.roster_summary.jng.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg'; this.classList.remove('border', 'border-[#c8aa6e]/50');" class="w-10 h-10 rounded-sm object-cover object-top border border-[#c8aa6e]/50" title="<%= match.roster_summary.jng %> (Jungle)">
+                                            <img src="/images/players/<%= match.roster_summary.mid.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg'; this.classList.remove('border', 'border-[#c8aa6e]/50');" class="w-10 h-10 rounded-sm object-cover object-top border border-[#c8aa6e]/50" title="<%= match.roster_summary.mid %> (Mid)">
+                                            <img src="/images/players/<%= match.roster_summary.adc.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg'; this.classList.remove('border', 'border-[#c8aa6e]/50');" class="w-10 h-10 rounded-sm object-cover object-top border border-[#c8aa6e]/50" title="<%= match.roster_summary.adc %> (ADC)">
+                                            <img src="/images/players/<%= match.roster_summary.sup.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg'; this.classList.remove('border', 'border-[#c8aa6e]/50');" class="w-10 h-10 rounded-sm object-cover object-top border border-[#c8aa6e]/50" title="<%= match.roster_summary.sup %> (Support)">
                                         </div>
                                     </div>
-                                    <div class="flex gap-2 bg-[#010a13] p-2 rounded-sm border border-[#c8aa6e]/20">
-                                        <img src="/images/players/<%= match.roster_summary.top.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg'; this.classList.remove('border', 'border-[#c8aa6e]/50');" class="w-10 h-10 rounded-sm object-cover object-top border border-[#c8aa6e]/50" title="<%= match.roster_summary.top %> (Top)">
-                                        <img src="/images/players/<%= match.roster_summary.jng.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg'; this.classList.remove('border', 'border-[#c8aa6e]/50');" class="w-10 h-10 rounded-sm object-cover object-top border border-[#c8aa6e]/50" title="<%= match.roster_summary.jng %> (Jungle)">
-                                        <img src="/images/players/<%= match.roster_summary.mid.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg'; this.classList.remove('border', 'border-[#c8aa6e]/50');" class="w-10 h-10 rounded-sm object-cover object-top border border-[#c8aa6e]/50" title="<%= match.roster_summary.mid %> (Mid)">
-                                        <img src="/images/players/<%= match.roster_summary.adc.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg'; this.classList.remove('border', 'border-[#c8aa6e]/50');" class="w-10 h-10 rounded-sm object-cover object-top border border-[#c8aa6e]/50" title="<%= match.roster_summary.adc %> (ADC)">
-                                        <img src="/images/players/<%= match.roster_summary.sup.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg'; this.classList.remove('border', 'border-[#c8aa6e]/50');" class="w-10 h-10 rounded-sm object-cover object-top border border-[#c8aa6e]/50" title="<%= match.roster_summary.sup %> (Support)">
-                                    </div>
-                                </div>
-                            <% }) %>
-                        </div>
-                    <% } %>
+                                <% }) %>
+                            </div>
+                        <% } %>
+                    </div>
                 </div>
             </div>
 
@@ -152,7 +173,10 @@
                 <div class="bg-[#091428] rounded-sm border border-[#c8aa6e]/30 p-5 shadow-xl">
                     <h2 class="text-lg font-bold text-[#c8aa6e] uppercase tracking-widest border-b border-[#c8aa6e]/30 pb-2 mb-4">Globális ranglista</h2>
                     <div class="space-y-2">
-                        <% leaderboard.forEach((user, index) => { 
+                        <% 
+                        // Itt is szűrjük azokat a felhasználókat, akiknek nincs értelmes neve (mert pl. törölték a fiókot), és max 10-et mutatunk.
+                        const validLeaderboard = leaderboard.filter(u => u && u.username).slice(0, 10);
+                        validLeaderboard.forEach((user, index) => { 
                             let rankColor = 'text-slate-400';
                             let bgClass = 'bg-[#1e2328] border-[#c8aa6e]/20';
                             if(index === 0) { rankColor = 'text-yellow-400 font-black'; bgClass = 'bg-gradient-to-r from-amber-900/40 to-transparent border-amber-500'; }
@@ -181,6 +205,19 @@
         socket.emit('identify', { userId: USER_ID });
 
         socket.on('friend_update', () => { refreshFriendsUI(); });
+
+        // Történet lenyíló fül vezérlése
+        function toggleHistory() {
+            const container = document.getElementById('historyContainer');
+            const icon = document.getElementById('historyToggleIcon');
+            if (container.classList.contains('hidden')) {
+                container.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                container.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
 
         async function refreshFriendsUI() {
             try {
@@ -307,7 +344,7 @@
                 if (data.length === 0) { resultsContainer.innerHTML = '<p class="text-xs text-slate-500 italic">Nincs találat.</p>'; return; }
                 data.forEach(user => {
                     resultsContainer.innerHTML += `
-                        <div class="bg-[#010a13] border border-[#c8aa6e]/30 p-2 rounded-sm flex justify-between items-center">
+                        <div id="search-result-${user.id}" class="bg-[#010a13] border border-[#c8aa6e]/30 p-2 rounded-sm flex justify-between items-center transition-all duration-300">
                             <div class="flex flex-col">
                                 <span class="text-sm font-bold text-white">${user.username}</span>
                                 <span class="text-[0.65rem] text-amber-500 font-bold">🏆 ${user.trophies_count}</span>
@@ -318,7 +355,6 @@
             } catch (error) { alert('Hiba történt a keresés során.'); }
         }
 
-        // Dedikált, visszajelzést adó barátjelölő funkció
         async function sendFriendRequest(targetId) {
             const btn = document.getElementById(`addBtn_${targetId}`);
             if(btn) { btn.innerText = 'Küldés...'; btn.disabled = true; }
@@ -333,11 +369,14 @@
                     alert(data.error || 'Hiba történt.');
                     if(btn) { btn.innerText = 'Jelölés'; btn.disabled = false; }
                 } else {
-                    if(btn) {
-                        btn.innerText = 'Elküldve ✓';
-                        btn.className = 'bg-emerald-600/20 border border-emerald-500/50 text-emerald-400 text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-sm cursor-not-allowed';
-                    }
                     showToast('Jelölés elküldve!', 'A barátkérelem sikeresen elment.', 'success');
+                    
+                    // Amint sikeres, elhalványítjuk és kitöröljük a listából, hogy ne zavarja a felhasználót
+                    const resultCard = document.getElementById(`search-result-${targetId}`);
+                    if (resultCard) {
+                        resultCard.style.opacity = '0';
+                        setTimeout(() => resultCard.remove(), 300);
+                    }
                 }
             } catch (error) { 
                 alert('Hálózati hiba.');

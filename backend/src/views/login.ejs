@@ -38,7 +38,12 @@
                         <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest">Jelszó</label>
                         <a href="#" onclick="showSection('forgotSection')" class="text-[0.65rem] text-slate-400 hover:text-[#c8aa6e] uppercase tracking-widest font-bold transition-colors">Elfelejtett jelszó?</a>
                     </div>
-                    <input type="password" id="loginPassword" required class="w-full bg-[#010a13] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#c8aa6e] transition-colors">
+                    <div class="relative">
+                        <input type="password" id="loginPassword" required class="w-full bg-[#010a13] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 pr-12 text-white focus:outline-none focus:border-[#c8aa6e] transition-colors">
+                        <button type="button" onclick="toggleVisibility('loginPassword', 'eyeLogin')" class="absolute inset-y-0 right-0 px-4 flex items-center text-slate-400 hover:text-[#c8aa6e] focus:outline-none">
+                            <svg id="eyeLogin" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                        </button>
+                    </div>
                 </div>
                 <button type="submit" id="btnLogin" class="w-full bg-[#c8aa6e] hover:bg-[#f0e6d2] text-[#010a13] font-black uppercase tracking-widest text-lg px-6 py-3.5 rounded-sm transition-all shadow-lg hover:shadow-[0_0_15px_rgba(200,170,110,0.4)] mt-4">Belépés az arénába</button>
             </form>
@@ -55,7 +60,7 @@
             <form id="registerForm" class="space-y-4">
                 <div>
                     <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">Felhasználónév</label>
-                    <input type="text" id="regUsername" required minlength="3" class="w-full bg-[#010a13] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#c8aa6e] transition-colors" placeholder="Kívánt neved">
+                    <input type="text" id="regUsername" required minlength="3" class="w-full bg-[#010a13] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#c8aa6e] transition-colors" placeholder="Válassz egy nevet">
                 </div>
                 <div>
                     <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">E-mail cím</label>
@@ -63,13 +68,23 @@
                 </div>
                 <div>
                     <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">Jelszó</label>
-                    <input type="password" id="regPassword" required minlength="6" class="w-full bg-[#010a13] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#c8aa6e] transition-colors">
+                    <div class="relative">
+                        <input type="password" id="regPassword" required minlength="6" class="w-full bg-[#010a13] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 pr-12 text-white focus:outline-none focus:border-[#c8aa6e] transition-colors">
+                        <button type="button" onclick="toggleVisibility('regPassword', 'eyeReg1')" class="absolute inset-y-0 right-0 px-4 flex items-center text-slate-400 hover:text-[#c8aa6e] focus:outline-none">
+                            <svg id="eyeReg1" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                        </button>
+                    </div>
                 </div>
                 <div>
                     <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">Jelszó megerősítése</label>
-                    <input type="password" id="regConfirmPassword" required minlength="6" class="w-full bg-[#010a13] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#c8aa6e] transition-colors">
+                    <div class="relative">
+                        <input type="password" id="regConfirmPassword" required minlength="6" class="w-full bg-[#010a13] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 pr-12 text-white focus:outline-none focus:border-[#c8aa6e] transition-colors">
+                        <button type="button" onclick="toggleVisibility('regConfirmPassword', 'eyeReg2')" class="absolute inset-y-0 right-0 px-4 flex items-center text-slate-400 hover:text-[#c8aa6e] focus:outline-none">
+                            <svg id="eyeReg2" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                        </button>
+                    </div>
                 </div>
-                <button type="submit" id="btnRegister" class="w-full bg-[#c8aa6e] hover:bg-[#f0e6d2] text-[#010a13] font-black uppercase tracking-widest text-lg px-6 py-3.5 rounded-sm transition-all shadow-lg hover:shadow-[0_0_15px_rgba(200,170,110,0.4)] mt-4">Fiók létrehozása</button>
+                <button type="submit" id="btnRegister" class="w-full bg-[#c8aa6e] hover:bg-[#f0e6d2] text-[#010a13] font-black uppercase tracking-widest text-lg px-6 py-3.5 rounded-sm transition-all shadow-lg mt-4">Fiók létrehozása</button>
             </form>
 
             <p class="text-center text-slate-400 text-sm mt-6">Már van fiókod? <a href="#" onclick="showSection('loginSection')" class="text-[#c8aa6e] hover:text-[#f0e6d2] font-bold transition-colors">Belépés</a></p>
@@ -78,7 +93,7 @@
         <div id="forgotSection" class="hidden">
             <div class="text-center mb-8">
                 <h1 class="text-3xl font-black text-[#c8aa6e] tracking-wider esport-font">Elfelejtett jelszó</h1>
-                <p class="text-slate-400 mt-2 text-sm">Add meg az e-mail címed, és küldünk egy linket a jelszavad visszaállításához.</p>
+                <p class="text-slate-400 mt-2 text-sm">Küldünk egy linket a jelszavad visszaállításához.</p>
             </div>
 
             <form id="forgotForm" class="space-y-5">
@@ -86,7 +101,7 @@
                     <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">E-mail cím</label>
                     <input type="email" id="forgotEmail" required class="w-full bg-[#010a13] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#c8aa6e] transition-colors">
                 </div>
-                <button type="submit" id="btnForgot" class="w-full bg-[#c8aa6e] hover:bg-[#f0e6d2] text-[#010a13] font-black uppercase tracking-widest text-lg px-6 py-3.5 rounded-sm transition-all shadow-lg hover:shadow-[0_0_15px_rgba(200,170,110,0.4)] mt-4">Link küldése</button>
+                <button type="submit" id="btnForgot" class="w-full bg-[#c8aa6e] hover:bg-[#f0e6d2] text-[#010a13] font-black uppercase tracking-widest text-lg px-6 py-3.5 rounded-sm transition-all shadow-lg mt-4">Link küldése</button>
             </form>
 
             <p class="text-center text-slate-400 text-sm mt-6"><a href="#" onclick="showSection('loginSection')" class="text-slate-500 hover:text-[#f0e6d2] font-bold transition-colors">← Vissza a belépéshez</a></p>
@@ -95,16 +110,21 @@
         <div id="resetSection" class="hidden">
             <div class="text-center mb-8">
                 <h1 class="text-3xl font-black text-[#c8aa6e] tracking-wider esport-font">Új jelszó megadása</h1>
-                <p class="text-slate-400 mt-2 text-sm">Állítsd be a fiókod új jelszavát.</p>
+                <p class="text-slate-400 mt-2 text-sm">Állítsd be az új jelszavadat.</p>
             </div>
 
             <form id="resetForm" class="space-y-5">
                 <input type="hidden" id="resetTokenInput">
                 <div>
                     <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">Új jelszó</label>
-                    <input type="password" id="resetNewPassword" required minlength="6" class="w-full bg-[#010a13] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#c8aa6e] transition-colors">
+                    <div class="relative">
+                        <input type="password" id="resetNewPassword" required minlength="6" class="w-full bg-[#010a13] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 pr-12 text-white focus:outline-none focus:border-[#c8aa6e] transition-colors">
+                        <button type="button" onclick="toggleVisibility('resetNewPassword', 'eyeReset')" class="absolute inset-y-0 right-0 px-4 flex items-center text-slate-400 hover:text-[#c8aa6e] focus:outline-none">
+                            <svg id="eyeReset" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                        </button>
+                    </div>
                 </div>
-                <button type="submit" id="btnReset" class="w-full bg-[#c8aa6e] hover:bg-[#f0e6d2] text-[#010a13] font-black uppercase tracking-widest text-lg px-6 py-3.5 rounded-sm transition-all shadow-lg hover:shadow-[0_0_15px_rgba(200,170,110,0.4)] mt-4">Jelszó frissítése</button>
+                <button type="submit" id="btnReset" class="w-full bg-[#c8aa6e] hover:bg-[#f0e6d2] text-[#010a13] font-black uppercase tracking-widest text-lg px-6 py-3.5 rounded-sm transition-all shadow-lg mt-4">Jelszó frissítése</button>
             </form>
         </div>
 
@@ -116,11 +136,8 @@
         function showAlert(msg, isError = false) {
             alertBox.innerHTML = msg;
             alertBox.classList.remove('hidden', 'bg-red-950/40', 'border-red-500/50', 'text-red-400', 'bg-emerald-950/40', 'border-emerald-500/50', 'text-emerald-400');
-            if (isError) {
-                alertBox.classList.add('bg-red-950/40', 'border-red-500/50', 'text-red-400');
-            } else {
-                alertBox.classList.add('bg-emerald-950/40', 'border-emerald-500/50', 'text-emerald-400');
-            }
+            if (isError) { alertBox.classList.add('bg-red-950/40', 'border-red-500/50', 'text-red-400'); } 
+            else { alertBox.classList.add('bg-emerald-950/40', 'border-emerald-500/50', 'text-emerald-400'); }
         }
 
         function showSection(sectionId) {
@@ -129,8 +146,19 @@
             document.getElementById('forgotSection').classList.add('hidden');
             document.getElementById('resetSection').classList.add('hidden');
             alertBox.classList.add('hidden');
-            
             document.getElementById(sectionId).classList.remove('hidden');
+        }
+
+        function toggleVisibility(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />`;
+            } else {
+                input.type = 'password';
+                icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />`;
+            }
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -144,7 +172,7 @@
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const btn = document.getElementById('btnLogin'); btn.disabled = true; btn.innerText = 'Betöltés...';
+            const btn = e.submitter; btn.disabled = true; btn.innerText = 'Csatlakozás...';
             try {
                 const res = await fetch('/api/auth/login', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -153,58 +181,53 @@
                 const data = await res.json();
                 if (!res.ok) { showAlert(data.message, true); btn.disabled = false; btn.innerText = 'Belépés az arénába'; } 
                 else { window.location.href = '/dashboard'; }
-            } catch(err) { showAlert('Hálózati hiba történt.', true); btn.disabled = false; btn.innerText = 'Belépés az arénába'; }
+            } catch(err) { showAlert('Szerver hiba történt.', true); btn.disabled = false; btn.innerText = 'Belépés az arénába'; }
         });
 
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const password = document.getElementById('regPassword').value;
-            const confirmPassword = document.getElementById('regConfirmPassword').value;
-            
-            if (password !== confirmPassword) {
-                return showAlert('A megadott jelszavak nem egyeznek!', true);
-            }
+            const p1 = document.getElementById('regPassword').value;
+            const p2 = document.getElementById('regConfirmPassword').value;
+            if (p1 !== p2) return showAlert('A jelszavak nem egyeznek!', true);
 
-            const btn = document.getElementById('btnRegister'); btn.disabled = true; btn.innerText = 'Betöltés...';
+            const btn = e.submitter; btn.disabled = true; btn.innerText = 'Létrehozás...';
             try {
                 const res = await fetch('/api/auth/register', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         username: document.getElementById('regUsername').value,
                         email: document.getElementById('regEmail').value,
-                        password: password,
-                        confirmPassword: confirmPassword
+                        password: p1,
+                        confirmPassword: p2
                     })
                 });
                 const data = await res.json();
                 if (!res.ok) { showAlert(data.message, true); btn.disabled = false; btn.innerText = 'Fiók létrehozása'; } 
                 else { window.location.href = '/dashboard'; }
-            } catch(err) { showAlert('Hálózati hiba történt.', true); btn.disabled = false; btn.innerText = 'Fiók létrehozása'; }
+            } catch(err) { showAlert('Szerver hiba történt.', true); btn.disabled = false; btn.innerText = 'Fiók létrehozása'; }
         });
 
         document.getElementById('forgotForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const btn = document.getElementById('btnForgot'); btn.disabled = true; btn.innerText = 'Küldés...';
+            const btn = e.submitter; btn.disabled = true; btn.innerText = 'Küldés...';
             try {
                 const res = await fetch('/api/auth/forgot-password', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: document.getElementById('forgotEmail').value })
                 });
                 const data = await res.json();
-                if (!res.ok) { 
-                    showAlert(data.message, true); 
-                    btn.disabled = false; btn.innerText = 'Link küldése';
-                } else { 
-                    showAlert(data.message, false);
-                    document.getElementById('forgotForm').reset();
+                showAlert(data.message, !res.ok);
+                if (res.ok) {
+                    setTimeout(() => showSection('loginSection'), 3000);
+                } else {
                     btn.disabled = false; btn.innerText = 'Link küldése';
                 }
-            } catch(err) { showAlert('Hálózati hiba történt.', true); btn.disabled = false; btn.innerText = 'Link küldése'; }
+            } catch(err) { showAlert('Hálózati hiba.', true); btn.disabled = false; btn.innerText = 'Link küldése'; }
         });
 
         document.getElementById('resetForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const btn = document.getElementById('btnReset'); btn.disabled = true; btn.innerText = 'Frissítés...';
+            const btn = e.submitter; btn.disabled = true; btn.innerText = 'Frissítés...';
             try {
                 const res = await fetch('/api/auth/reset-password', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -214,14 +237,10 @@
                     })
                 });
                 const data = await res.json();
-                if (!res.ok) { 
-                    showAlert(data.message, true); 
-                    btn.disabled = false; btn.innerText = 'Jelszó frissítése';
-                } else { 
-                    showAlert(data.message, false);
-                    setTimeout(() => window.location.href = '/login', 2500);
-                }
-            } catch(err) { showAlert('Hálózati hiba történt.', true); btn.disabled = false; btn.innerText = 'Jelszó frissítése'; }
+                showAlert(data.message, !res.ok);
+                if (res.ok) { setTimeout(() => window.location.href = '/login', 2000); } 
+                else { btn.disabled = false; btn.innerText = 'Jelszó frissítése'; }
+            } catch(err) { showAlert('Hiba történt.', true); btn.disabled = false; btn.innerText = 'Jelszó frissítése'; }
         });
     </script>
 </body>
