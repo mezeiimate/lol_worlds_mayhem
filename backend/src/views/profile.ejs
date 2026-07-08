@@ -21,7 +21,7 @@
                 <button onclick="window.location.href='/dashboard'" class="bg-[#1e2328] hover:bg-[#2b3137] border border-[#c8aa6e]/50 px-4 py-2 rounded-sm text-sm font-bold text-white transition-colors">← Vissza</button>
                 <div>
                     <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-wider esport-font">Fiók beállításai</h1>
-                    <p class="text-slate-400 mt-1 uppercase tracking-widest text-xs font-bold">Profil kezelése</p>
+                    <p class="text-slate-400 mt-1 uppercase tracking-widest text-xs font-bold">Felhasználói profil kezelése</p>
                 </div>
             </div>
             <div class="absolute right-0 top-0 w-64 h-full bg-gradient-to-l from-[#c8aa6e]/10 to-transparent pointer-events-none"></div>
@@ -32,7 +32,7 @@
         <main class="grid grid-cols-1 md:grid-cols-2 gap-8">
             
             <div class="bg-[#091428] rounded-sm hex-border p-6 shadow-xl h-fit">
-                <h2 class="text-lg font-bold text-[#c8aa6e] uppercase tracking-widest border-b border-[#c8aa6e]/30 pb-2 mb-6">Menedzser adatok</h2>
+                <h2 class="text-lg font-bold text-[#c8aa6e] uppercase tracking-widest border-b border-[#c8aa6e]/30 pb-2 mb-6">Felhasználó adatok</h2>
                 
                 <div class="mb-6">
                     <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">E-mail cím (Nem módosítható)</label>
@@ -41,7 +41,7 @@
 
                 <form id="usernameForm" class="space-y-4">
                     <div>
-                        <label class="block text-xs font-bold text-[#c8aa6e] uppercase tracking-widest mb-2">Menedzser név</label>
+                        <label class="block text-xs font-bold text-[#c8aa6e] uppercase tracking-widest mb-2">Felhasználónév</label>
                         <input type="text" id="newUsername" value="<%= username %>" required minlength="3" class="w-full bg-[#1e2328] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#f0e6d2] transition-colors">
                     </div>
                     <button type="submit" id="btnUsername" class="bg-[#c8aa6e] hover:bg-[#f0e6d2] text-[#010a13] font-bold uppercase tracking-widest text-sm px-6 py-2.5 rounded-sm transition-colors shadow-lg">Név mentése</button>
@@ -75,7 +75,7 @@
                     </form>
                 </div>
 
-                <div class="bg-red-950/20 rounded-sm border border-red-900/50 p-6 shadow-xl">
+                <div class="bg-[#091428] rounded-sm hex-border p-6 shadow-xl border-red-900/50">
                     <h2 class="text-lg font-bold text-red-500 uppercase tracking-widest border-b border-red-900/50 pb-2 mb-4">Fiók törlése</h2>
                     <p class="text-slate-400 text-xs mb-4">A fiók törlése végleges, és nem vonható vissza. A baráti kapcsolataid elvesznek, a korábbi versenyeredményeid pedig anonimizálva maradnak meg a rendszerben.</p>
                     <div id="deleteConfirmation" class="hidden mb-4 p-4 border border-red-500/50 bg-red-900/30">
