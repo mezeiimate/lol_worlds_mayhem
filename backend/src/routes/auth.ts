@@ -8,7 +8,6 @@ import { z } from 'zod';
 
 const router = express.Router();
 
-// Zod sémák szigorú validációhoz
 const RegisterSchema = z.object({
     username: z.string().min(3, 'A felhasználónév legalább 3 karakter hosszú kell legyen.').max(30),
     email: z.string().email('Érvénytelen e-mail cím.'),
@@ -33,7 +32,6 @@ const ResetPasswordSchema = z.object({
     newPassword: z.string().min(6, 'Az új jelszónak legalább 6 karakternek kell lennie.')
 });
 
-// --- REGISZTRÁCIÓ ---
 router.post('/register', async (req: express.Request, res: express.Response) => {
     try {
         const data = RegisterSchema.parse(req.body);
@@ -67,14 +65,12 @@ router.post('/register', async (req: express.Request, res: express.Response) => 
         res.status(201).json({ status: 'success', message: 'Sikeres regisztráció!' });
     } catch (error: any) {
         if (error instanceof z.ZodError) {
-            // as any típuskonverzió a TypeScript build hiba elkerülésére
             return res.status(400).json({ message: (error as any).errors[0].message });
         }
         res.status(500).json({ message: 'Belső szerverhiba történt.' });
     }
 });
 
-// --- BEJELENTKEZÉS ---
 router.post('/login', async (req: express.Request, res: express.Response) => {
     try {
         const data = LoginSchema.parse(req.body);
@@ -107,14 +103,12 @@ router.post('/login', async (req: express.Request, res: express.Response) => {
         res.status(200).json({ status: 'success', message: 'Sikeres bejelentkezés!' });
     } catch (error: any) {
         if (error instanceof z.ZodError) {
-            // as any típuskonverzió a TypeScript build hiba elkerülésére
             return res.status(400).json({ message: (error as any).errors[0].message });
         }
         res.status(500).json({ message: 'Belső szerverhiba történt.' });
     }
 });
 
-// --- ELFELEJTETT JELSZÓ (E-MAIL KÜLDÉS) ---
 router.post('/forgot-password', async (req: express.Request, res: express.Response) => {
     try {
         const data = ForgotPasswordSchema.parse(req.body);
@@ -132,7 +126,8 @@ router.post('/forgot-password', async (req: express.Request, res: express.Respon
             [resetToken, expires, data.email]
         );
 
-        const resetLink = `${process.env.APP_URL}/login?reset_token=${resetToken}`;
+        const baseUrl = (process.env.APP_URL || '').replace(/\/+$/, '');
+        const resetLink = `${baseUrl}/login?reset_token=${resetToken}`;
 
         const transporter = nodemailer.createTransport({
             host: process.env.SMTP_HOST,
@@ -165,7 +160,6 @@ router.post('/forgot-password', async (req: express.Request, res: express.Respon
     }
 });
 
-// --- JELSZÓ VISSZAÁLLÍTÁSA (ÚJ JELSZÓ BEÁLLÍTÁSA) ---
 router.post('/reset-password', async (req: express.Request, res: express.Response) => {
     try {
         const data = ResetPasswordSchema.parse(req.body);
@@ -189,14 +183,12 @@ router.post('/reset-password', async (req: express.Request, res: express.Respons
         res.json({ status: 'success', message: 'A jelszavad sikeresen megváltozott! Most már bejelentkezhetsz.' });
     } catch (error: any) {
         if (error instanceof z.ZodError) {
-            // as any típuskonverzió a TypeScript build hiba elkerülésére
             return res.status(400).json({ message: (error as any).errors[0].message });
         }
         res.status(500).json({ message: 'Belső szerverhiba.' });
     }
 });
 
-// --- KIJELENTKEZÉS ---
 router.post('/logout', (req: express.Request, res: express.Response) => {
     res.clearCookie('auth_token', {
         httpOnly: true,
