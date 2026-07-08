@@ -332,6 +332,7 @@ export const setupSockets = (io: Server) => {
                 WHERE m.lobby_id = $1::uuid AND m.status = 'PENDING' ORDER BY m.match_order ASC LIMIT 1
             `, [data.lobbyId]);
 
+            // HA NINCS FOLYAMATBAN LÉVŐ MECCS (Lezárt fázis)
             if ((matchRes.rowCount ?? 0) === 0) {
                 const phaseRes = await client.query(`SELECT match_type, MAX(match_order) as max_order FROM public.matches WHERE lobby_id=$1::uuid GROUP BY match_type ORDER BY max_order DESC LIMIT 1`, [data.lobbyId]);
                 if ((phaseRes.rowCount ?? 0) === 0) throw new Error("Nincsenek meccsek az adatbázisban.");
@@ -448,6 +449,7 @@ export const setupSockets = (io: Server) => {
                     callback({ status: 'finished' }); return;
                 }
             }
+<<<<<<< HEAD
 
             const { isSeriesFinished, payload: simPayload } = await executeMatchSimulation(client, matchRes.rows[0], io, data.lobbyId, false);
             simPayload.newState = await getLobbyStateData(client, data.lobbyId);
@@ -456,6 +458,11 @@ export const setupSockets = (io: Server) => {
             
             io.to(data.lobbyId).emit('match_simulated_event', simPayload);
             callback({ status: 'success' });
+=======
+            // Van még lejátszandó meccs, szimuláljuk le
+            await executeMatchSimulation(client, matchRes.rows[0], io, data.lobbyId, true);
+            await client.query('COMMIT'); callback({ status: 'success' });
+>>>>>>> 7424c53aaac83f84ef646f204f923515297682ce
         } catch (error: any) { 
             await client.query('ROLLBACK'); 
             console.error('[next_match_step] Hiba:', error);
