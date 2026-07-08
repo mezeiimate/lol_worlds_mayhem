@@ -26,7 +26,7 @@
                 <div class="flex items-center gap-4 bg-[#1e2328] border border-[#c8aa6e]/30 px-6 py-3 rounded-sm shadow-inner">
                     <div class="text-right">
                         <div class="font-bold text-xl text-white tracking-wide"><%= username %></div>
-                        <div class="text-xs text-slate-400 font-mono">Menedzser</div>
+                        <div class="text-xs text-slate-400 font-mono">Felhasználó</div>
                     </div>
                     <div class="h-10 w-px bg-[#c8aa6e]/30 mx-2"></div>
                     <div class="flex flex-col items-center">
@@ -34,21 +34,9 @@
                         <span class="text-[0.65rem] uppercase tracking-widest text-slate-300 font-bold mt-1">Trófea</span>
                     </div>
                 </div>
-                
-                <div class="flex items-center gap-3">
-                    <button onclick="window.location.href='/profile'" class="relative group overflow-hidden bg-[#010a13] border border-[#c8aa6e]/50 px-5 py-2.5 rounded-sm transition-all hover:border-[#f0e6d2] hover:shadow-[0_0_15px_rgba(200,170,110,0.3)]">
-                        <span class="relative z-10 text-[#c8aa6e] group-hover:text-[#f0e6d2] font-bold uppercase tracking-widest text-[0.7rem] transition-colors flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                            Beállítások
-                        </span>
-                        <div class="absolute inset-0 bg-gradient-to-r from-[#c8aa6e]/0 via-[#c8aa6e]/10 to-[#c8aa6e]/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-                    </button>
-                    <button onclick="logout()" class="relative group overflow-hidden bg-red-950/30 border border-red-500/30 px-5 py-2.5 rounded-sm transition-all hover:bg-red-900/50 hover:border-red-500 hover:shadow-[0_0_15px_rgba(239,68,68,0.3)]">
-                        <span class="relative z-10 text-red-400 group-hover:text-red-300 font-bold uppercase tracking-widest text-[0.7rem] transition-colors flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                            Kilépés
-                        </span>
-                    </button>
+                <div class="flex flex-col gap-2">
+                    <button onclick="window.location.href='/profile'" class="bg-[#1e2328] hover:bg-[#2b3137] border border-[#c8aa6e]/50 text-[#c8aa6e] font-bold uppercase tracking-widest text-[0.7rem] px-4 py-1.5 rounded-sm transition-colors text-center">Beállítások</button>
+                    <button onclick="logout()" class="text-red-400 hover:text-red-300 font-bold uppercase tracking-widest text-[0.7rem] transition-colors text-right">Kilépés</button>
                 </div>
             </div>
             <div class="absolute right-0 top-0 w-64 h-full bg-gradient-to-l from-[#c8aa6e]/10 to-transparent pointer-events-none"></div>
@@ -330,6 +318,7 @@
             } catch (error) { alert('Hiba történt a keresés során.'); }
         }
 
+        // Dedikált, visszajelzést adó barátjelölő funkció
         async function sendFriendRequest(targetId) {
             const btn = document.getElementById(`addBtn_${targetId}`);
             if(btn) { btn.innerText = 'Küldés...'; btn.disabled = true; }
