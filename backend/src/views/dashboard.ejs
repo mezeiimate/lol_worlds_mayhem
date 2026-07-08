@@ -136,7 +136,6 @@
                     
                     <div id="historyContainer" class="hidden">
                         <% 
-                        // A filterrel eltüntetjük a null/undefined adatokat, majd a slice(0, 10)-zel csak az első 10-et kérjük le.
                         const validMatches = matchHistory ? matchHistory.slice(0, 10) : []; 
                         %>
                         <% if (validMatches.length === 0) { %>
@@ -174,8 +173,11 @@
                     <h2 class="text-lg font-bold text-[#c8aa6e] uppercase tracking-widest border-b border-[#c8aa6e]/30 pb-2 mb-4">Globális ranglista</h2>
                     <div class="space-y-2">
                         <% 
-                        // Itt is szűrjük azokat a felhasználókat, akiknek nincs értelmes neve (mert pl. törölték a fiókot), és max 10-et mutatunk.
-                        const validLeaderboard = leaderboard.filter(u => u && u.username).slice(0, 10);
+                        // Itt biztosítjuk, hogy a null vagy törölt nevű profilok kiessenek a listából, majd levágjuk az első 10-re
+                        const validLeaderboard = leaderboard
+                            .filter(u => u && u.username && !u.username.toLowerCase().includes('törölt') && !u.username.toLowerCase().includes('anonim') && !u.username.toLowerCase().startsWith('deleted'))
+                            .slice(0, 10);
+                            
                         validLeaderboard.forEach((user, index) => { 
                             let rankColor = 'text-slate-400';
                             let bgClass = 'bg-[#1e2328] border-[#c8aa6e]/20';
@@ -206,7 +208,6 @@
 
         socket.on('friend_update', () => { refreshFriendsUI(); });
 
-        // Történet lenyíló fül vezérlése
         function toggleHistory() {
             const container = document.getElementById('historyContainer');
             const icon = document.getElementById('historyToggleIcon');
@@ -370,8 +371,6 @@
                     if(btn) { btn.innerText = 'Jelölés'; btn.disabled = false; }
                 } else {
                     showToast('Jelölés elküldve!', 'A barátkérelem sikeresen elment.', 'success');
-                    
-                    // Amint sikeres, elhalványítjuk és kitöröljük a listából, hogy ne zavarja a felhasználót
                     const resultCard = document.getElementById(`search-result-${targetId}`);
                     if (resultCard) {
                         resultCard.style.opacity = '0';
