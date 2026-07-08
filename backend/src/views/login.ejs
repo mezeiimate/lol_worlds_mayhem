@@ -22,17 +22,16 @@
 
         <div id="alertBox" class="hidden mb-6 p-4 rounded-sm border text-sm text-center font-bold tracking-wide transition-all duration-300"></div>
 
-        <!-- BEJELENTKEZÉS -->
         <div id="loginSection" class="block">
             <div class="text-center mb-8">
                 <h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-wider esport-font">Worlds Mayhem</h1>
-                <p class="text-slate-400 mt-2 uppercase tracking-widest text-xs font-bold">Menedzseri hozzáférés</p>
+                <p class="text-slate-400 mt-2 uppercase tracking-widest text-xs font-bold">Felhasználói hozzáférés</p>
             </div>
 
             <form id="loginForm" class="space-y-5">
                 <div>
                     <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">E-mail cím</label>
-                    <input type="email" id="loginEmail" required class="w-full bg-[#010a13] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#c8aa6e] transition-colors placeholder-slate-600" placeholder="menedzser@lolesports.com">
+                    <input type="email" id="loginEmail" required class="w-full bg-[#010a13] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#c8aa6e] transition-colors placeholder-slate-600" placeholder="hello@worldsmayhem.com">
                 </div>
                 <div>
                     <div class="flex justify-between items-center mb-1.5">
@@ -47,17 +46,16 @@
             <p class="text-center text-slate-400 text-sm mt-6">Nincs még fiókod? <a href="#" onclick="showSection('registerSection')" class="text-[#c8aa6e] hover:text-[#f0e6d2] font-bold transition-colors">Regisztráció</a></p>
         </div>
 
-        <!-- REGISZTRÁCIÓ -->
         <div id="registerSection" class="hidden">
             <div class="text-center mb-8">
-                <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-wider esport-font">Új menedzser</h1>
+                <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-wider esport-font">Új felhasználó</h1>
                 <p class="text-slate-400 mt-2 uppercase tracking-widest text-xs font-bold">Készítsd el a fiókod</p>
             </div>
 
             <form id="registerForm" class="space-y-4">
                 <div>
-                    <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">Kívánt felhasználónév</label>
-                    <input type="text" id="regUsername" required minlength="3" class="w-full bg-[#010a13] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#c8aa6e] transition-colors" placeholder="Faker123">
+                    <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">Felhasználónév</label>
+                    <input type="text" id="regUsername" required minlength="3" class="w-full bg-[#010a13] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#c8aa6e] transition-colors" placeholder="Felhasználóneved">
                 </div>
                 <div>
                     <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">E-mail cím</label>
@@ -77,7 +75,6 @@
             <p class="text-center text-slate-400 text-sm mt-6">Már van fiókod? <a href="#" onclick="showSection('loginSection')" class="text-[#c8aa6e] hover:text-[#f0e6d2] font-bold transition-colors">Belépés</a></p>
         </div>
 
-        <!-- ELFELEJTETT JELSZÓ -->
         <div id="forgotSection" class="hidden">
             <div class="text-center mb-8">
                 <h1 class="text-3xl font-black text-[#c8aa6e] tracking-wider esport-font">Elfelejtett jelszó</h1>
@@ -95,7 +92,6 @@
             <p class="text-center text-slate-400 text-sm mt-6"><a href="#" onclick="showSection('loginSection')" class="text-slate-500 hover:text-[#f0e6d2] font-bold transition-colors">← Vissza a belépéshez</a></p>
         </div>
 
-        <!-- JELSZÓ VISSZAÁLLÍTÁSA (ÚJ JELSZÓ) -->
         <div id="resetSection" class="hidden">
             <div class="text-center mb-8">
                 <h1 class="text-3xl font-black text-[#c8aa6e] tracking-wider esport-font">Új jelszó megadása</h1>
@@ -137,7 +133,6 @@
             document.getElementById(sectionId).classList.remove('hidden');
         }
 
-        // URL vizsgálata reset token miatt
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const token = urlParams.get('reset_token');
