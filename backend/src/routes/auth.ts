@@ -58,7 +58,7 @@ const ResetPasswordSchema = z.object({
     newPassword: z.string().min(6, 'Az új jelszónak legalább 6 karakternek kell lennie.'),
     confirmNewPassword: z.string()
 }).refine((data) => data.newPassword === data.confirmNewPassword, {
-    message: "Az új jelszavak nem egyeznek meg.",
+    message: "A jelszavak nem egyeznek meg.",
     path: ["confirmNewPassword"]
 });
 
@@ -89,7 +89,7 @@ router.post('/register', async (req: express.Request, res: express.Response) => 
 
         const emailSent = await sendEmailViaRelay(
             data.email,
-            'Fiók megerősítése | Worlds Mayhem',
+            'Fiók megerősítése | LoL Worlds Mayhem',
             `<div style="background-color: #010a13; color: #f0e6d2; padding: 30px; font-family: sans-serif; border: 1px solid #c8aa6e; text-align: center;">
                 <h2 style="color: #c8aa6e; text-transform: uppercase;">Üdv a ligában, ${data.username}!</h2>
                 <p>A fiókod sikeresen létrejött. A belépéshez kérlek erősítsd meg az e-mail címedet az alábbi gombra kattintva:</p>
@@ -199,11 +199,11 @@ router.post('/forgot-password', async (req: express.Request, res: express.Respon
 
         const emailSent = await sendEmailViaRelay(
             data.email,
-            'Jelszó visszaállítása | Worlds Mayhem',
+            'Jelszó visszaállítása | LoL Worlds Mayhem',
             `<div style="background-color: #010a13; color: #f0e6d2; padding: 30px; font-family: sans-serif; border: 1px solid #c8aa6e; text-align: center;">
                 <h2 style="color: #c8aa6e; text-transform: uppercase;">Jelszó visszaállítása</h2>
                 <p>Üdvözlünk, ${userRes.rows[0].username}!</p>
-                <p>Egy kérés érkezett a Worlds Mayhem fiókod jelszavának visszaállítására.</p>
+                <p>Egy kérés érkezett a LoL Worlds Mayhem fiókod jelszavának visszaállítására.</p>
                 <p>Kattints az alábbi gombra az új jelszó megadásához:</p>
                 <a href="${resetLink}" style="display: inline-block; background-color: #c8aa6e; color: #010a13; padding: 12px 25px; text-decoration: none; font-weight: bold; margin: 20px 0; text-transform: uppercase;">Új jelszó megadása</a>
                 <p style="font-size: 11px; color: #888;">Ez a link 1 órán belül lejár. Ha nem te kérted a visszaállítást, hagyd figyelmen kívül ezt az e-mailt.</p>
@@ -239,7 +239,7 @@ router.post('/reset-password', async (req: express.Request, res: express.Respons
             [passwordHash, userRes.rows[0].id]
         );
 
-        res.json({ status: 'success', message: 'A jelszavad sikeresen megváltozott! Kérlek lépj be.' });
+        res.json({ status: 'success', message: 'A jelszavad sikeresen megváltozott!' });
     } catch (error: any) {
         if (error instanceof z.ZodError) {
             return res.status(400).json({ message: (error as any).errors[0].message });

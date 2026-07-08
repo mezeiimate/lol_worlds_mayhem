@@ -56,14 +56,13 @@
 
         <div id="loginSection" class="block relative z-10">
             <div class="text-center mb-8 border-b border-[#c8aa6e]/30 pb-4">
-                <h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-wider esport-font">Worlds Mayhem</h1>
-                <p class="text-slate-400 mt-2 uppercase tracking-widest text-xs font-bold">Felhasználói hozzáférés</p>
+                <h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-wider esport-font">LoLWorlds Mayhem</h1>
             </div>
 
             <form id="loginForm" class="space-y-5">
                 <div>
                     <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">Felhasználónév</label>
-                    <input type="text" id="loginUsername" required class="w-full input-hex px-4 py-3 text-white transition-colors placeholder-slate-600" placeholder="Felhasználóneved">
+                    <input type="text" id="loginUsername" required class="w-full input-hex px-4 py-3 text-white transition-colors placeholder-slate-600" placeholder="Felhasználónév">
                 </div>
                 <div>
                     <div class="flex justify-between items-center mb-1.5">
@@ -77,7 +76,7 @@
                         </button>
                     </div>
                 </div>
-                <button type="submit" id="btnLogin" class="w-full btn-hex font-black uppercase tracking-widest text-lg px-6 py-3 mt-6">Belépés az arénába</button>
+                <button type="submit" id="btnLogin" class="w-full btn-hex font-black uppercase tracking-widest text-lg px-6 py-3 mt-6">Belépés</button>
             </form>
 
             <p class="text-center text-slate-400 text-sm mt-6">Nincs még fiókod? <a href="#" onclick="showSection('registerSection')" class="text-[#c8aa6e] hover:text-[#f0e6d2] font-bold transition-colors">Regisztráció</a></p>
@@ -85,14 +84,13 @@
 
         <div id="registerSection" class="hidden relative z-10">
             <div class="text-center mb-8 border-b border-[#c8aa6e]/30 pb-4">
-                <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-wider esport-font">Új felhasználó</h1>
-                <p class="text-slate-400 mt-2 uppercase tracking-widest text-xs font-bold">Készítsd el a fiókod</p>
+                <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-wider esport-font">Regisztráció</h1>
             </div>
 
             <form id="registerForm" class="space-y-4">
                 <div>
                     <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">Felhasználónév</label>
-                    <input type="text" id="regUsername" required minlength="3" class="w-full input-hex px-4 py-3 text-white transition-colors" placeholder="Kívánt neved">
+                    <input type="text" id="regUsername" required minlength="3" class="w-full input-hex px-4 py-3 text-white transition-colors" placeholder="Felhasználónév">
                 </div>
                 <div>
                     <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">E-mail cím</label>
@@ -116,7 +114,7 @@
                         </button>
                     </div>
                 </div>
-                <button type="submit" id="btnRegister" class="w-full btn-hex font-black uppercase tracking-widest text-lg px-6 py-3 mt-6">Regisztráció & Hitelesítés</button>
+                <button type="submit" id="btnRegister" class="w-full btn-hex font-black uppercase tracking-widest text-lg px-6 py-3 mt-6">Regisztráció</button>
             </form>
 
             <p class="text-center text-slate-400 text-sm mt-6">Már van fiókod? <a href="#" onclick="showSection('loginSection')" class="text-[#c8aa6e] hover:text-[#f0e6d2] font-bold transition-colors">Belépés</a></p>
@@ -125,7 +123,7 @@
         <div id="forgotSection" class="hidden relative z-10">
             <div class="text-center mb-8 border-b border-[#c8aa6e]/30 pb-4">
                 <h1 class="text-3xl font-black text-[#c8aa6e] tracking-wider esport-font">Elfelejtett jelszó</h1>
-                <p class="text-slate-400 mt-2 text-sm">Adja meg az e-mail címét a visszaállító linkhez.</p>
+                <p class="text-slate-400 mt-2 text-sm">Add meg az e-mail címed a visszaállító linkhez.</p>
             </div>
 
             <form id="forgotForm" class="space-y-5">

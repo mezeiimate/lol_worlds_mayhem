@@ -26,7 +26,6 @@
                 <div class="flex items-center gap-4 bg-[#1e2328] border border-[#c8aa6e]/30 px-6 py-3 rounded-sm shadow-inner">
                     <div class="text-right">
                         <div class="font-bold text-xl text-white tracking-wide"><%= username %></div>
-                        <div class="text-xs text-slate-400 font-mono">Felhasználó</div>
                     </div>
                     <div class="h-10 w-px bg-[#c8aa6e]/30 mx-2"></div>
                     <div class="flex flex-col items-center">
@@ -58,10 +57,10 @@
             
             <div class="xl:col-span-3 space-y-6">
                 <div class="bg-[#091428] rounded-sm border border-[#c8aa6e]/30 p-5 shadow-xl">
-                    <h2 class="text-lg font-bold text-[#c8aa6e] uppercase tracking-widest border-b border-[#c8aa6e]/30 pb-2 mb-4">Közösség</h2>
+                    <h2 class="text-lg font-bold text-[#c8aa6e] uppercase tracking-widest border-b border-[#c8aa6e]/30 pb-2 mb-4">Barátok</h2>
                     
                     <div class="flex gap-2 mb-6">
-                        <input type="text" id="friendSearchInput" placeholder="Név keresése..." class="flex-1 bg-[#1e2328] border border-[#c8aa6e]/50 rounded-sm px-3 py-1.5 text-sm text-white focus:outline-none focus:border-[#f0e6d2]">
+                        <input type="text" id="friendSearchInput" placeholder="Felhasználó keresése..." class="flex-1 bg-[#1e2328] border border-[#c8aa6e]/50 rounded-sm px-3 py-1.5 text-sm text-white focus:outline-none focus:border-[#f0e6d2]">
                         <button onclick="searchFriends()" class="bg-[#c8aa6e] hover:bg-[#f0e6d2] text-[#010a13] px-3 py-1.5 rounded-sm font-bold transition-colors">🔍</button>
                     </div>
                     <div id="searchResults" class="space-y-2 mb-6 empty:hidden"></div>
@@ -113,8 +112,8 @@
             <div class="xl:col-span-6 space-y-8">
                 <div class="bg-gradient-to-br from-[#091428] to-[#1e2328] rounded-sm border border-[#c8aa6e] p-8 shadow-[0_0_30px_rgba(200,170,110,0.15)] flex flex-col md:flex-row gap-8 items-center justify-center relative">
                     <div class="flex-1 text-center border-r border-[#c8aa6e]/30 pr-8">
-                        <h2 class="text-xl font-bold text-white uppercase tracking-widest mb-2" style="font-family: 'Oswald', sans-serif;">Új torna indítása</h2>
-                        <p class="text-slate-400 text-sm mb-6">Hozd létre a saját draft szobádat és oszd meg a kódot!</p>
+                        <h2 class="text-xl font-bold text-white uppercase tracking-widest mb-2" style="font-family: 'Oswald', sans-serif;">LoL Worlds Mayhem</h2>
+                        <p class="text-slate-400 text-sm mb-6">Hozd létre a saját LoL Worlds Mayhem szobádat és oszd meg a kódot!</p>
                         <button id="createLobbyBtn" class="bg-[#c8aa6e] hover:bg-[#f0e6d2] text-[#010a13] font-black uppercase tracking-widest px-8 py-3 rounded-sm w-full transition-all shadow-lg hover:scale-105">Létrehozás</button>
                     </div>
                     
@@ -130,7 +129,7 @@
 
                 <div class="bg-[#091428] rounded-sm border border-[#c8aa6e]/30 p-6 shadow-xl">
                     <div class="flex justify-between items-center border-b border-[#c8aa6e]/30 pb-2 mb-4 cursor-pointer" onclick="toggleHistory()">
-                        <h2 class="text-lg font-bold text-[#c8aa6e] uppercase tracking-widest">Előző tornáim (Utolsó 10)</h2>
+                        <h2 class="text-lg font-bold text-[#c8aa6e] uppercase tracking-widest">Előző LoL Worlds Mayhem tornáim (Utolsó 10)</h2>
                         <span id="historyToggleIcon" class="text-[#c8aa6e] transition-transform duration-300">▼</span>
                     </div>
                     

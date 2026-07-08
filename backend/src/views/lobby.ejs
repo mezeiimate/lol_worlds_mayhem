@@ -66,7 +66,7 @@
         <div class="bg-[#091428] hex-border rounded-sm p-4 shadow-xl mb-6 flex justify-between items-center">
             <div class="flex items-center gap-6">
                 <a href="/dashboard" class="bg-[#1e2328] hover:bg-[#2b3137] border border-[#c8aa6e]/50 px-4 py-1.5 rounded-sm text-sm font-bold transition-colors">Központ</a>
-                <h1 id="lobbyTitle" class="text-3xl tracking-widest text-gold esport-font">WORLDS DRAFT</h1>
+                <h1 id="lobbyTitle" class="text-3xl tracking-widest text-gold esport-font">LOL WORLDS MAYHEM DRAFT</h1>
             </div>
             <div class="flex items-center gap-4">
                 <button id="inviteFriendBtn" onclick="openInviteModal()" class="bg-[#1e2328] hover:bg-[#2b3137] border border-[#c8aa6e]/50 px-4 py-1.5 rounded-sm text-sm font-bold text-gold transition-colors mr-2">BARÁT MEGHÍVÁSA</button>
@@ -81,7 +81,7 @@
             
             <div class="xl:col-span-1 flex flex-col items-center justify-start relative" id="leftMapArea">
                 <div class="w-full flex justify-between items-center mb-4">
-                    <h2 class="text-xl text-gold-light esport-font tracking-widest" id="mapTitle">SAJÁT FELÁLLÁS</h2>
+                    <h2 class="text-xl text-gold-light esport-font tracking-widest" id="mapTitle">ROSTER</h2>
                     <button id="readyBtnTop" onclick="setReady()" class="hidden esport-font text-sm bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-1 rounded-sm tracking-widest transition-colors">KERET LEZÁRÁSA</button>
                 </div>
                 
@@ -106,7 +106,7 @@
                     <button id="mainSpinBtn" onclick="rollTeams()" class="esport-font text-3xl text-[#010a13] bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] hover:from-[#f0e6d2] hover:to-[#c8aa6e] px-16 py-4 rounded-sm transition-all hover:scale-105 shadow-[0_0_20px_rgba(200,170,110,0.4)]">
                         SPIN
                     </button>
-                    <p class="mt-4 text-slate-500 font-bold tracking-widest text-sm" id="initialRerollText">3 REROLLS LEFT</p>
+                    <p class="mt-4 text-slate-500 font-bold tracking-widest text-sm" id="initialRerollText">3 REROLL MARADT</p>
                 </div>
 
                 <div id="teamsAreaPhase1" class="w-full hidden flex-col">
@@ -178,7 +178,7 @@
                         <h2 class="text-2xl font-bold text-gold-light esport-font tracking-widest mb-4">A torna véget ért</h2>
                         <img id="championLogo" src="" class="w-24 h-24 rounded-full border-4 border-gold mb-4 shadow-xl object-cover">
                         <p class="text-5xl font-black text-white drop-shadow-lg mb-2">🏆 <span id="championName">Bajnok neve</span> 🏆</p>
-                        <p class="text-lg text-gold font-semibold">Megnyerte a Worlds Mayhem trófeát!</p>
+                        <p class="text-lg text-gold font-semibold">Megnyerte a LoL Worlds Mayhem trófeát!</p>
                     </div>
                     
                     <div class="w-full bg-[#010a13] rounded-sm p-6 border border-[#c8aa6e]/50 mb-8">
@@ -187,7 +187,7 @@
                     </div>
 
                     <div id="finalGroupTablesArea" class="w-full hidden flex-col gap-4 bg-[#1e2328]/50 p-6 rounded-sm border border-[#c8aa6e]/30">
-                        <h3 class="text-center text-gold-light text-sm uppercase tracking-widest font-bold border-b border-[#c8aa6e]/30 pb-2">Csoportkörök végeredménye</h3>
+                        <h3 class="text-center text-gold-light text-sm uppercase tracking-widest font-bold border-b border-[#c8aa6e]/30 pb-2">Csoportkör végeredménye</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="finalGroupTablesContainer"></div>
                     </div>
                 </div>
@@ -802,7 +802,7 @@
         });
 
         function transitionToSimulation() {
-            document.getElementById('lobbyTitle').innerText = "KÖZVETÍTÉS";
+            document.getElementById('lobbyTitle').innerText = "LOL WORLDS MAYHEM";
             document.getElementById('startArea').classList.add('hidden');
             document.getElementById('teamsAreaPhase1').classList.add('hidden');
             document.getElementById('teamsAreaPhase2').classList.add('hidden');
