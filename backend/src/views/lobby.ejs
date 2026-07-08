@@ -82,7 +82,7 @@
             <div class="xl:col-span-1 flex flex-col items-center justify-start relative" id="leftMapArea">
                 <div class="w-full flex justify-between items-center mb-4">
                     <h2 class="text-xl text-gold-light esport-font tracking-widest" id="mapTitle">ROSTER</h2>
-                    <button id="readyBtnTop" onclick="setReady()" class="hidden esport-font text-sm bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-1 rounded-sm tracking-widest transition-colors">KERET LEZÁRÁSA</button>
+                    <button id="readyBtnTop" onclick="setReady()" class="hidden esport-font text-sm bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-1 rounded-sm tracking-widest transition-colors">ROSTER LEZÁRÁSA</button>
                 </div>
                 
                 <div id="mapContainer" class="relative w-full aspect-square max-w-[400px] sr-map rounded-sm mx-auto">
@@ -345,9 +345,9 @@
                     } else if (phase === 'QUARTER') {
                         nextMatchBtn.innerText = "TOVÁBB AZ ELŐDÖNTŐKRE";
                     } else if (phase === 'SEMI') {
-                        nextMatchBtn.innerText = "TOVÁBB A NAGYDÖNTŐRE";
+                        nextMatchBtn.innerText = "TOVÁBB A DÖNTŐRE";
                     } else if (phase === 'FINAL') {
-                        nextMatchBtn.innerText = "🏆 EREDMÉNYHIRDETÉS";
+                        nextMatchBtn.innerText = "EREDMÉNYHIRDETÉS";
                     }
                 } else {
                     // Ha VAN PENDING meccs, akkor normál meccsléptetés vagy gyorsítás jön
@@ -810,7 +810,7 @@
             
             document.getElementById('simulationStudio').classList.remove('hidden'); 
             document.getElementById('simulationStudio').classList.add('flex');
-            document.getElementById('sidebarTitle').innerText = "CSOPORTÁLLÁSOK";
+            document.getElementById('sidebarTitle').innerText = "TABELLA";
 
             if (USER_ID === CURRENT_HOST_ID) {
                 document.getElementById('hostControls').classList.remove('hidden');
@@ -829,7 +829,7 @@
                     document.getElementById('matchGroupBadge').classList.add('hidden'); document.getElementById('matchTeamsDisplay').classList.add('hidden'); document.getElementById('matchWinnerDisplay').classList.add('hidden'); document.getElementById('bo5ScoreDisplay').classList.add('hidden'); document.getElementById('playByPlayLog').classList.add('hidden');
                     
                     ['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT'].forEach(r => document.getElementById(`node-${r}-2`).classList.add('hidden'));
-                    document.getElementById('mapTitle').innerText = "SAJÁT FELÁLLÁS";
+                    document.getElementById('mapTitle').innerText = "SAJÁT ROSTER";
                 } else if (res.status === 'error') {
                     alert('Hiba történt a szerveren: ' + res.message);
                     btn.classList.remove('hidden'); btn.disabled = false;
