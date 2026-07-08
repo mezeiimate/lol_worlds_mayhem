@@ -323,7 +323,6 @@
             if (USER_ID === data.hostId && !isTournamentEnded && data.status === 'SIMULATING') {
                 document.getElementById('hostControls').classList.remove('hidden');
                 document.getElementById('hostControls').classList.add('flex');
-<<<<<<< HEAD
                 
                 const nextMatchBtn = document.getElementById('nextMatchBtn');
                 const fastForwardGroup = document.getElementById('fastForwardGroup');
@@ -354,25 +353,6 @@
                     // Ha VAN PENDING meccs, akkor normál meccsléptetés vagy gyorsítás jön
                     nextMatchBtn.innerText = "KÖVETKEZŐ MECCS";
 
-=======
-                document.getElementById('nextMatchBtn').classList.remove('hidden');
-                document.getElementById('nextMatchBtn').disabled = false;
-                
-                // Hibajavítás: Döntő után gomb átváltása Eredményhirdetésre és ff rejtése
-                if (phase === 'FINAL' && cOrder === null) {
-                    document.getElementById('nextMatchBtn').innerText = "🏆 EREDMÉNYHIRDETÉS";
-                    document.getElementById('fastForwardGroup').classList.add('hidden');
-                    document.getElementById('fastForwardGroup').classList.remove('flex');
-                } else {
-                    document.getElementById('nextMatchBtn').innerText = "KÖVETKEZŐ MECCS";
-                    document.getElementById('fastForwardGroup').classList.remove('hidden');
-                    document.getElementById('fastForwardGroup').classList.add('flex');
-                    
-                    const btnAll = document.getElementById('ffAllBtn');
-                    const btnGroup = document.getElementById('ffGroupBtn');
-                    const btnBo5 = document.getElementById('ffBo5Btn');
-                    
->>>>>>> 7424c53aaac83f84ef646f204f923515297682ce
                     if (phase === 'GROUP') {
                         btnAll.classList.remove('hidden');
                         btnGroup.classList.remove('hidden'); 
@@ -381,11 +361,6 @@
                         btnAll.classList.add('hidden');
                         btnGroup.classList.add('hidden'); 
                         btnBo5.classList.remove('hidden');
-<<<<<<< HEAD
-=======
-                    } else { 
-                        document.getElementById('fastForwardGroup').classList.add('hidden');
->>>>>>> 7424c53aaac83f84ef646f204f923515297682ce
                     }
                 }
             }
@@ -844,7 +819,6 @@
             }
         }
 
-        // Hibajavítás: Gombnyomásra visszajelzést ad, ha a szerver oldalán elszáll a kód
         function triggerNextMatch() {
             const btn = document.getElementById('nextMatchBtn');
             btn.disabled = true; btn.classList.add('hidden'); document.getElementById('fastForwardGroup').classList.add('hidden');
