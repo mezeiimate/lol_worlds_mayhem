@@ -160,3 +160,5 @@ const PORT = process.env.PORT || 3333;
 httpServer.listen(PORT, () => {
   console.log(`✅ Kiszolgáló elindítva a ${PORT}-es porton.`);
 });
+
+// NA EZ A JÓ
