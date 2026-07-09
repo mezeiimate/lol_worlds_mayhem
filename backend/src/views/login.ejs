@@ -8,17 +8,22 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style> 
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap');
-        body { background-color: #010a13; color: #f0e6d2; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; } 
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+        body { 
+            background-color: #010a13; 
+            color: #f0e6d2; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: relative;
+        } 
         .esport-font { font-family: 'Oswald', sans-serif; text-transform: uppercase; }
         
-        .hex-bg { 
-            background: radial-gradient(circle at center, #091428 0%, #010a13 100%); 
-        }
         .hex-panel {
-            background: linear-gradient(135deg, #091428 0%, #0a1428 100%);
+            background: linear-gradient(135deg, rgba(9, 20, 40, 0.9) 0%, rgba(1, 10, 19, 0.95) 100%);
             border: 1px solid #c8aa6e;
             box-shadow: 0 0 25px rgba(200, 170, 110, 0.15), inset 0 0 20px rgba(0,0,0,0.5);
             position: relative;
+            backdrop-filter: blur(10px);
         }
         .hex-panel::before, .hex-panel::after {
             content: ''; position: absolute; width: 12px; height: 12px; border: 1px solid #c8aa6e;
@@ -26,26 +31,192 @@
         .hex-panel::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
         .hex-panel::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
         
-        .btn-hex {
-            background: linear-gradient(to right, #c8aa6e, #f0e6d2);
-            color: #010a13;
-            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
-            transition: all 0.3s ease;
-        }
-        .btn-hex:hover {
-            filter: drop-shadow(0 0 15px rgba(200,170,110,0.6));
-            transform: scale(1.02);
-        }
-        
         .input-hex {
-            background: #010a13; 
-            border: 1px solid rgba(200, 170, 110, 0.3);
-            border-left: 2px solid #c8aa6e;
+            background: #010a13; border: 1px solid rgba(200, 170, 110, 0.3); border-left: 2px solid #c8aa6e;
         }
         .input-hex:focus { border-color: #c8aa6e; box-shadow: 0 0 10px rgba(200,170,110,0.2); outline: none; }
+
+        /* --- HÁTTÉR ANIMÁCIÓ --- */
+        .star-container { background: radial-gradient(ellipse at bottom, #091428 0%, #010a13 100%); }
+        #stars, #stars2, #stars3 { background: transparent; }
+        #stars {
+            width: 1px; height: 1px;
+            box-shadow: 501px 811px #c8aa6e, 1450px 1324px #fff, 1093px 1780px #fff, 1469px 678px #c8aa6e, 904px 741px #fff, 1160px 781px #fff, 1841px 1962px #fff, 1630px 1667px #fff, 1788px 676px #fff, 367px 1734px #fff, 1343px 156px #fff, 1283px 1142px #fff, 1062px 378px #fff, 1395px 467px #fff, 1017px 1891px #fff, 137px 1114px #fff, 1767px 1403px #fff, 1543px 11px #fff, 1078px 181px #fff, 1189px 1574px #fff, 1697px 1551px #fff, 439px 472px #fff, 1491px 677px #fff, 1364px 599px #fff, 34px 382px #fff, 1221px 1584px #c8aa6e, 1266px 1499px #fff, 169px 1907px #fff, 1219px 1125px #fff, 659px 18px #fff, 1731px 1959px #fff, 332px 1216px #fff, 1913px 788px #fff, 80px 712px #fff, 326px 1605px #fff, 574px 1502px #fff, 473px 1653px #fff, 404px 975px #fff, 322px 1797px #fff, 425px 1321px #fff, 1121px 1797px #fff, 731px 647px #fff, 891px 1584px #fff, 1523px 109px #fff, 1379px 244px #fff, 865px 1064px #fff, 493px 956px #fff, 624px 1380px #fff, 440px 619px #fff, 1630px 767px #fff, 955px 1196px #c8aa6e, 62px 729px #fff, 126px 946px #fff, 1256px 896px #fff, 1444px 256px #fff, 661px 1628px #fff, 1078px 1716px #fff, 300px 737px #fff, 1734px 413px #fff, 1296px 129px #fff, 1771px 1678px #fff, 977px 1764px #fff, 1879px 549px #fff, 665px 1531px #fff, 89px 701px #fff, 1084px 1183px #fff, 1597px 1576px #fff, 1354px 1774px #fff, 554px 1471px #fff, 1469px 287px #fff, 887px 106px #fff, 1962px 766px #fff, 638px 805px #fff, 1651px 741px #fff, 1517px 1826px #fff, 24px 1152px #fff, 507px 558px #fff, 1262px 652px #fff, 246px 1048px #fff, 1077px 421px #fff, 1866px 1847px #fff, 1986px 1561px #fff, 704px 632px #fff, 1991px 1875px #c8aa6e, 1227px 395px #fff, 45px 1116px #fff, 247px 786px #fff, 890px 607px #fff, 787px 1235px #fff, 557px 524px #fff, 1582px 1285px #fff, 1725px 1366px #fff, 952px 747px #fff, 251px 458px #fff, 1500px 1250px #fff, 1999px 1734px #fff, 1336px 1955px #fff, 1705px 1464px #fff, 728px 697px #fff, 594px 510px #fff, 1345px 1990px #fff, 1919px 1803px #fff, 1117px 966px #fff, 1629px 97px #fff, 1046px 1196px #fff, 810px 1092px #fff, 722px 976px #fff, 406px 18px #fff, 1665px 1860px #fff, 1758px 1628px #fff, 1183px 463px #fff, 564px 239px #c8aa6e, 13px 1767px #fff, 1482px 1472px #fff, 1700px 347px #fff, 1362px 244px #fff, 1141px 1708px #fff, 22px 885px #fff, 374px 1309px #fff, 1034px 1037px #fff, 1725px 1086px #fff, 1343px 1921px #fff, 596px 903px #fff, 1061px 478px #fff, 18px 1409px #fff, 729px 1364px #fff, 264px 911px #fff, 677px 1442px #fff, 123px 33px #fff, 1303px 646px #fff, 1945px 792px #fff, 1305px 938px #fff, 918px 1536px #fff, 620px 948px #c8aa6e, 183px 646px #fff, 695px 687px #fff, 881px 272px #fff, 1521px 1212px #fff, 1423px 1022px #fff, 1545px 1271px #fff, 1393px 348px #fff, 685px 1910px #fff, 1446px 856px #fff, 73px 1201px #fff, 736px 999px #fff, 673px 796px #fff, 469px 850px #fff, 1912px 142px #fff, 1278px 664px #fff, 184px 1990px #fff, 1173px 1312px #fff, 782px 1879px #fff, 323px 1035px #fff, 611px 908px #fff, 565px 1449px #fff, 748px 1713px #fff, 1047px 490px #fff, 1040px 1872px #fff, 1818px 1659px #fff, 1806px 1327px #fff, 386px 575px #fff, 1550px 463px #fff, 148px 687px #fff, 651px 1683px #fff, 1588px 1194px #fff, 1831px 2px #fff, 581px 876px #fff, 1396px 1743px #fff, 1212px 1810px #c8aa6e, 421px 1920px #fff, 658px 1461px #fff, 1859px 1809px #fff, 1456px 388px #fff, 186px 1627px #fff, 1528px 1145px #fff, 171px 97px #fff, 674px 1072px #fff, 676px 1052px #fff, 1165px 1131px #fff, 1088px 781px #fff, 1231px 948px #fff, 330px 257px #fff, 426px 1046px #fff, 549px 652px #fff, 1338px 74px #fff, 1749px 364px #fff, 931px 369px #fff, 383px 1428px #fff, 1558px 389px #fff, 927px 133px #fff, 234px 1888px #fff, 1785px 1617px #fff, 556px 643px #fff, 401px 275px #fff, 406px 1644px #fff, 1253px 1852px #fff, 1599px 883px #fff, 744px 1721px #fff, 524px 1297px #fff, 1226px 1177px #fff, 1679px 55px #fff, 874px 1811px #fff, 838px 790px #fff, 1241px 430px #fff, 1676px 652px #fff, 1191px 568px #fff, 53px 1990px #c8aa6e, 1163px 237px #fff, 61px 223px #fff, 592px 456px #fff;
+            animation: animStar 50s linear infinite;
+        }
+        #stars2 {
+            width: 2px; height: 2px;
+            box-shadow: 1925px 1320px #fff, 693px 1778px #fff, 1016px 711px #c8aa6e, 1171px 563px #fff, 661px 1919px #fff, 1610px 44px #fff, 1275px 140px #fff, 1208px 1802px #fff, 1473px 1587px #fff, 11px 1117px #fff, 853px 1757px #fff, 1149px 937px #fff, 1353px 428px #fff, 270px 279px #fff, 258px 1404px #fff, 417px 1188px #fff, 286px 561px #fff, 393px 1765px #fff, 147px 881px #fff, 666px 1097px #fff, 1425px 1278px #fff, 806px 156px #c8aa6e, 1252px 561px #fff, 218px 52px #fff, 1371px 1980px #fff, 171px 745px #fff, 1424px 89px #fff, 137px 244px #fff, 939px 1922px #fff, 137px 1080px #fff, 1757px 50px #fff, 904px 536px #fff, 1938px 1001px #fff, 1172px 440px #fff, 72px 1475px #fff, 102px 121px #fff, 804px 1671px #fff, 1314px 270px #fff, 440px 1341px #fff, 1216px 511px #fff, 1061px 1523px #fff, 97px 274px #fff, 704px 1318px #fff, 52px 1872px #fff, 1962px 296px #fff, 111px 289px #fff, 1157px 1236px #fff, 1347px 1451px #fff, 820px 286px #fff, 1389px 1169px #fff, 644px 841px #fff, 1286px 522px #fff, 955px 659px #fff, 428px 1805px #fff, 237px 557px #fff, 1689px 1058px #fff, 636px 1882px #fff, 1349px 1664px #fff, 1548px 432px #fff, 1841px 504px #fff, 302px 252px #fff, 827px 1765px #fff, 620px 123px #fff, 207px 748px #fff, 1454px 1234px #fff, 1967px 1790px #c8aa6e, 542px 33px #fff, 742px 1214px #fff, 255px 1402px #fff, 74px 1772px #fff, 699px 475px #fff, 980px 1253px #fff, 534px 1676px #fff, 909px 202px #fff, 1498px 1251px #fff, 1796px 120px #fff, 1409px 1263px #fff, 1627px 995px #fff, 969px 710px #fff, 1674px 676px #fff, 1832px 759px #fff, 1623px 563px #fff, 251px 1790px #fff, 96px 1688px #fff, 886px 239px #fff, 778px 150px #fff, 1767px 430px #fff, 765px 1259px #fff, 1189px 877px #fff, 444px 1629px #fff, 1560px 324px #fff, 1952px 1097px #fff, 712px 1173px #c8aa6e, 541px 911px #fff, 827px 1420px #fff, 1233px 285px #fff, 784px 546px #fff, 645px 285px #fff, 1273px 1255px #fff, 1821px 174px #fff, 221px 1795px #fff, 1004px 456px #fff, 1298px 941px #fff, 274px 387px #fff, 174px 376px #fff, 1491px 258px #fff, 1489px 1946px #fff, 1134px 1382px #fff, 1289px 1145px #fff, 464px 358px #fff, 1249px 1842px #fff, 1665px 831px #fff, 1982px 84px #fff, 541px 774px #fff, 1994px 523px #fff, 762px 1644px #fff, 1730px 867px #fff, 1951px 1287px #fff, 911px 1691px #fff, 1454px 725px #fff;
+            animation: animStar 100s linear infinite;
+        }
+        #stars3 {
+            width: 3px; height: 3px;
+            box-shadow: 200px 981px #fff, 1731px 521px #fff, 132px 1039px #fff, 1888px 1547px #c8aa6e, 899px 1226px #fff, 1887px 580px #fff, 1548px 1092px #fff, 1626px 689px #fff, 254px 1072px #fff, 1684px 1211px #fff, 672px 1267px #fff, 939px 668px #fff, 1969px 645px #fff, 1126px 983px #fff, 457px 568px #fff, 476px 876px #fff, 829px 1896px #fff, 1364px 1846px #fff, 1507px 1120px #fff, 936px 1948px #fff, 1833px 832px #fff, 1424px 285px #fff, 1377px 1596px #fff, 432px 153px #fff, 1348px 1410px #fff, 1529px 954px #c8aa6e, 1102px 387px #fff, 264px 297px #fff, 811px 977px #fff, 1931px 673px #fff, 1734px 978px #fff, 1772px 1567px #fff, 1197px 1400px #fff, 764px 282px #fff, 1103px 822px #fff, 872px 1803px #fff, 1057px 1763px #fff, 52px 1299px #fff, 1312px 1236px #fff, 235px 1082px #fff, 299px 1086px #fff, 1017px 1602px #fff, 1950px 626px #fff, 1306px 132px #fff, 1358px 1618px #fff, 1873px 1718px #fff, 1447px 940px #fff, 1888px 1195px #fff, 1704px 1765px #fff, 872px 1357px #fff;
+            animation: animStar 150s linear infinite;
+        }
+        #stars:after, #stars2:after, #stars3:after {
+            content: " "; position: absolute; top: 2000px; width: inherit; height: inherit; box-shadow: inherit;
+        }
+        @keyframes animStar {
+            from { transform: translateY(0px); }
+            to { transform: translateY(-2000px); }
+        }
+
+        /* --- INLINE TOOLTIP --- */
+        .item-hints {
+            display: inline-flex; justify-content: center; align-items: center; cursor: help;
+        }
+        .item-hints .hint {
+            position: relative; display: flex; justify-content: center; align-items: center;
+        }
+        .item-hints .hint-dot {
+            z-index: 3; border: 1px solid rgba(200, 170, 110, 0.5); border-radius: 50%;
+            width: 14px; height: 14px; display: flex; align-items: center; justify-content: center;
+            color: #c8aa6e; font-size: 9px; font-weight: bold; transition: all 0.3s;
+        }
+        .item-hints .hint:hover .hint-dot {
+            background-color: #c8aa6e; color: #010a13; border-color: #c8aa6e;
+        }
+        .item-hints .hint-content {
+            width: 220px; position: absolute; z-index: 50; padding: 10px;
+            background: #091428; border: 1px solid #c8aa6e; border-radius: 2px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5); opacity: 0; visibility: hidden; pointer-events: none;
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+            color: #f0e6d2; font-size: 0.7rem; font-weight: normal; text-transform: none;
+            bottom: 150%; left: 50%; transform: translateX(-50%) translateY(10px);
+            text-align: center; line-height: 1.4;
+        }
+        .item-hints .hint:hover .hint-content {
+            opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0);
+        }
+        .item-hints .hint-content::after {
+            content: ''; position: absolute; bottom: -5px; left: 50%; margin-left: -5px;
+            width: 10px; height: 10px; background: #091428; border-bottom: 1px solid #c8aa6e; border-right: 1px solid #c8aa6e;
+            transform: rotate(45deg);
+        }
+
+        /* --- HOLO GLITCH GOMB --- */
+        .button-container {
+            position: relative; perspective: 1000px; transform-style: preserve-3d; z-index: 10;
+            width: 100%; height: 60px; margin-top: 30px; margin-bottom: 20px;
+        }
+        .holo-button {
+            position: relative; width: 100%; height: 100%;
+            background: rgba(10, 15, 30, 0.8); border: none; color: #c8aa6e;
+            font-family: "Orbitron", sans-serif; font-size: 16px; font-weight: 700; letter-spacing: 3px;
+            text-shadow: 0 0 10px rgba(200, 170, 110, 0.5); cursor: pointer; overflow: hidden;
+            transform-style: preserve-3d; transition: all 0.3s ease; outline: none; z-index: 5;
+            border-radius: 2px; display: flex; align-items: center; justify-content: center;
+        }
+        .holo-button::before {
+            content: ""; position: absolute; top: 1px; left: 1px; right: 1px; bottom: 1px;
+            background: linear-gradient(45deg, rgba(9, 20, 40, 0.9) 0%, rgba(15, 30, 60, 0.9) 50%, rgba(5, 10, 20, 0.9) 100%);
+            z-index: -1; border-radius: 1px;
+        }
+        
+        .button-border { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
+        .button-border::before, .button-border::after {
+            content: ""; position: absolute; width: 100%; height: 100%; border: 1px solid transparent;
+            box-shadow: 0 0 10px rgba(200, 170, 110, 0.4); animation: border-flow 3s infinite;
+        }
+        .button-border::before {
+            border-top-color: #c8aa6e; border-left-color: #c8aa6e; filter: drop-shadow(0 0 5px rgba(200, 170, 110, 0.7));
+        }
+        .button-border::after {
+            border-bottom-color: #f0e6d2; border-right-color: #f0e6d2; filter: drop-shadow(0 0 5px rgba(240, 230, 210, 0.7));
+        }
+        @keyframes border-flow { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.02); opacity: 0.8; } }
+
+        .holo-glow {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%;
+            background: radial-gradient(ellipse at center, rgba(200, 170, 110, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            pointer-events: none; z-index: 1; opacity: 0.7; filter: blur(10px); animation: glow-pulse 3s infinite alternate;
+        }
+        @keyframes glow-pulse { 0% { opacity: 0.4; filter: blur(10px) brightness(0.8); } 100% { opacity: 0.7; filter: blur(15px) brightness(1.2); } }
+
+        .holo-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none; z-index: 2; }
+        .holo-line { position: absolute; background: rgba(200, 170, 110, 0.5); filter: blur(1px); }
+        .holo-line:nth-child(1) { top: 0; left: 20px; width: 1px; height: 100%; animation: line-pulse 2s infinite alternate; animation-delay: -0.5s; }
+        .holo-line:nth-child(2) { top: 0; right: 20px; width: 1px; height: 100%; animation: line-pulse 2s infinite alternate; animation-delay: -1s; }
+        .holo-line:nth-child(3) { top: 10px; left: 0; width: 100%; height: 1px; animation: line-pulse 2s infinite alternate; animation-delay: -1.5s; }
+        .holo-line:nth-child(4) { bottom: 10px; left: 0; width: 100%; height: 1px; animation: line-pulse 2s infinite alternate; animation-delay: -2s; }
+        @keyframes line-pulse { 0% { opacity: 0.3; background: rgba(200, 170, 110, 0.5); } 100% { opacity: 0.7; background: rgba(240, 230, 210, 0.5); } }
+
+        .scan-line {
+            position: absolute; width: 100%; height: 2px;
+            background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(200,170,110,0.5) 20%, rgba(255,255,255,0.8) 50%, rgba(240,230,210,0.5) 80%, rgba(0,0,0,0) 100%);
+            top: 0; left: 0; filter: blur(1px); opacity: 0; z-index: 2; pointer-events: none; animation: scan 2.5s infinite;
+        }
+        @keyframes scan { 0% { top: -5px; opacity: 0; } 15%, 85% { opacity: 0.7; } 100% { top: 65px; opacity: 0; } }
+
+        .button-hexagons { position: absolute; width: 100%; height: 140px; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 1; }
+        .hexagon {
+            position: absolute; width: 20px; height: 11.5px; background: transparent; border: 1px solid rgba(200, 170, 110, 0.2);
+            transform: rotate(30deg); opacity: 0; animation: hexagon-pulse 3s infinite;
+        }
+        .hexagon::before, .hexagon::after {
+            content: ""; position: absolute; width: 100%; height: 100%; top: -1px; left: -1px;
+            background: transparent; border: 1px solid rgba(200, 170, 110, 0.2);
+        }
+        .hexagon::before { transform: rotate(60deg); } .hexagon::after { transform: rotate(-60deg); }
+        .hexagon:nth-child(1) { top: 0px; left: 5px; animation-delay: 0.1s; }
+        .hexagon:nth-child(2) { top: 0px; right: 5px; animation-delay: 0.3s; }
+        .hexagon:nth-child(3) { bottom: 0px; left: 5px; animation-delay: 0.5s; }
+        .hexagon:nth-child(4) { bottom: 0px; right: 5px; animation-delay: 0.7s; }
+
+        @keyframes hexagon-pulse {
+            0% { opacity: 0; transform: rotate(30deg) scale(0.8); }
+            20%, 80% { opacity: 0.4; transform: rotate(30deg) scale(1); }
+            100% { opacity: 0; transform: rotate(30deg) scale(1.2); }
+        }
+
+        .digital-glyphs {
+            position: absolute; width: 100%; height: 120px; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 1;
+        }
+        .digital-glyph {
+            position: absolute; color: rgba(200, 170, 110, 0.4); font-size: 8px; font-family: "Orbitron", monospace; white-space: nowrap; opacity: 0; animation: glyph-fade 4s infinite;
+        }
+        .digital-glyph:nth-child(1) { top: 0px; left: 10px; animation-delay: 0.2s; }
+        .digital-glyph:nth-child(2) { top: 10px; right: 5px; animation-delay: 0.6s; }
+        .digital-glyph:nth-child(3) { bottom: 0px; left: 20px; animation-delay: 1s; }
+        .digital-glyph:nth-child(4) { bottom: 10px; right: 10px; animation-delay: 1.4s; }
+        @keyframes glyph-fade { 0% { opacity: 0; transform: translateY(0); } 10%, 90% { opacity: 0.7; } 100% { opacity: 0; transform: translateY(-5px); } }
+
+        .button-glitch {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: transparent; pointer-events: none; z-index: 3; opacity: 0; animation: button-glitch 6s infinite;
+        }
+        @keyframes button-glitch {
+            0%, 100%, 94%, 96% { opacity: 0; }
+            94.5% { opacity: 0.8; transform: translate(3px, -1px) skew(-5deg, 1deg); background: rgba(240, 230, 210, 0.1); }
+            95% { opacity: 0.8; transform: translate(-3px, 1px) skew(5deg, -1deg); background: rgba(200, 170, 110, 0.1); }
+            95.5% { opacity: 0.8; transform: translate(1px, 0) skew(-1deg, 0); background: rgba(255, 255, 255, 0.1); }
+        }
+
+        .sound-wave {
+            position: absolute; bottom: -15px; left: 0; width: 100%; height: 10px; display: flex; justify-content: center; align-items: center; pointer-events: none;
+        }
+        .wave-bar {
+            width: 1.5px; height: 3px; background: rgba(200, 170, 110, 0.4); margin: 0 2px; border-radius: 1px; animation: wave-animation 1.5s infinite;
+        }
+        @keyframes wave-animation { 0%, 100% { height: 3px; } 50% { height: 10px; } }
+        .wave-bar:nth-child(1) { animation-delay: 0.1s; } .wave-bar:nth-child(2) { animation-delay: 0.2s; } .wave-bar:nth-child(3) { animation-delay: 0.3s; } .wave-bar:nth-child(4) { animation-delay: 0.4s; } .wave-bar:nth-child(5) { animation-delay: 0.5s; } .wave-bar:nth-child(6) { animation-delay: 0.6s; } .wave-bar:nth-child(7) { animation-delay: 0.7s; } .wave-bar:nth-child(8) { animation-delay: 0.8s; } .wave-bar:nth-child(9) { animation-delay: 0.9s; } .wave-bar:nth-child(10) { animation-delay: 1s; } .wave-bar:nth-child(11) { animation-delay: 0.9s; } .wave-bar:nth-child(12) { animation-delay: 0.8s; }
+
+        .holo-button:hover { color: #fff; text-shadow: 0 0 15px rgba(255, 255, 255, 0.8); transform: scale(1.02); }
+        .holo-button:hover .holo-glow { background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.2) 0%, rgba(200, 170, 110, 0.2) 40%, rgba(0, 0, 0, 0) 70%); animation: glow-pulse-hover 1.5s infinite alternate; }
+        @keyframes glow-pulse-hover { 0% { opacity: 0.6; filter: blur(10px) brightness(1); } 100% { opacity: 0.9; filter: blur(15px) brightness(1.5); } }
+        .holo-button:active { transform: scale(0.98); transition: all 0.1s ease; }
+        
+        .button-text { position: relative; z-index: 5; transform-style: preserve-3d; text-transform: uppercase; }
+
     </style>
 </head>
-<body class="hex-bg min-h-screen flex items-center justify-center p-4">
+<body class="min-h-screen flex items-center justify-center p-4 overflow-hidden">
+
+    <div class="star-container fixed inset-0 z-[-1] pointer-events-none">
+        <div id="stars"></div>
+        <div id="stars2"></div>
+        <div id="stars3"></div>
+    </div>
 
     <div class="max-w-md w-full hex-panel p-8 sm:p-10 rounded-sm">
         
@@ -59,7 +230,7 @@
                 <h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-wider esport-font">LoL Worlds Mayhem</h1>
             </div>
 
-            <form id="loginForm" class="space-y-5">
+            <form id="loginForm" class="space-y-4">
                 <div>
                     <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">Felhasználónév</label>
                     <input type="text" id="loginUsername" required class="w-full input-hex px-4 py-3 text-white transition-colors placeholder-slate-600" placeholder="Felhasználónév">
@@ -76,7 +247,27 @@
                         </button>
                     </div>
                 </div>
-                <button type="submit" id="btnLogin" class="w-full btn-hex font-black uppercase tracking-widest text-lg px-6 py-3 mt-6">Belépés</button>
+
+                <div class="button-container">
+                    <div class="button-hexagons">
+                        <div class="hexagon"></div><div class="hexagon"></div><div class="hexagon"></div><div class="hexagon"></div>
+                    </div>
+                    <div class="digital-glyphs">
+                        <div class="digital-glyph">0x89F2 AUTH PROTOCOL</div>
+                        <div class="digital-glyph">SYS.HEX.INIT()</div>
+                    </div>
+                    <button type="submit" id="btnLogin" class="holo-button">
+                        <div class="button-border"></div>
+                        <div class="button-text">Belépés</div>
+                        <div class="holo-glow"></div>
+                        <div class="button-glitch"></div>
+                        <div class="holo-lines"><div class="holo-line"></div><div class="holo-line"></div><div class="holo-line"></div><div class="holo-line"></div></div>
+                        <div class="scan-line"></div>
+                    </button>
+                    <div class="sound-wave">
+                        <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+                    </div>
+                </div>
             </form>
 
             <p class="text-center text-slate-400 text-sm mt-6">Nincs még fiókod? <a href="#" onclick="showSection('registerSection')" class="text-[#c8aa6e] hover:text-[#f0e6d2] font-bold transition-colors">Regisztráció</a></p>
@@ -89,15 +280,33 @@
 
             <form id="registerForm" class="space-y-4">
                 <div>
-                    <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">Felhasználónév</label>
+                    <div class="flex items-center gap-2 mb-1.5">
+                        <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest">Felhasználónév</label>
+                        <div class="item-hints">
+                            <div class="hint">
+                                <span class="hint-dot">?</span>
+                                <div class="hint-content">A felhasználónévnek minimum 3 karakter hosszúnak kell lennie.</div>
+                            </div>
+                        </div>
+                    </div>
                     <input type="text" id="regUsername" required minlength="3" class="w-full input-hex px-4 py-3 text-white transition-colors" placeholder="Felhasználónév">
                 </div>
+                
                 <div>
                     <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">E-mail cím</label>
                     <input type="email" id="regEmail" required class="w-full input-hex px-4 py-3 text-white transition-colors">
                 </div>
+
                 <div>
-                    <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">Jelszó</label>
+                    <div class="flex items-center gap-2 mb-1.5">
+                        <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest">Jelszó</label>
+                        <div class="item-hints">
+                            <div class="hint">
+                                <span class="hint-dot">?</span>
+                                <div class="hint-content">A jelszónak minimum 6 karakter hosszúnak kell lennie, a biztonság érdekében.</div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="relative">
                         <input type="password" id="regPassword" required minlength="6" class="w-full input-hex px-4 py-3 pr-12 text-white transition-colors">
                         <button type="button" onclick="toggleVisibility('regPassword', 'eyeReg1')" class="absolute inset-y-0 right-0 px-4 flex items-center text-slate-400 hover:text-[#c8aa6e] focus:outline-none">
@@ -114,7 +323,27 @@
                         </button>
                     </div>
                 </div>
-                <button type="submit" id="btnRegister" class="w-full btn-hex font-black uppercase tracking-widest text-lg px-6 py-3 mt-6">Regisztráció</button>
+
+                <div class="button-container">
+                    <div class="button-hexagons">
+                        <div class="hexagon"></div><div class="hexagon"></div><div class="hexagon"></div><div class="hexagon"></div>
+                    </div>
+                    <div class="digital-glyphs">
+                        <div class="digital-glyph">0x89F2 REG PROTOCOL</div>
+                        <div class="digital-glyph">SYS.CREATE.INIT()</div>
+                    </div>
+                    <button type="submit" id="btnRegister" class="holo-button">
+                        <div class="button-border"></div>
+                        <div class="button-text">Regisztráció</div>
+                        <div class="holo-glow"></div>
+                        <div class="button-glitch"></div>
+                        <div class="holo-lines"><div class="holo-line"></div><div class="holo-line"></div><div class="holo-line"></div><div class="holo-line"></div></div>
+                        <div class="scan-line"></div>
+                    </button>
+                    <div class="sound-wave">
+                        <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+                    </div>
+                </div>
             </form>
 
             <p class="text-center text-slate-400 text-sm mt-6">Már van fiókod? <a href="#" onclick="showSection('loginSection')" class="text-[#c8aa6e] hover:text-[#f0e6d2] font-bold transition-colors">Belépés</a></p>
@@ -126,12 +355,28 @@
                 <p class="text-slate-400 mt-2 text-sm">Add meg az e-mail címed a visszaállító linkhez.</p>
             </div>
 
-            <form id="forgotForm" class="space-y-5">
+            <form id="forgotForm" class="space-y-4">
                 <div>
                     <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">E-mail cím</label>
                     <input type="email" id="forgotEmail" required class="w-full input-hex px-4 py-3 text-white transition-colors">
                 </div>
-                <button type="submit" id="btnForgot" class="w-full btn-hex font-black uppercase tracking-widest text-lg px-6 py-3 mt-6">Link küldése</button>
+                
+                <div class="button-container">
+                    <div class="button-hexagons">
+                        <div class="hexagon"></div><div class="hexagon"></div><div class="hexagon"></div><div class="hexagon"></div>
+                    </div>
+                    <button type="submit" id="btnForgot" class="holo-button">
+                        <div class="button-border"></div>
+                        <div class="button-text">Link küldése</div>
+                        <div class="holo-glow"></div>
+                        <div class="button-glitch"></div>
+                        <div class="holo-lines"><div class="holo-line"></div><div class="holo-line"></div><div class="holo-line"></div><div class="holo-line"></div></div>
+                        <div class="scan-line"></div>
+                    </button>
+                    <div class="sound-wave">
+                        <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+                    </div>
+                </div>
             </form>
 
             <p class="text-center text-slate-400 text-sm mt-6"><a href="#" onclick="showSection('loginSection')" class="text-slate-500 hover:text-[#f0e6d2] font-bold transition-colors">← Vissza a belépéshez</a></p>
@@ -143,10 +388,18 @@
                 <p class="text-slate-400 mt-2 text-sm">Állítsd be a fiókod új jelszavát.</p>
             </div>
 
-            <form id="resetForm" class="space-y-5">
+            <form id="resetForm" class="space-y-4">
                 <input type="hidden" id="resetTokenInput">
                 <div>
-                    <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">Új jelszó</label>
+                    <div class="flex items-center gap-2 mb-1.5">
+                        <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest">Új jelszó</label>
+                        <div class="item-hints">
+                            <div class="hint">
+                                <span class="hint-dot">?</span>
+                                <div class="hint-content">A jelszónak minimum 6 karakter hosszúnak kell lennie.</div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="relative">
                         <input type="password" id="resetNewPassword" required minlength="6" class="w-full input-hex px-4 py-3 pr-12 text-white transition-colors">
                         <button type="button" onclick="toggleVisibility('resetNewPassword', 'eyeReset1')" class="absolute inset-y-0 right-0 px-4 flex items-center text-slate-400 hover:text-[#c8aa6e] focus:outline-none">
@@ -155,7 +408,7 @@
                     </div>
                 </div>
                 <div>
-                    <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">Új jelszó megerősítése</label>
+                    <label class="block text-[0.65rem] font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5">Jelszó megerősítése</label>
                     <div class="relative">
                         <input type="password" id="resetConfirmPassword" required minlength="6" class="w-full input-hex px-4 py-3 pr-12 text-white transition-colors">
                         <button type="button" onclick="toggleVisibility('resetConfirmPassword', 'eyeReset2')" class="absolute inset-y-0 right-0 px-4 flex items-center text-slate-400 hover:text-[#c8aa6e] focus:outline-none">
@@ -163,7 +416,23 @@
                         </button>
                     </div>
                 </div>
-                <button type="submit" id="btnReset" class="w-full btn-hex font-black uppercase tracking-widest text-lg px-6 py-3 mt-6">Jelszó frissítése</button>
+                
+                <div class="button-container">
+                    <div class="button-hexagons">
+                        <div class="hexagon"></div><div class="hexagon"></div><div class="hexagon"></div><div class="hexagon"></div>
+                    </div>
+                    <button type="submit" id="btnReset" class="holo-button">
+                        <div class="button-border"></div>
+                        <div class="button-text">Jelszó frissítése</div>
+                        <div class="holo-glow"></div>
+                        <div class="button-glitch"></div>
+                        <div class="holo-lines"><div class="holo-line"></div><div class="holo-line"></div><div class="holo-line"></div><div class="holo-line"></div></div>
+                        <div class="scan-line"></div>
+                    </button>
+                    <div class="sound-wave">
+                        <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+                    </div>
+                </div>
             </form>
         </div>
 
@@ -215,17 +484,18 @@
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const btn = e.submitter; btn.disabled = true; btn.innerText = 'Belépés...';
+            const btn = e.submitter; 
+            const btnText = btn.querySelector('.button-text');
+            btn.disabled = true; btnText.innerText = 'Belépés...';
             try {
                 const res = await fetch('/api/auth/login', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    // FIGYELEM: Itt loginUsername-t küldünk az email helyett!
                     body: JSON.stringify({ username: document.getElementById('loginUsername').value, password: document.getElementById('loginPassword').value })
                 });
                 const data = await res.json();
-                if (!res.ok) { showAlert(data.message, true); btn.disabled = false; btn.innerText = 'Belépés az arénába'; } 
+                if (!res.ok) { showAlert(data.message, true); btn.disabled = false; btnText.innerText = 'Belépés'; } 
                 else { window.location.href = '/dashboard'; }
-            } catch(err) { showAlert('Szerver hiba történt.', true); btn.disabled = false; btn.innerText = 'Belépés az arénába'; }
+            } catch(err) { showAlert('Szerver hiba történt.', true); btn.disabled = false; btnText.innerText = 'Belépés'; }
         });
 
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
@@ -234,7 +504,10 @@
             const p2 = document.getElementById('regConfirmPassword').value;
             if (p1 !== p2) return showAlert('A jelszavak nem egyeznek!', true);
 
-            const btn = e.submitter; btn.disabled = true; btn.innerText = 'Regisztráció...';
+            const btn = e.submitter; 
+            const btnText = btn.querySelector('.button-text');
+            btn.disabled = true; btnText.innerText = 'Regisztráció...';
+            
             try {
                 const res = await fetch('/api/auth/register', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -247,18 +520,19 @@
                 });
                 const data = await res.json();
                 showAlert(data.message, !res.ok);
-                
                 if (res.ok) {
                     document.getElementById('registerForm').reset();
                     setTimeout(() => showSection('loginSection'), 4000);
                 }
-                btn.disabled = false; btn.innerText = 'Regisztráció & Hitelesítés';
-            } catch(err) { showAlert('Szerver hiba történt.', true); btn.disabled = false; btn.innerText = 'Regisztráció & Hitelesítés'; }
+                btn.disabled = false; btnText.innerText = 'Regisztráció';
+            } catch(err) { showAlert('Szerver hiba történt.', true); btn.disabled = false; btnText.innerText = 'Regisztráció'; }
         });
 
         document.getElementById('forgotForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const btn = e.submitter; btn.disabled = true; btn.innerText = 'Küldés...';
+            const btn = e.submitter; 
+            const btnText = btn.querySelector('.button-text');
+            btn.disabled = true; btnText.innerText = 'Küldés...';
             try {
                 const res = await fetch('/api/auth/forgot-password', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -266,12 +540,9 @@
                 });
                 const data = await res.json();
                 showAlert(data.message, !res.ok);
-                if (res.ok) {
-                    setTimeout(() => showSection('loginSection'), 3000);
-                } else {
-                    btn.disabled = false; btn.innerText = 'Link küldése';
-                }
-            } catch(err) { showAlert('Hálózati hiba.', true); btn.disabled = false; btn.innerText = 'Link küldése'; }
+                if (res.ok) { setTimeout(() => showSection('loginSection'), 3000); } 
+                else { btn.disabled = false; btnText.innerText = 'Link küldése'; }
+            } catch(err) { showAlert('Hálózati hiba.', true); btn.disabled = false; btnText.innerText = 'Link küldése'; }
         });
 
         document.getElementById('resetForm').addEventListener('submit', async (e) => {
@@ -281,7 +552,9 @@
             
             if (p1 !== p2) return showAlert('Az új jelszavak nem egyeznek!', true);
 
-            const btn = e.submitter; btn.disabled = true; btn.innerText = 'Frissítés...';
+            const btn = e.submitter; 
+            const btnText = btn.querySelector('.button-text');
+            btn.disabled = true; btnText.innerText = 'Frissítés...';
             try {
                 const res = await fetch('/api/auth/reset-password', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -294,8 +567,8 @@
                 const data = await res.json();
                 showAlert(data.message, !res.ok);
                 if (res.ok) { setTimeout(() => window.location.href = '/login', 2500); } 
-                else { btn.disabled = false; btn.innerText = 'Jelszó frissítése'; }
-            } catch(err) { showAlert('Hiba történt a kommunikációban.', true); btn.disabled = false; btn.innerText = 'Jelszó frissítése'; }
+                else { btn.disabled = false; btnText.innerText = 'Jelszó frissítése'; }
+            } catch(err) { showAlert('Hiba történt a kommunikációban.', true); btn.disabled = false; btnText.innerText = 'Jelszó frissítése'; }
         });
     </script>
 </body>
