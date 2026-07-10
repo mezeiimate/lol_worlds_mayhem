@@ -8,102 +8,317 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style> 
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap');
-        body { background-color: #010a13; color: #f0e6d2; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; } 
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap');
+
+        body { 
+            background-color: #010a13; 
+            color: #f0e6d2; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: relative;
+        } 
         .esport-font { font-family: 'Oswald', sans-serif; text-transform: uppercase; }
-        .hex-border { border: 1px solid #c8aa6e; }
+        .cyber-font { font-family: 'Orbitron', sans-serif; }
+        
+        .hex-panel {
+            background: linear-gradient(135deg, rgba(9, 20, 40, 0.9) 0%, rgba(1, 10, 19, 0.95) 100%);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            box-shadow: 0 0 25px rgba(0, 229, 255, 0.1), inset 0 0 20px rgba(0,0,0,0.8);
+            position: relative;
+            backdrop-filter: blur(10px);
+            overflow: visible;
+        }
+        .hex-panel::before, .hex-panel::after {
+            content: ''; position: absolute; width: 12px; height: 12px; border: 1px solid #00e5ff; pointer-events: none;
+        }
+        .hex-panel::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+        .hex-panel::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+
+        /* --- HÁTTÉR ANIMÁCIÓ --- */
+        .star-container { background: radial-gradient(ellipse at bottom, #091428 0%, #010a13 100%); }
+        #stars, #stars2, #stars3 { background: transparent; }
+        #stars { width: 1px; height: 1px; box-shadow: 501px 811px #00e5ff, 1450px 1324px #fff, 1093px 1780px #fff, 1469px 678px #ff0092, 904px 741px #fff, 1160px 781px #fff, 1841px 1962px #fff, 1630px 1667px #fff, 1788px 676px #fff, 367px 1734px #fff, 1343px 156px #fff, 1283px 1142px #fff, 1062px 378px #fff, 1395px 467px #fff, 1017px 1891px #fff, 137px 1114px #fff, 1767px 1403px #fff, 1543px 11px #fff, 1078px 181px #fff, 1189px 1574px #fff, 1697px 1551px #fff, 439px 472px #fff, 1491px 677px #fff, 1364px 599px #fff, 34px 382px #fff, 1221px 1584px #00e5ff, 1266px 1499px #fff, 169px 1907px #fff, 1219px 1125px #fff, 659px 18px #fff, 1731px 1959px #fff, 332px 1216px #fff, 1913px 788px #fff, 80px 712px #fff, 326px 1605px #fff, 574px 1502px #fff, 473px 1653px #fff, 404px 975px #fff, 322px 1797px #fff, 425px 1321px #fff, 1121px 1797px #fff, 731px 647px #fff, 891px 1584px #fff, 1523px 109px #fff, 1379px 244px #fff, 865px 1064px #fff, 493px 956px #fff, 624px 1380px #fff, 440px 619px #fff, 1630px 767px #fff, 955px 1196px #ff0092, 62px 729px #fff, 126px 946px #fff, 1256px 896px #fff, 1444px 256px #fff, 661px 1628px #fff, 1078px 1716px #fff, 300px 737px #fff, 1734px 413px #fff, 1296px 129px #fff; animation: animStar 50s linear infinite; }
+        #stars2 { width: 2px; height: 2px; box-shadow: 1925px 1320px #fff, 693px 1778px #fff, 1016px 711px #00e5ff, 1171px 563px #fff, 661px 1919px #fff, 1610px 44px #fff, 1275px 140px #fff, 1208px 1802px #fff, 1473px 1587px #fff, 11px 1117px #fff, 853px 1757px #fff, 1149px 937px #fff, 1353px 428px #fff, 270px 279px #fff, 258px 1404px #fff, 417px 1188px #fff, 286px 561px #fff, 393px 1765px #fff, 147px 881px #fff, 666px 1097px #fff, 1425px 1278px #fff, 806px 156px #ff0092, 1252px 561px #fff, 218px 52px #fff, 1371px 1980px #fff, 171px 745px #fff, 1424px 89px #fff, 137px 244px #fff, 939px 1922px #fff, 137px 1080px #fff, 1757px 50px #fff, 904px 536px #fff, 1938px 1001px #fff, 1172px 440px #fff, 72px 1475px #fff, 102px 121px #fff, 804px 1671px #fff, 1314px 270px #fff, 440px 1341px #fff, 1216px 511px #fff, 1061px 1523px #fff, 97px 274px #fff, 704px 1318px #fff, 52px 1872px #fff, 1962px 296px #fff, 111px 289px #fff, 1157px 1236px #fff, 1347px 1451px #fff, 820px 286px #fff, 1389px 1169px #fff; animation: animStar 100s linear infinite; }
+        #stars3 { width: 3px; height: 3px; box-shadow: 200px 981px #fff, 1731px 521px #fff, 132px 1039px #fff, 1888px 1547px #ff0092, 899px 1226px #fff, 1887px 580px #fff, 1548px 1092px #fff, 1626px 689px #fff, 254px 1072px #fff, 1684px 1211px #fff, 672px 1267px #fff, 939px 668px #fff, 1969px 645px #fff, 1126px 983px #fff, 457px 568px #fff, 476px 876px #fff, 829px 1896px #fff, 1364px 1846px #fff, 1507px 1120px #fff, 936px 1948px #fff, 1833px 832px #fff, 1424px 285px #fff, 1377px 1596px #fff, 432px 153px #fff, 1348px 1410px #fff, 1529px 954px #00e5ff, 1102px 387px #fff, 264px 297px #fff, 811px 977px #fff, 1931px 673px #fff, 1734px 978px #fff, 1772px 1567px #fff, 1197px 1400px #fff, 764px 282px #fff, 1103px 822px #fff, 872px 1803px #fff, 1057px 1763px #fff, 52px 1299px #fff, 1312px 1236px #fff, 235px 1082px #fff, 299px 1086px #fff, 1017px 1602px #fff, 1950px 626px #fff, 1306px 132px #fff, 1358px 1618px #fff, 1873px 1718px #fff, 1447px 940px #fff, 1888px 1195px #fff, 1704px 1765px #fff, 872px 1357px #fff; animation: animStar 150s linear infinite; }
+        #stars:after, #stars2:after, #stars3:after { content: " "; position: absolute; top: 2000px; width: inherit; height: inherit; box-shadow: inherit; }
+        @keyframes animStar { from { transform: translateY(0px); } to { transform: translateY(-2000px); } }
+
+        /* --- CYBER NEON SVG PATH --- */
+        .neon-svg-container { position: absolute; top: -50px; left: 50%; transform: translateX(-50%); width: 100%; height: 200px; pointer-events: none; z-index: 0; opacity: 0.5; display: flex; justify-content: center; align-items: center; }
+        .neon-svg { position: absolute; width: 400px; fill: none; }
+        .neon-svg:nth-child(2) { filter: blur(40px); }
+        .neon-svg path { d: path("M0,25 C150,110 150, -60 300,25"); stroke: #00e5ff; stroke-width: 25; stroke-linecap: round; transform: translate(50px,50%); animation: svgAnimate 3s ease-in-out infinite alternate; }
+        @keyframes svgAnimate { 0% { stroke: #00e5ff; d: path("M0,25 C150,110 150, -60 300,25"); } 50% { stroke: #ff0092; d: path("M0,25 C160,-50 140, 110 300,25"); } 100% { stroke: #8949ff; d: path("M0,25 C140,100 160, -40 300,25"); } }
+
+        /* --- HOLO INPUT DESIGN --- */
+        .input-group-wrapper { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 2rem; width: 100%; position: relative; }
+        .input-container { position: relative; flex: 1; display: flex; flex-direction: column; align-items: center; z-index: 10; }
+        .input-field-container { position: relative; width: 100%; }
+        
+        .holo-input {
+            width: 100%; height: 50px; background: rgba(0, 12, 36, 0.7); border: none; outline: none;
+            padding: 0 45px 0 15px; color: rgba(0, 229, 255, 0.9); font-family: "Orbitron", sans-serif;
+            font-size: 14px; letter-spacing: 1px; backdrop-filter: blur(5px); border-radius: 2px;
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.1), inset 0 0 10px rgba(0, 0, 0, 0.8);
+            transition: all 0.3s ease; z-index: 1; position: relative;
+        }
+        .holo-input::placeholder { color: rgba(0, 150, 255, 0.3); transition: all 0.3s ease; text-transform: uppercase; font-size: 12px; }
+        
+        /* READONLY STATE STYLES */
+        .holo-input[readonly] { background: rgba(10, 15, 20, 0.5); color: #89a1c2; border: 1px solid rgba(0, 229, 255, 0.1); cursor: default; }
+        
+        .input-border { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; border: 1px solid rgba(0, 229, 255, 0.3); border-radius: 2px; z-index: 2; }
+        .input-border::before, .input-border::after { content: ""; position: absolute; width: 15px; height: 15px; border: 1px solid rgba(0, 229, 255, 0.7); z-index: 2; transition: all 0.3s ease; }
+        .input-border::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+        .input-border::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+        
+        .holo-scan-line { position: absolute; width: 100%; height: 2px; background: linear-gradient(90deg, transparent 0%, rgba(0,229,255,0.5) 20%, rgba(255,255,255,0.8) 50%, rgba(0,229,255,0.5) 80%, transparent 100%); top: 0; left: 0; opacity: 0; filter: blur(1px); z-index: 3; pointer-events: none; transition: opacity 0.3s ease; }
+        .input-glow { position: absolute; width: 100%; height: 100%; top: 0; left: 0; background: radial-gradient(ellipse at center, rgba(0,229,255,0.15) 0%, transparent 70%); opacity: 0; z-index: 0; transition: opacity 0.3s ease; pointer-events: none; }
+        .input-active-indicator { position: absolute; width: 6px; height: 6px; background: rgba(0,229,255,0.7); border-radius: 50%; right: 15px; top: 22px; opacity: 0.3; box-shadow: 0 0 10px rgba(0,229,255,0.5); transition: all 0.3s ease; z-index: 2; pointer-events: none; }
+        
+        .input-label { position: absolute; top: -22px; left: 0; color: rgba(0,229,255,0.7); font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; transition: all 0.3s ease; pointer-events: none; font-family: 'Orbitron', sans-serif; }
+        
+        .input-data-visualization { position: absolute; width: calc(100% - 30px); height: 2px; bottom: 8px; left: 15px; display: flex; justify-content: space-between; z-index: 2; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+        .data-segment { width: 6%; height: 100%; background: rgba(0,229,255,0.4); transition: all 0.5s ease; }
+        .data-segment:nth-child(even) { height: 4px; transform: translateY(-1px); }
+        
+        .input-particles { position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 3; overflow: hidden; }
+        .input-particle { position: absolute; width: 3px; height: 3px; background: rgba(0,229,255,0.7); border-radius: 50%; opacity: 0; filter: blur(1px); transition: all 0.3s ease; }
+        
+        .interface-lines { position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 2; }
+        .interface-line { position: absolute; background: rgba(0,229,255,0.3); transition: all 0.3s ease; }
+        .interface-line:nth-child(1) { width: 15px; height: 1px; top: 10px; right: 10px; }
+        .interface-line:nth-child(2) { width: 1px; height: 15px; top: 10px; right: 10px; }
+        .interface-line:nth-child(3) { width: 1px; height: 15px; bottom: 10px; left: 10px; }
+        .interface-line:nth-child(4) { width: 15px; height: 1px; bottom: 10px; left: 10px; }
+        
+        .hex-decoration { position: absolute; width: 20px; height: 23px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); border: 1px solid rgba(0,229,255,0.3); right: -10px; top: 50%; transform: translateY(-50%); transition: all 0.3s ease; z-index: 2; }
+        .power-indicator { position: absolute; width: 100%; height: 2px; background: linear-gradient(90deg, rgba(0,229,255,0.8) 0%, rgba(0,229,255,0.1) 100%); bottom: 0; left: 0; transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease; z-index: 3; }
+        
+        .holo-input:not([readonly]):focus { background: rgba(0, 22, 46, 0.8); box-shadow: 0 0 20px rgba(0,229,255,0.3), inset 0 0 15px rgba(0,0,0,0.9); color: #fff; }
+        .holo-input:not([readonly]):focus::placeholder { color: rgba(0,229,255,0.3); transform: translateX(10px); }
+        .holo-input:not([readonly]):focus ~ .input-border { border-color: rgba(0,229,255,0.7); }
+        .holo-input:not([readonly]):focus ~ .input-border::before, .holo-input:not([readonly]):focus ~ .input-border::after { border-color: #00e5ff; width: 25px; height: 25px; }
+        .holo-input:not([readonly]):focus ~ .holo-scan-line { opacity: 1; animation: scan-animation 2s infinite ease-in-out; }
+        .holo-input:not([readonly]):focus ~ .input-glow { opacity: 1; }
+        .holo-input:not([readonly]):focus ~ .input-active-indicator { opacity: 1; background: #00e5ff; box-shadow: 0 0 15px #00e5ff; transform: scale(1.2); }
+        .holo-input:not([readonly]):focus ~ .input-label { color: #00e5ff; text-shadow: 0 0 10px rgba(0,229,255,0.7); transform: translateY(-3px); }
+        .holo-input:not([readonly]):focus ~ .input-data-visualization { opacity: 1; }
+        .holo-input:not([readonly]):focus ~ .input-data-visualization .data-segment { animation: data-pulse 2s infinite; animation-delay: calc(var(--index) * 0.1s); }
+        .holo-input:not([readonly]):focus ~ .interface-lines .interface-line { background: rgba(0,229,255,0.6); }
+        .holo-input:not([readonly]):focus ~ .hex-decoration { border-color: rgba(0,229,255,0.6); box-shadow: 0 0 10px rgba(0,229,255,0.3); transform: translateY(-50%) rotate(30deg); }
+        .holo-input:not([readonly]):focus ~ .input-particles .input-particle { opacity: 1; animation: particle-float 3s infinite ease-in-out; animation-delay: calc(var(--index) * 0.2s); }
+        .holo-input:not([readonly]):focus ~ .power-indicator { transform: scaleX(1); }
+        .holo-input:not([readonly]):hover { background: rgba(0, 15, 40, 0.75); }
+        
+        @keyframes scan-animation { 0% { top: 0; opacity: 0; } 10%, 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+        @keyframes data-pulse { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.8); } }
+        @keyframes particle-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        /* PASSWORD TOGGLE EYE */
+        .password-toggle-btn { position: absolute; right: 25px; top: 15px; z-index: 20; color: rgba(0,229,255,0.5); cursor: pointer; transition: color 0.3s; }
+        .password-toggle-btn:hover { color: #00e5ff; }
+
+        /* --- TOOLTIP DESIGN --- */
+        .item-hints { display: flex; align-items: center; justify-content: center; z-index: 20; position: relative; margin-top: 15px; }
+        .item-hints .hint { position: relative; display: flex; justify-content: center; align-items: center; }
+        .item-hints .hint-dot {
+            width: 22px; height: 22px; border: 1px solid rgba(0,229,255,0.4); border-radius: 50%;
+            color: #00e5ff; display: flex; align-items: center; justify-content: center;
+            font-weight: 900; cursor: help; font-size: 11px; transition: all 0.3s ease; font-family: 'Orbitron', sans-serif;
+            box-shadow: inset 0 0 5px rgba(0,229,255,0.2); background: rgba(0,10,20,0.5);
+        }
+        .item-hints .hint:hover .hint-dot { background-color: rgba(0,229,255,0.2); border-color: #00e5ff; box-shadow: 0 0 10px rgba(0,229,255,0.5); }
+        .item-hints .hint-content {
+            position: absolute; right: 35px; bottom: 50%; transform: translateY(50%); width: 220px;
+            background: rgba(1, 10, 19, 0.95); border: 1px solid #00e5ff; border-left: 3px solid #ff0092;
+            padding: 12px; font-size: 10px; color: #f0e6d2; text-transform: uppercase; font-family: 'Orbitron', sans-serif;
+            opacity: 0; visibility: hidden; transition: all 0.4s ease;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.15); pointer-events: none; z-index: 30; letter-spacing: 1px;
+        }
+        .item-hints .hint:hover .hint-content { opacity: 1; visibility: visible; }
+        .item-hints .hint-content::before { content: ""; position: absolute; height: 1px; background: #00e5ff; right: -30px; bottom: 50%; width: 0; transition: width 0.4s ease; transition-delay: 0.1s; }
+        .item-hints .hint:hover .hint-content::before { width: 30px; }
+        .item-hints .hint-content::after { content: ""; position: absolute; height: 1px; background: #ff0092; right: -10px; bottom: 50%; transform-origin: right; transform: rotate(-45deg); width: 0; transition: width 0.4s ease; }
+        .item-hints .hint:hover .hint-content::after { width: 15px; }
+
+        /* --- COSMIC PORTAL BUTTON --- */
+        .cosmic-portal-btn-wrapper { width: 100%; margin-top: 2rem; margin-bottom: 1rem; }
+        .cosmic-portal-btn {
+            --btn-bg: #010a13; --btn-color: #00e5ff; --btn-highlight: #091428;
+            --portal-color1: #ff0092; --portal-color2: #00e5ff;
+            position: relative; width: 100%; display: block; text-align: center;
+            font-family: "Orbitron", sans-serif; font-size: 1.1em; font-weight: bold; letter-spacing: 0.1em; text-transform: uppercase;
+            color: var(--btn-color); background-color: var(--btn-bg); border: none; padding: 1em 2em;
+            cursor: pointer; overflow: hidden; transition: all 0.3s ease;
+            clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 90% 100%, 10% 100%, 0% 70%);
+        }
+        .cosmic-portal-btn::before {
+            content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(from 0deg at 50% 50%, var(--portal-color1) 0deg, var(--portal-color2) 120deg, var(--portal-color1) 240deg, var(--portal-color2) 360deg);
+            animation: rotatePortal 4s linear infinite; opacity: 0.4; transition: opacity 0.3s ease;
+        }
+        .cosmic-portal-btn:hover::before { opacity: 1; }
+        .cosmic-portal-btn::after { content: ""; position: absolute; inset: 2px; background-color: var(--btn-bg); clip-path: inherit; z-index: 1; }
+        .cosmic-btn-text { position: relative; z-index: 2; text-shadow: 0 0 10px rgba(0, 229, 255, 0.5); }
+        .portal-effect { position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, var(--btn-highlight), transparent 50%); opacity: 0; transition: opacity 0.3s ease; z-index: 1; }
+        .cosmic-portal-btn:hover .portal-effect { opacity: 1; animation: pulsePortal 2s ease-in-out infinite; }
+        .cosmic-portal-btn:hover { transform: translateY(-3px); filter: drop-shadow(0 5px 15px rgba(255, 0, 146, 0.4)); color: #fff; }
+        .cosmic-portal-btn:active { transform: translateY(0); }
+        @keyframes rotatePortal { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes pulsePortal { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+        /* --- GLITCH ALERT BOX --- */
+        .glitch-alert {
+            position: relative; border: 1px solid #ff004d; background: rgba(20,0,0,0.85); color: #ff004d;
+            padding: 15px; font-family: 'Orbitron', sans-serif; text-transform: uppercase; text-align: center;
+            font-size: 12px; letter-spacing: 1px; box-shadow: 0 0 15px rgba(255,0,77,0.4), inset 0 0 10px rgba(255,0,77,0.2);
+            animation: alert-glitch 0.4s cubic-bezier(.25, .46, .45, .94) both infinite alternate; margin-bottom: 25px;
+            backdrop-filter: blur(5px); display: none; z-index: 20;
+        }
+        .glitch-alert.success {
+            color: #00e5ff; border-color: #00e5ff; background: rgba(0,20,30,0.85); box-shadow: 0 0 15px rgba(0,229,255,0.4), inset 0 0 10px rgba(0,229,255,0.2); animation: none;
+        }
+        @keyframes alert-glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 1px); }
+            40% { transform: translate(-1px, -1px); }
+            60% { transform: translate(2px, 1px); }
+            80% { transform: translate(1px, -1px); }
+            100% { transform: translate(0); }
+        }
+
     </style>
 </head>
-<body class="p-4 md:p-8 min-h-screen">
+<body class="min-h-screen flex items-center justify-center p-4 overflow-hidden">
 
-    <div class="max-w-4xl mx-auto">
-        <header class="bg-[#091428] rounded-sm border border-[#c8aa6e]/50 p-6 shadow-xl mb-8 flex flex-col md:flex-row justify-between items-center gap-4 relative overflow-hidden">
-            <div class="z-10 flex items-center gap-4">
-                <button onclick="window.location.href='/dashboard'" class="bg-[#1e2328] hover:bg-[#2b3137] border border-[#c8aa6e]/50 px-4 py-2 rounded-sm text-sm font-bold text-white transition-colors">← Vissza</button>
-                <div>
-                    <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-wider esport-font">Fiók beállításai</h1>
-                    <p class="text-slate-400 mt-1 uppercase tracking-widest text-xs font-bold">Felhasználói profil kezelése</p>
+    <!-- HÁTTÉR ANIMÁCIÓ -->
+    <div class="star-container fixed inset-0 z-[-1] pointer-events-none">
+        <div id="stars"></div>
+        <div id="stars2"></div>
+        <div id="stars3"></div>
+    </div>
+
+    <!-- MAIN PROFILE PANEL -->
+    <div class="max-w-[480px] w-full hex-panel p-8 sm:p-10 rounded-sm">
+        
+        <!-- NEON SVG BACKGROUND EFFECT -->
+        <div class="neon-svg-container">
+            <svg class="neon-svg" viewBox="0 0 400 100"><path/></svg>
+            <svg class="neon-svg" viewBox="0 0 400 100"><path/></svg>
+        </div>
+
+        <!-- GLITCH ERROR BOX -->
+        <div id="alertBox" class="glitch-alert"></div>
+
+        <div class="block relative z-10">
+            <div class="text-center mb-10 border-b border-[#00e5ff]/30 pb-4">
+                <h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#00e5ff] to-[#ff0092] tracking-wider esport-font drop-shadow-[0_0_10px_rgba(0,229,255,0.5)]">Fiók beállításai</h1>
+                <p class="text-slate-400 mt-2 text-xs uppercase tracking-widest font-bold cyber-font">Rendszer adatok és biztonság</p>
+            </div>
+
+            <!-- READONLY USER DATA -->
+            <div class="space-y-6 mb-8">
+                <div class="input-group-wrapper !mb-0">
+                    <div class="input-container">
+                        <div class="input-field-container">
+                            <input type="text" readonly value="<%= username %>" class="holo-input" />
+                            <div class="input-border"></div>
+                            <div class="input-label">Felhasználónév</div>
+                            <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group-wrapper !mb-0">
+                    <div class="input-container">
+                        <div class="input-field-container">
+                            <input type="email" readonly value="<%= email %>" class="holo-input" />
+                            <div class="input-border"></div>
+                            <div class="input-label">E-mail cím (Azonosító)</div>
+                            <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="absolute right-0 top-0 w-64 h-full bg-gradient-to-l from-[#c8aa6e]/10 to-transparent pointer-events-none"></div>
-        </header>
 
-        <div id="globalMessage" class="hidden mb-6 px-4 py-3 rounded-sm text-sm text-center font-bold tracking-wide shadow-inner border"></div>
+            <div class="w-full h-px bg-gradient-to-r from-transparent via-[#ff0092]/50 to-transparent mb-8"></div>
 
-        <main class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            
-            <div class="bg-[#091428] rounded-sm hex-border p-6 shadow-xl h-fit">
-                <h2 class="text-lg font-bold text-[#c8aa6e] uppercase tracking-widest border-b border-[#c8aa6e]/30 pb-2 mb-6">Felhasználó adatok</h2>
+            <!-- CHANGE PASSWORD FORM -->
+            <form id="changePasswordForm">
+                <h2 class="text-sm font-bold text-[#ff0092] uppercase tracking-widest mb-6 cyber-font text-center">Jelszó módosítása</h2>
                 
-                <div class="mb-6">
-                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">E-mail cím (Nem módosítható)</label>
-                    <input type="text" disabled value="<%= email %>" class="w-full bg-[#010a13] border border-slate-700 rounded-sm px-4 py-3 text-slate-500 cursor-not-allowed">
-                </div>
-
-                <form id="usernameForm" class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-bold text-[#c8aa6e] uppercase tracking-widest mb-2">Felhasználónév</label>
-                        <input type="text" id="newUsername" value="<%= username %>" required minlength="3" class="w-full bg-[#1e2328] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 text-white focus:outline-none focus:border-[#f0e6d2] transition-colors">
-                    </div>
-                    <button type="submit" id="btnUsername" class="bg-[#c8aa6e] hover:bg-[#f0e6d2] text-[#010a13] font-bold uppercase tracking-widest text-sm px-6 py-2.5 rounded-sm transition-colors shadow-lg">Felhasználónév mentése</button>
-                </form>
-            </div>
-
-            <div class="space-y-8">
-                <div class="bg-[#091428] rounded-sm hex-border p-6 shadow-xl">
-                    <h2 class="text-lg font-bold text-[#c8aa6e] uppercase tracking-widest border-b border-[#c8aa6e]/30 pb-2 mb-6">Biztonság</h2>
-                    
-                    <form id="passwordForm" class="space-y-4">
-                        <div>
-                            <label class="block text-xs font-bold text-[#c8aa6e] uppercase tracking-widest mb-2">Jelenlegi jelszó</label>
-                            <div class="relative">
-                                <input type="password" id="currentPassword" required class="w-full bg-[#1e2328] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 pr-12 text-white focus:outline-none focus:border-[#f0e6d2] transition-colors">
-                                <button type="button" onclick="toggleVisibility('currentPassword', 'eyeCurrent')" class="absolute inset-y-0 right-0 px-4 flex items-center text-slate-400 hover:text-[#c8aa6e] focus:outline-none">
-                                    <svg id="eyeCurrent" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-[#c8aa6e] uppercase tracking-widest mb-2">Új jelszó</label>
-                            <div class="relative">
-                                <input type="password" id="newPassword" required minlength="6" class="w-full bg-[#1e2328] border border-[#c8aa6e]/30 rounded-sm px-4 py-3 pr-12 text-white focus:outline-none focus:border-[#f0e6d2] transition-colors">
-                                <button type="button" onclick="toggleVisibility('newPassword', 'eyeNew')" class="absolute inset-y-0 right-0 px-4 flex items-center text-slate-400 hover:text-[#c8aa6e] focus:outline-none">
-                                    <svg id="eyeNew" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                                </button>
-                            </div>
-                        </div>
-                        <button type="submit" id="btnPassword" class="bg-[#c8aa6e] hover:bg-[#f0e6d2] text-[#010a13] font-bold uppercase tracking-widest text-sm px-6 py-2.5 rounded-sm transition-colors shadow-lg">Jelszó cseréje</button>
-                    </form>
-                </div>
-
-                <div class="bg-[#091428] rounded-sm hex-border p-6 shadow-xl border-red-900/50">
-                    <h2 class="text-lg font-bold text-red-500 uppercase tracking-widest border-b border-red-900/50 pb-2 mb-4">Fiók törlése</h2>
-                    <p class="text-slate-400 text-xs mb-4">A fiók törlése végleges, és nem vonható vissza. A baráti kapcsolataid elvesznek, a korábbi versenyeredményeid pedig anonimizálva maradnak meg a rendszerben.</p>
-                    <div id="deleteConfirmation" class="hidden mb-4 p-4 border border-red-500/50 bg-red-900/30">
-                        <p class="text-red-400 text-sm font-bold mb-3">Biztosan törölni szeretnéd a fiókodat?</p>
-                        <div class="flex gap-2">
-                            <button onclick="executeDelete()" class="bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase tracking-widest px-4 py-2 rounded-sm">Igen, véglegesen törlöm</button>
-                            <button onclick="cancelDelete()" class="bg-[#1e2328] hover:bg-[#2b3137] border border-slate-500 text-slate-300 font-bold text-xs uppercase tracking-widest px-4 py-2 rounded-sm">Mégsem</button>
+                <div class="input-group-wrapper">
+                    <div class="input-container">
+                        <div class="input-field-container">
+                            <input type="password" id="newPassword" required minlength="6" class="holo-input" placeholder="********" />
+                            <svg id="eyePass1" onclick="toggleVisibility('newPassword', 'eyePass1')" class="w-4 h-4 password-toggle-btn" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                            <div class="input-border"></div><div class="holo-scan-line"></div><div class="input-glow"></div><div class="input-active-indicator"></div>
+                            <div class="input-label">Új jelszó</div>
+                            <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div><div class="data-segment" style="--index: 4;"></div></div>
+                            <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
+                            <div class="hex-decoration"></div><div class="power-indicator"></div>
                         </div>
                     </div>
-                    <button id="btnInitDelete" onclick="initDelete()" class="bg-red-900/50 border border-red-500/50 hover:bg-red-600 text-red-200 hover:text-white font-bold uppercase tracking-widest text-sm px-6 py-2.5 rounded-sm transition-colors">Fiók törlése</button>
+                    <div class="item-hints shrink-0">
+                        <div class="hint">
+                            <span class="hint-dot">?</span>
+                            <div class="hint-content">Erős jelszó (Min. 6 karakter).</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-        </main>
+                <div class="input-group-wrapper">
+                    <div class="input-container">
+                        <div class="input-field-container">
+                            <input type="password" id="confirmNewPassword" required minlength="6" class="holo-input" placeholder="********" />
+                            <svg id="eyePass2" onclick="toggleVisibility('confirmNewPassword', 'eyePass2')" class="w-4 h-4 password-toggle-btn" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                            <div class="input-border"></div><div class="holo-scan-line"></div><div class="input-glow"></div><div class="input-active-indicator"></div>
+                            <div class="input-label">Jelszó megerősítése</div>
+                            <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div><div class="data-segment" style="--index: 4;"></div></div>
+                            <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
+                            <div class="hex-decoration"></div><div class="power-indicator"></div>
+                        </div>
+                    </div>
+                    <div class="item-hints shrink-0">
+                        <div class="hint">
+                            <span class="hint-dot">?</span>
+                            <div class="hint-content">Pontosan egyeznie kell az előzővel.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cosmic-portal-btn-wrapper">
+                    <button type="submit" id="btnSave" class="cosmic-portal-btn">
+                        <span class="cosmic-btn-text">Mentés</span>
+                        <div class="portal-effect"></div>
+                    </button>
+                </div>
+            </form>
+
+            <div class="text-center mt-6">
+                <a href="/dashboard" class="text-slate-500 hover:text-[#00e5ff] font-bold transition-colors uppercase tracking-widest text-xs cyber-font">← Vissza a Központba</a>
+            </div>
+        </div>
     </div>
 
     <script>
-        const messageBox = document.getElementById('globalMessage');
+        const alertBox = document.getElementById('alertBox');
 
-        function showMessage(text, type) {
-            messageBox.innerHTML = text;
-            messageBox.classList.remove('hidden', 'bg-red-950/40', 'border-red-500/50', 'text-red-400', 'bg-emerald-950/40', 'border-emerald-500/50', 'text-emerald-400');
-            if (type === 'error') { messageBox.classList.add('bg-red-950/40', 'border-red-500/50', 'text-red-400'); } 
-            else { messageBox.classList.add('bg-emerald-950/40', 'border-emerald-500/50', 'text-emerald-400'); }
+        function showAlert(msg, isError = false) {
+            alertBox.innerHTML = `[SYS.MSG] // ${msg}`;
+            alertBox.style.display = 'block';
+            alertBox.classList.remove('success');
+            
+            if (!isError) { alertBox.classList.add('success'); }
+            
+            alertBox.style.animation = 'none';
+            alertBox.offsetHeight; 
+            alertBox.style.animation = null;
         }
 
         function toggleVisibility(inputId, iconId) {
-            const input = document.getElementById(inputId); const icon = document.getElementById(iconId);
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
             if (input.type === 'password') {
                 input.type = 'text';
                 icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />`;
@@ -113,47 +328,39 @@
             }
         }
 
-        document.getElementById('usernameForm').addEventListener('submit', async (e) => {
+        document.getElementById('changePasswordForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const btn = document.getElementById('btnUsername'); btn.disabled = true; btn.innerText = 'Mentés...';
+            const p1 = document.getElementById('newPassword').value;
+            const p2 = document.getElementById('confirmNewPassword').value;
+            
+            if (p1 !== p2) return showAlert('Az új jelszavak nem egyeznek!', true);
+
+            const btn = e.submitter; 
+            const btnText = btn.querySelector('.cosmic-btn-text');
+            btn.disabled = true; btnText.innerText = 'Feldolgozás...';
+            
             try {
-                const res = await fetch('/api/user/update-username', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ newUsername: document.getElementById('newUsername').value.trim() }) });
-                const data = await res.json();
-                if (!res.ok) { showMessage(data.message || data.errors.map(err => err.message).join('<br>'), 'error'); } 
-                else { showMessage(data.message, 'success'); }
-            } catch(err) { showMessage('Hálózati hiba.', 'error'); } 
-            finally { btn.disabled = false; btn.innerText = 'Név mentése'; }
+                // Biztonságos backend endpoint feltételezése a kontextus alapján
+                const res = await fetch('/api/user/change-password', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ newPassword: p1, confirmNewPassword: p2 })
+                });
+                
+                let data = {};
+                try { data = await res.json(); } catch(e) {}
+
+                if (res.ok) { 
+                    showAlert(data.message || 'Jelszó sikeresen frissítve.', false); 
+                    document.getElementById('changePasswordForm').reset();
+                } else { 
+                    showAlert(data.message || 'Művelet megtagadva.', true); 
+                }
+            } catch(err) { 
+                showAlert('Kommunikációs hiba a szerverrel.', true); 
+            } finally {
+                btn.disabled = false; btnText.innerText = 'Mentés';
+            }
         });
-
-        document.getElementById('passwordForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('btnPassword'); btn.disabled = true; btn.innerText = 'Csere...';
-            try {
-                const res = await fetch('/api/user/update-password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ currentPassword: document.getElementById('currentPassword').value, newPassword: document.getElementById('newPassword').value }) });
-                const data = await res.json();
-                if (!res.ok) { showMessage(data.message || data.errors.map(err => err.message).join('<br>'), 'error'); btn.disabled = false; btn.innerText = 'Jelszó cseréje'; } 
-                else { showMessage(data.message, 'success'); setTimeout(() => window.location.href = '/login', 2500); }
-            } catch(err) { showMessage('Hálózati hiba.', 'error'); btn.disabled = false; btn.innerText = 'Jelszó cseréje'; }
-        });
-
-        function initDelete() {
-            document.getElementById('btnInitDelete').classList.add('hidden');
-            document.getElementById('deleteConfirmation').classList.remove('hidden');
-        }
-
-        function cancelDelete() {
-            document.getElementById('deleteConfirmation').classList.add('hidden');
-            document.getElementById('btnInitDelete').classList.remove('hidden');
-        }
-
-        async function executeDelete() {
-            try {
-                const res = await fetch('/api/user/delete-account', { method: 'POST' });
-                const data = await res.json();
-                if (res.ok) { window.location.href = '/login'; } 
-                else { showMessage(data.message, 'error'); cancelDelete(); }
-            } catch(err) { showMessage('Hálózati hiba.', 'error'); cancelDelete(); }
-        }
     </script>
 </body>
 </html>

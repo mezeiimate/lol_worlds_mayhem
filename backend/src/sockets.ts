@@ -16,6 +16,24 @@ const PickSchema = z.object({
     playerId: z.string().uuid(), role: z.enum(['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT']) 
 });
 
+// Chat sémák
+const PrivateMessageSchema = z.object({
+    senderId: z.string().uuid(),
+    targetId: z.string().uuid(),
+    message: z.string().max(250)
+});
+
+const FetchHistorySchema = z.object({
+    userId: z.string().uuid(),
+    friendId: z.string().uuid()
+});
+
+const LobbyMessageSchema = z.object({
+    lobbyId: z.string().uuid(),
+    senderId: z.string().uuid(),
+    message: z.string().max(250)
+});
+
 const generateInviteCode = () => Array.from({ length: 6 }, () => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.charAt(Math.floor(Math.random() * 36))).join('');
 const RoleColumnMap: Record<string, string> = { 'TOP': 'top_player_id', 'JUNGLE': 'jng_player_id', 'MID': 'mid_player_id', 'ADC': 'adc_player_id', 'SUPPORT': 'sup_player_id' };
 
@@ -221,6 +239,110 @@ export const setupSockets = (io: Server) => {
     socket.on('identify', (payload: any) => {
         try { const data = IdentifySchema.parse(payload); socket.join(data.userId); } catch (e) { }
     });
+
+    // PRIVÁT CHAT KÜLDÉS - BEÉPÍTVE
+    socket.on('send_private_message', async (payload: any) => {
+        const client = await pool.connect();
+        try {
+            const data = PrivateMessageSchema.parse(payload);
+
+            const friendCheck = await client.query(`
+                SELECT 1 FROM public.friendships
+                WHERE ((user_id_1 = $1 AND user_id_2 = $2) OR (user_id_1 = $2 AND user_id_2 = $1))
+                AND status = 'ACCEPTED'
+            `, [data.senderId, data.targetId]);
+
+            if ((friendCheck.rowCount ?? 0) === 0) {
+                throw new Error('Nincs jogosultságod üzenetet küldeni ennek a felhasználónak.');
+            }
+
+            const senderRes = await client.query('SELECT username FROM public.users WHERE id = $1', [data.senderId]);
+            const senderName = senderRes.rows[0].username;
+
+            await client.query(`
+                INSERT INTO public.private_messages (sender_id, receiver_id, content)
+                VALUES ($1::uuid, $2::uuid, $3)
+            `, [data.senderId, data.targetId, data.message]);
+
+            io.to(data.targetId).emit('receive_private_message', {
+                senderId: data.senderId,
+                senderName: senderName,
+                message: data.message
+            });
+
+        } catch (error: any) {
+            console.error('[Socket] Chat error:', error.message);
+        } finally {
+            client.release();
+        }
+    });
+
+    // PRIVÁT CHAT ELŐZMÉNYEK LEKÉRÉSE - BEÉPÍTVE
+    socket.on('fetch_private_history', async (payload: any, callback: any) => {
+        const client = await pool.connect();
+        try {
+            const data = FetchHistorySchema.parse(payload);
+            const friendCheck = await client.query(`
+                SELECT 1 FROM public.friendships
+                WHERE ((user_id_1 = $1 AND user_id_2 = $2) OR (user_id_1 = $2 AND user_id_2 = $1))
+                AND status = 'ACCEPTED'
+            `, [data.userId, data.friendId]);
+
+            if ((friendCheck.rowCount ?? 0) === 0) throw new Error('Nem vagytok barátok.');
+
+            const msgs = await client.query(`
+                SELECT pm.sender_id, pm.content, u.username as sender_name
+                FROM public.private_messages pm
+                JOIN public.users u ON pm.sender_id = u.id
+                WHERE (pm.sender_id = $1 AND pm.receiver_id = $2) OR (pm.sender_id = $2 AND pm.receiver_id = $1)
+                ORDER BY pm.sent_at ASC
+                LIMIT 50
+            `, [data.userId, data.friendId]);
+
+            callback({ status: 'success', messages: msgs.rows });
+        } catch(e: any) {
+            callback({ status: 'error', message: e.message });
+        } finally {
+            client.release();
+        }
+    });
+
+    // LOBBY CHAT - BEÉPÍTVE KÉSŐBBRE
+    socket.on('send_lobby_message', async (payload: any) => {
+        const client = await pool.connect();
+        try {
+            const data = LobbyMessageSchema.parse(payload);
+
+            const participantCheck = await client.query(`
+                SELECT 1 FROM public.lobby_teams
+                WHERE lobby_id = $1 AND user_id = $2
+            `, [data.lobbyId, data.senderId]);
+
+            if ((participantCheck.rowCount ?? 0) === 0) {
+                throw new Error('Nem vagy tagja ennek a lobbinak.');
+            }
+
+            const senderRes = await client.query('SELECT username FROM public.users WHERE id = $1', [data.senderId]);
+            const senderName = senderRes.rows[0].username;
+
+            await client.query(`
+                INSERT INTO public.lobby_messages (lobby_id, sender_id, content)
+                VALUES ($1::uuid, $2::uuid, $3)
+            `, [data.lobbyId, data.senderId, data.message]);
+
+            io.to(data.lobbyId).emit('receive_lobby_message', {
+                senderId: data.senderId,
+                senderName: senderName,
+                message: data.message
+            });
+
+        } catch (error: any) {
+            console.error('[Socket] Lobby Chat error:', error.message);
+        } finally {
+            client.release();
+        }
+    });
+
 
     socket.on('send_lobby_invite', async (payload: any, callback: any) => {
         const client = await pool.connect();
