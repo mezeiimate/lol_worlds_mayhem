@@ -21,14 +21,14 @@
         
         .hex-panel {
             background: linear-gradient(135deg, rgba(9, 20, 40, 0.9) 0%, rgba(1, 10, 19, 0.95) 100%);
-            border: 1px solid rgba(0, 229, 255, 0.3);
-            box-shadow: 0 0 25px rgba(0, 229, 255, 0.1), inset 0 0 20px rgba(0,0,0,0.8);
+            border: 1px solid rgba(200, 170, 110, 0.3);
+            box-shadow: 0 0 25px rgba(200, 170, 110, 0.1), inset 0 0 20px rgba(0,0,0,0.8);
             position: relative;
             backdrop-filter: blur(10px);
             overflow: visible;
         }
         .hex-panel::before, .hex-panel::after {
-            content: ''; position: absolute; width: 12px; height: 12px; border: 1px solid #00e5ff; pointer-events: none;
+            content: ''; position: absolute; width: 12px; height: 12px; border: 1px solid #c8aa6e; pointer-events: none;
         }
         .hex-panel::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
         .hex-panel::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
@@ -37,16 +37,20 @@
             background: linear-gradient(135deg, rgba(40, 9, 20, 0.9) 0%, rgba(19, 1, 10, 0.95) 100%);
             border: 1px solid rgba(255, 0, 77, 0.3);
             box-shadow: 0 0 25px rgba(255, 0, 77, 0.1), inset 0 0 20px rgba(0,0,0,0.8);
+            position: relative;
         }
-        .hex-panel-danger::before, .hex-panel-danger::after { border-color: #ff004d; }
+        .hex-panel-danger::before, .hex-panel-danger::after {
+            content: ''; position: absolute; width: 12px; height: 12px; border: 1px solid #ff004d; pointer-events: none;
+        }
+        .hex-panel-danger::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+        .hex-panel-danger::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
 
         /* --- HÁTTÉR ANIMÁCIÓ --- */
-        .star-container { background: radial-gradient(ellipse at bottom, #091428 0%, #010a13 100%); }
+        .star-container { background: radial-gradient(ellipse at bottom, #091428 0%, #010a13 100%); position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
         #stars, #stars2, #stars3 { background: transparent; }
-        #stars { width: 1px; height: 1px; box-shadow: 501px 811px #00e5ff, 1450px 1324px #fff, 1093px 1780px #fff, 1469px 678px #ff0092, 904px 741px #fff, 1160px 781px #fff, 1841px 1962px #fff, 1630px 1667px #fff, 1788px 676px #fff, 367px 1734px #fff, 1343px 156px #fff, 1283px 1142px #fff, 1062px 378px #fff, 1395px 467px #fff, 1017px 1891px #fff, 137px 1114px #fff, 1767px 1403px #fff, 1543px 11px #fff, 1078px 181px #fff, 1189px 1574px #fff, 1697px 1551px #fff, 439px 472px #fff, 1491px 677px #fff, 1364px 599px #fff, 34px 382px #fff, 1221px 1584px #00e5ff, 1266px 1499px #fff, 169px 1907px #fff, 1219px 1125px #fff, 659px 18px #fff, 1731px 1959px #fff, 332px 1216px #fff, 1913px 788px #fff, 80px 712px #fff, 326px 1605px #fff, 574px 1502px #fff, 473px 1653px #fff, 404px 975px #fff, 322px 1797px #fff, 425px 1321px #fff, 1121px 1797px #fff, 731px 647px #fff, 891px 1584px #fff, 1523px 109px #fff, 1379px 244px #fff, 865px 1064px #fff, 493px 956px #fff, 624px 1380px #fff, 440px 619px #fff, 1630px 767px #fff, 955px 1196px #ff0092, 62px 729px #fff, 126px 946px #fff, 1256px 896px #fff, 1444px 256px #fff, 661px 1628px #fff, 1078px 1716px #fff, 300px 737px #fff, 1734px 413px #fff, 1296px 129px #fff; animation: animStar 50s linear infinite; }
-        #stars2 { width: 2px; height: 2px; box-shadow: 1925px 1320px #fff, 693px 1778px #fff, 1016px 711px #00e5ff, 1171px 563px #fff, 661px 1919px #fff, 1610px 44px #fff, 1275px 140px #fff, 1208px 1802px #fff, 1473px 1587px #fff, 11px 1117px #fff, 853px 1757px #fff, 1149px 937px #fff, 1353px 428px #fff, 270px 279px #fff, 258px 1404px #fff, 417px 1188px #fff, 286px 561px #fff, 393px 1765px #fff, 147px 881px #fff, 666px 1097px #fff, 1425px 1278px #fff, 806px 156px #ff0092, 1252px 561px #fff, 218px 52px #fff, 1371px 1980px #fff, 171px 745px #fff, 1424px 89px #fff, 137px 244px #fff, 939px 1922px #fff, 137px 1080px #fff, 1757px 50px #fff, 904px 536px #fff, 1938px 1001px #fff, 1172px 440px #fff, 72px 1475px #fff, 102px 121px #fff, 804px 1671px #fff, 1314px 270px #fff, 440px 1341px #fff, 1216px 511px #fff, 1061px 1523px #fff, 97px 274px #fff, 704px 1318px #fff, 52px 1872px #fff, 1962px 296px #fff, 111px 289px #fff, 1157px 1236px #fff, 1347px 1451px #fff, 820px 286px #fff, 1389px 1169px #fff; animation: animStar 100s linear infinite; }
-        #stars3 { width: 3px; height: 3px; box-shadow: 200px 981px #fff, 1731px 521px #fff, 132px 1039px #fff, 1888px 1547px #ff0092, 899px 1226px #fff, 1887px 580px #fff, 1548px 1092px #fff, 1626px 689px #fff, 254px 1072px #fff, 1684px 1211px #fff, 672px 1267px #fff, 939px 668px #fff, 1969px 645px #fff, 1126px 983px #fff, 457px 568px #fff, 476px 876px #fff, 829px 1896px #fff, 1364px 1846px #fff, 1507px 1120px #fff, 936px 1948px #fff, 1833px 832px #fff, 1424px 285px #fff, 1377px 1596px #fff, 432px 153px #fff, 1348px 1410px #fff, 1529px 954px #00e5ff, 1102px 387px #fff, 264px 297px #fff, 811px 977px #fff, 1931px 673px #fff, 1734px 978px #fff, 1772px 1567px #fff, 1197px 1400px #fff, 764px 282px #fff, 1103px 822px #fff, 872px 1803px #fff, 1057px 1763px #fff, 52px 1299px #fff, 1312px 1236px #fff, 235px 1082px #fff, 299px 1086px #fff, 1017px 1602px #fff, 1950px 626px #fff, 1306px 132px #fff, 1358px 1618px #fff, 1873px 1718px #fff, 1447px 940px #fff, 1888px 1195px #fff, 1704px 1765px #fff, 872px 1357px #fff; animation: animStar 150s linear infinite; }
-        #stars:after, #stars2:after, #stars3:after { content: " "; position: absolute; top: 2000px; width: inherit; height: inherit; box-shadow: inherit; }
+        #stars { width: 1px; height: 1px; box-shadow: 501px 811px #c8aa6e, 1450px 1324px #fff, 1093px 1780px #fff, 1469px 678px #c8aa6e, 904px 741px #fff, 1160px 781px #fff, 1841px 1962px #fff, 1630px 1667px #fff, 1788px 676px #fff, 367px 1734px #fff, 1343px 156px #fff, 1283px 1142px #fff, 1062px 378px #fff, 1395px 467px #fff, 1017px 1891px #fff, 137px 1114px #fff, 1767px 1403px #fff, 1543px 11px #fff, 1078px 181px #fff, 1189px 1574px #fff, 1697px 1551px #fff, 439px 472px #fff, 1491px 677px #fff, 1364px 599px #fff, 34px 382px #fff, 1221px 1584px #c8aa6e, 1266px 1499px #fff, 169px 1907px #fff, 1219px 1125px #fff, 659px 18px #fff, 1731px 1959px #fff, 332px 1216px #fff, 1913px 788px #fff, 80px 712px #fff, 326px 1605px #fff, 574px 1502px #fff, 473px 1653px #fff, 404px 975px #fff, 322px 1797px #fff, 425px 1321px #fff, 1121px 1797px #fff, 731px 647px #fff, 891px 1584px #fff, 1523px 109px #fff, 1379px 244px #fff, 865px 1064px #fff, 493px 956px #fff, 624px 1380px #fff, 440px 619px #fff, 1630px 767px #fff; animation: animStar 50s linear infinite; }
+        #stars2 { width: 2px; height: 2px; box-shadow: 1925px 1320px #fff, 693px 1778px #fff, 1016px 711px #c8aa6e, 1171px 563px #fff, 661px 1919px #fff, 1610px 44px #fff, 1275px 140px #fff, 1208px 1802px #fff, 1473px 1587px #fff, 11px 1117px #fff, 853px 1757px #fff, 1149px 937px #fff, 1353px 428px #fff, 270px 279px #fff, 258px 1404px #fff, 417px 1188px #fff, 286px 561px #fff, 393px 1765px #fff, 147px 881px #fff, 666px 1097px #fff, 1425px 1278px #fff, 806px 156px #c8aa6e, 1252px 561px #fff, 218px 52px #fff, 1371px 1980px #fff, 171px 745px #fff, 1424px 89px #fff, 137px 244px #fff, 939px 1922px #fff, 137px 1080px #fff, 1757px 50px #fff, 904px 536px #fff, 1938px 1001px #fff, 1172px 440px #fff, 72px 1475px #fff, 102px 121px #fff, 804px 1671px #fff, 1314px 270px #fff, 440px 1341px #fff, 1216px 511px #fff; animation: animStar 100s linear infinite; }
+        #stars3 { width: 3px; height: 3px; box-shadow: 200px 981px #fff, 1731px 521px #fff, 132px 1039px #fff, 1888px 1547px #c8aa6e, 899px 1226px #fff, 1887px 580px #fff, 1548px 1092px #fff, 1626px 689px #fff, 254px 1072px #fff, 1684px 1211px #fff, 672px 1267px #fff, 939px 668px #fff, 1969px 645px #fff, 1126px 983px #fff, 457px 568px #fff, 476px 876px #fff, 829px 1896px #fff, 1364px 1846px #fff, 1507px 1120px #fff, 936px 1948px #fff, 1833px 832px #fff, 1424px 285px #fff, 1377px 1596px #fff, 432px 153px #fff, 1348px 1410px #fff, 1529px 954px #c8aa6e, 1102px 387px #fff, 264px 297px #fff, 811px 977px #fff, 1931px 673px #fff, 1734px 978px #fff; animation: animStar 150s linear infinite; }
         @keyframes animStar { from { transform: translateY(0px); } to { transform: translateY(-2000px); } }
 
         /* --- CYBER NEON SVG PATH (Background effect) --- */
@@ -55,13 +59,13 @@
         .neon-svg:nth-child(2) { filter: blur(40px); }
         .neon-svg path {
             d: path("M0,25 C150,110 150, -60 300,25");
-            stroke: #00e5ff; stroke-width: 25; stroke-linecap: round;
+            stroke: #c8aa6e; stroke-width: 25; stroke-linecap: round;
             transform: translate(50px,50%); animation: svgAnimate 3s ease-in-out infinite alternate;
         }
         @keyframes svgAnimate {
-            0% { stroke: #00e5ff; d: path("M0,25 C150,110 150, -60 300,25"); }
-            50% { stroke: #ff0092; d: path("M0,25 C160,-50 140, 110 300,25"); }
-            100% { stroke: #8949ff; d: path("M0,25 C140,100 160, -40 300,25"); }
+            0% { stroke: #c8aa6e; d: path("M0,25 C150,110 150, -60 300,25"); }
+            50% { stroke: #f0e6d2; d: path("M0,25 C160,-50 140, 110 300,25"); }
+            100% { stroke: #c8aa6e; d: path("M0,25 C140,100 160, -40 300,25"); }
         }
 
         /* --- HOLO INPUT DESIGN --- */
@@ -70,104 +74,101 @@
         .input-field-container { position: relative; width: 100%; }
         
         .holo-input {
-            width: 100%; height: 50px; background: rgba(0, 12, 36, 0.7); border: none; outline: none;
-            padding: 0 45px 0 15px; color: rgba(0, 229, 255, 0.9); font-family: "Orbitron", sans-serif;
+            width: 100%; height: 50px; background: rgba(1, 10, 19, 0.7); border: none; outline: none;
+            padding: 0 45px 0 15px; color: #f0e6d2; font-family: "Segoe UI", sans-serif; font-weight: 500;
             font-size: 14px; letter-spacing: 1px; backdrop-filter: blur(5px); border-radius: 2px;
-            box-shadow: 0 0 15px rgba(0, 229, 255, 0.1), inset 0 0 10px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 15px rgba(200, 170, 110, 0.1), inset 0 0 10px rgba(0, 0, 0, 0.8);
             transition: all 0.3s ease; z-index: 1; position: relative;
         }
-        .holo-input::placeholder { color: rgba(0, 150, 255, 0.3); transition: all 0.3s ease; text-transform: uppercase; font-size: 12px; }
+        .holo-input::placeholder { color: rgba(200, 170, 110, 0.3); transition: all 0.3s ease; text-transform: uppercase; font-size: 12px; font-weight: bold; letter-spacing: 2px; }
         
         /* READONLY STATE STYLES */
-        .holo-input[readonly] { background: rgba(10, 15, 20, 0.5); color: #89a1c2; border: 1px solid rgba(0, 229, 255, 0.1); cursor: default; }
+        .holo-input[readonly] { background: rgba(10, 15, 20, 0.5); color: #89a1c2; border: 1px solid rgba(200, 170, 110, 0.1); cursor: default; }
         
-        .input-border { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; border: 1px solid rgba(0, 229, 255, 0.3); border-radius: 2px; z-index: 2; }
-        .input-border::before, .input-border::after { content: ""; position: absolute; width: 15px; height: 15px; border: 1px solid rgba(0, 229, 255, 0.7); z-index: 2; transition: all 0.3s ease; }
+        .input-border { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; border: 1px solid rgba(200, 170, 110, 0.3); border-radius: 2px; z-index: 2; }
+        .input-border::before, .input-border::after { content: ""; position: absolute; width: 15px; height: 15px; border: 1px solid rgba(200, 170, 110, 0.7); z-index: 2; transition: all 0.3s ease; }
         .input-border::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
         .input-border::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
         
-        .holo-scan-line { position: absolute; width: 100%; height: 2px; background: linear-gradient(90deg, transparent 0%, rgba(0,229,255,0.5) 20%, rgba(255,255,255,0.8) 50%, rgba(0,229,255,0.5) 80%, transparent 100%); top: 0; left: 0; opacity: 0; filter: blur(1px); z-index: 3; pointer-events: none; transition: opacity 0.3s ease; }
-        .input-glow { position: absolute; width: 100%; height: 100%; top: 0; left: 0; background: radial-gradient(ellipse at center, rgba(0,229,255,0.15) 0%, transparent 70%); opacity: 0; z-index: 0; transition: opacity 0.3s ease; pointer-events: none; }
-        .input-active-indicator { position: absolute; width: 6px; height: 6px; background: rgba(0,229,255,0.7); border-radius: 50%; right: 15px; top: 22px; opacity: 0.3; box-shadow: 0 0 10px rgba(0,229,255,0.5); transition: all 0.3s ease; z-index: 2; pointer-events: none; }
+        .holo-scan-line { position: absolute; width: 100%; height: 2px; background: linear-gradient(90deg, transparent 0%, rgba(200,170,110,0.5) 20%, rgba(240,230,210,0.8) 50%, rgba(200,170,110,0.5) 80%, transparent 100%); top: 0; left: 0; opacity: 0; filter: blur(1px); z-index: 3; pointer-events: none; transition: opacity 0.3s ease; }
+        .input-glow { position: absolute; width: 100%; height: 100%; top: 0; left: 0; background: radial-gradient(ellipse at center, rgba(200,170,110,0.15) 0%, transparent 70%); opacity: 0; z-index: 0; transition: opacity 0.3s ease; pointer-events: none; }
+        .input-active-indicator { position: absolute; width: 6px; height: 6px; background: rgba(200,170,110,0.7); border-radius: 50%; right: 15px; top: 22px; opacity: 0.3; box-shadow: 0 0 10px rgba(200,170,110,0.5); transition: all 0.3s ease; z-index: 2; pointer-events: none; }
         
-        .input-label { position: absolute; top: -22px; left: 0; color: rgba(0,229,255,0.7); font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; transition: all 0.3s ease; pointer-events: none; font-family: 'Orbitron', sans-serif; }
+        .input-label { position: absolute; top: -22px; left: 0; color: rgba(200,170,110,0.7); font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; transition: all 0.3s ease; pointer-events: none; font-family: 'Oswald', sans-serif; }
         
         .input-data-visualization { position: absolute; width: calc(100% - 30px); height: 2px; bottom: 8px; left: 15px; display: flex; justify-content: space-between; z-index: 2; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
-        .data-segment { width: 6%; height: 100%; background: rgba(0,229,255,0.4); transition: all 0.5s ease; }
+        .data-segment { width: 6%; height: 100%; background: rgba(200,170,110,0.4); transition: all 0.5s ease; }
         .data-segment:nth-child(even) { height: 4px; transform: translateY(-1px); }
         
-        .input-particles { position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 3; overflow: hidden; }
-        .input-particle { position: absolute; width: 3px; height: 3px; background: rgba(0,229,255,0.7); border-radius: 50%; opacity: 0; filter: blur(1px); transition: all 0.3s ease; }
-        
         .interface-lines { position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 2; }
-        .interface-line { position: absolute; background: rgba(0,229,255,0.3); transition: all 0.3s ease; }
+        .interface-line { position: absolute; background: rgba(200,170,110,0.3); transition: all 0.3s ease; }
         .interface-line:nth-child(1) { width: 15px; height: 1px; top: 10px; right: 10px; }
         .interface-line:nth-child(2) { width: 1px; height: 15px; top: 10px; right: 10px; }
         .interface-line:nth-child(3) { width: 1px; height: 15px; bottom: 10px; left: 10px; }
         .interface-line:nth-child(4) { width: 15px; height: 1px; bottom: 10px; left: 10px; }
         
-        .hex-decoration { position: absolute; width: 20px; height: 23px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); border: 1px solid rgba(0,229,255,0.3); right: -10px; top: 50%; transform: translateY(-50%); transition: all 0.3s ease; z-index: 2; }
-        .power-indicator { position: absolute; width: 100%; height: 2px; background: linear-gradient(90deg, rgba(0,229,255,0.8) 0%, rgba(0,229,255,0.1) 100%); bottom: 0; left: 0; transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease; z-index: 3; }
+        .power-indicator { position: absolute; width: 100%; height: 2px; background: linear-gradient(90deg, rgba(200,170,110,0.8) 0%, rgba(200,170,110,0.1) 100%); bottom: 0; left: 0; transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease; z-index: 3; }
         
-        .holo-input:not([readonly]):focus { background: rgba(0, 22, 46, 0.8); box-shadow: 0 0 20px rgba(0,229,255,0.3), inset 0 0 15px rgba(0,0,0,0.9); color: #fff; }
-        .holo-input:not([readonly]):focus::placeholder { color: rgba(0,229,255,0.3); transform: translateX(10px); }
-        .holo-input:not([readonly]):focus ~ .input-border { border-color: rgba(0,229,255,0.7); }
-        .holo-input:not([readonly]):focus ~ .input-border::before, .holo-input:not([readonly]):focus ~ .input-border::after { border-color: #00e5ff; width: 25px; height: 25px; }
+        .holo-input:not([readonly]):focus { background: rgba(9, 20, 40, 0.8); box-shadow: 0 0 20px rgba(200,170,110,0.3), inset 0 0 15px rgba(0,0,0,0.9); color: #fff; }
+        .holo-input:not([readonly]):focus::placeholder { color: rgba(200,170,110,0.5); transform: translateX(10px); }
+        .holo-input:not([readonly]):focus ~ .input-border { border-color: #c8aa6e; }
+        .holo-input:not([readonly]):focus ~ .input-border::before, .holo-input:not([readonly]):focus ~ .input-border::after { border-color: #f0e6d2; width: 25px; height: 25px; }
         .holo-input:not([readonly]):focus ~ .holo-scan-line { opacity: 1; animation: scan-animation 2s infinite ease-in-out; }
         .holo-input:not([readonly]):focus ~ .input-glow { opacity: 1; }
-        .holo-input:not([readonly]):focus ~ .input-active-indicator { opacity: 1; background: #00e5ff; box-shadow: 0 0 15px #00e5ff; transform: scale(1.2); }
-        .holo-input:not([readonly]):focus ~ .input-label { color: #00e5ff; text-shadow: 0 0 10px rgba(0,229,255,0.7); transform: translateY(-3px); }
+        .holo-input:not([readonly]):focus ~ .input-active-indicator { opacity: 1; background: #c8aa6e; box-shadow: 0 0 15px #c8aa6e; transform: scale(1.2); }
+        .holo-input:not([readonly]):focus ~ .input-label { color: #c8aa6e; text-shadow: 0 0 10px rgba(200,170,110,0.7); transform: translateY(-3px); }
         .holo-input:not([readonly]):focus ~ .input-data-visualization { opacity: 1; }
         .holo-input:not([readonly]):focus ~ .input-data-visualization .data-segment { animation: data-pulse 2s infinite; animation-delay: calc(var(--index) * 0.1s); }
-        .holo-input:not([readonly]):focus ~ .interface-lines .interface-line { background: rgba(0,229,255,0.6); }
-        .holo-input:not([readonly]):focus ~ .hex-decoration { border-color: rgba(0,229,255,0.6); box-shadow: 0 0 10px rgba(0,229,255,0.3); transform: translateY(-50%) rotate(30deg); }
-        .holo-input:not([readonly]):focus ~ .input-particles .input-particle { opacity: 1; animation: particle-float 3s infinite ease-in-out; animation-delay: calc(var(--index) * 0.2s); }
+        .holo-input:not([readonly]):focus ~ .interface-lines .interface-line { background: rgba(200,170,110,0.6); }
         .holo-input:not([readonly]):focus ~ .power-indicator { transform: scaleX(1); }
-        .holo-input:not([readonly]):hover { background: rgba(0, 15, 40, 0.75); }
+        .holo-input:not([readonly]):hover { background: rgba(9, 20, 40, 0.5); }
         
         @keyframes scan-animation { 0% { top: 0; opacity: 0; } 10%, 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
         @keyframes data-pulse { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.8); } }
-        @keyframes particle-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
         /* PASSWORD TOGGLE EYE */
-        .password-toggle-btn { position: absolute; right: 25px; top: 15px; z-index: 20; color: rgba(0,229,255,0.5); cursor: pointer; transition: color 0.3s; }
-        .password-toggle-btn:hover { color: #00e5ff; }
+        .password-toggle-btn { position: absolute; right: 20px; top: 15px; z-index: 20; color: rgba(200,170,110,0.5); cursor: pointer; transition: color 0.3s; }
+        .password-toggle-btn:hover { color: #c8aa6e; }
 
         /* --- TOOLTIP DESIGN --- */
         .item-hints { display: flex; align-items: center; justify-content: center; z-index: 20; position: relative; margin-top: 15px; }
         .item-hints .hint { position: relative; display: flex; justify-content: center; align-items: center; }
         .item-hints .hint-dot {
-            width: 22px; height: 22px; border: 1px solid rgba(0,229,255,0.4); border-radius: 50%;
-            color: #00e5ff; display: flex; align-items: center; justify-content: center;
-            font-weight: 900; cursor: help; font-size: 11px; transition: all 0.3s ease; font-family: 'Orbitron', sans-serif;
-            box-shadow: inset 0 0 5px rgba(0,229,255,0.2); background: rgba(0,10,20,0.5);
+            width: 22px; height: 22px; border: 1px solid rgba(200,170,110,0.4); border-radius: 50%;
+            color: #c8aa6e; display: flex; align-items: center; justify-content: center;
+            font-weight: 900; cursor: help; font-size: 11px; transition: all 0.3s ease; font-family: 'Oswald', sans-serif;
+            box-shadow: inset 0 0 5px rgba(200,170,110,0.2); background: rgba(1,10,19,0.5);
         }
-        .item-hints .hint:hover .hint-dot { background-color: rgba(0,229,255,0.2); border-color: #00e5ff; box-shadow: 0 0 10px rgba(0,229,255,0.5); }
+        .item-hints .hint:hover .hint-dot { background-color: rgba(200,170,110,0.2); border-color: #c8aa6e; box-shadow: 0 0 10px rgba(200,170,110,0.5); }
         .item-hints .hint-content {
             position: absolute; right: 35px; bottom: 50%; transform: translateY(50%); width: 220px;
-            background: rgba(1, 10, 19, 0.95); border: 1px solid #00e5ff; border-left: 3px solid #ff0092;
-            padding: 12px; font-size: 10px; color: #f0e6d2; text-transform: uppercase; font-family: 'Orbitron', sans-serif;
+            background: rgba(9, 20, 40, 0.95); border: 1px solid #c8aa6e; border-left: 3px solid #f0e6d2;
+            padding: 12px; font-size: 11px; color: #f0e6d2; font-family: 'Segoe UI', sans-serif; font-weight: 500;
             opacity: 0; visibility: hidden; transition: all 0.4s ease;
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.15); pointer-events: none; z-index: 30; letter-spacing: 1px;
+            box-shadow: 0 0 20px rgba(200, 170, 110, 0.15); pointer-events: none; z-index: 30;
         }
         .item-hints .hint:hover .hint-content { opacity: 1; visibility: visible; }
-        .item-hints .hint-content::before { content: ""; position: absolute; height: 1px; background: #00e5ff; right: -30px; bottom: 50%; width: 0; transition: width 0.4s ease; transition-delay: 0.1s; }
+        .item-hints .hint-content::before {
+            content: ""; position: absolute; height: 1px; background: #c8aa6e;
+            right: -30px; bottom: 50%; width: 0; transition: width 0.4s ease; transition-delay: 0.1s;
+        }
         .item-hints .hint:hover .hint-content::before { width: 30px; }
-        .item-hints .hint-content::after { content: ""; position: absolute; height: 1px; background: #ff0092; right: -10px; bottom: 50%; transform-origin: right; transform: rotate(-45deg); width: 0; transition: width 0.4s ease; }
+        .item-hints .hint-content::after {
+            content: ""; position: absolute; height: 1px; background: #f0e6d2;
+            right: -10px; bottom: 50%; transform-origin: right; transform: rotate(-45deg); width: 0; transition: width 0.4s ease;
+        }
         .item-hints .hint:hover .hint-content::after { width: 15px; }
 
         /* --- COSMIC PORTAL BUTTON --- */
+        .cosmic-portal-btn-wrapper { width: 100%; margin-top: 2rem; margin-bottom: 1rem; }
         .cosmic-portal-btn {
-            --btn-bg: #010a13; --btn-color: #00e5ff; --btn-highlight: #091428;
-            --portal-color1: #ff0092; --portal-color2: #00e5ff;
+            --btn-bg: #010a13; --btn-color: #c8aa6e; --btn-highlight: #091428;
+            --portal-color1: #c8aa6e; --portal-color2: #f0e6d2;
             position: relative; width: 100%; display: block; text-align: center;
-            font-family: "Orbitron", sans-serif; font-size: 1.1em; font-weight: bold; letter-spacing: 0.1em; text-transform: uppercase;
+            font-family: "Oswald", sans-serif; font-size: 1.1em; font-weight: bold; letter-spacing: 0.1em; text-transform: uppercase;
             color: var(--btn-color); background-color: var(--btn-bg); border: none; padding: 1em 2em;
-            cursor: pointer; overflow: hidden; transition: all 0.3s ease; margin-top: 1.5rem;
+            cursor: pointer; overflow: hidden; transition: all 0.3s ease;
             clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 90% 100%, 10% 100%, 0% 70%);
-        }
-        .cosmic-portal-btn.btn-danger {
-            --btn-color: #ff004d; --portal-color1: #ff004d; --portal-color2: #ff9900;
         }
         .cosmic-portal-btn::before {
             content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
@@ -176,28 +177,55 @@
         }
         .cosmic-portal-btn:hover::before { opacity: 1; }
         .cosmic-portal-btn::after { content: ""; position: absolute; inset: 2px; background-color: var(--btn-bg); clip-path: inherit; z-index: 1; }
-        .cosmic-btn-text { position: relative; z-index: 2; text-shadow: 0 0 10px rgba(0, 229, 255, 0.5); }
-        .btn-danger .cosmic-btn-text { text-shadow: 0 0 10px rgba(255, 0, 77, 0.5); }
-        
+        .cosmic-btn-text { position: relative; z-index: 2; text-shadow: 0 0 10px rgba(200, 170, 110, 0.5); }
         .portal-effect { position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, var(--btn-highlight), transparent 50%); opacity: 0; transition: opacity 0.3s ease; z-index: 1; }
         .cosmic-portal-btn:hover .portal-effect { opacity: 1; animation: pulsePortal 2s ease-in-out infinite; }
-        .cosmic-portal-btn:hover { transform: translateY(-3px); filter: drop-shadow(0 5px 15px rgba(0, 229, 255, 0.4)); color: #fff; }
-        .btn-danger:hover { filter: drop-shadow(0 5px 15px rgba(255, 0, 77, 0.4)); }
-        
+        .cosmic-portal-btn:hover { transform: translateY(-3px); filter: drop-shadow(0 5px 15px rgba(200, 170, 110, 0.4)); color: #fff; }
         .cosmic-portal-btn:active { transform: translateY(0); }
         @keyframes rotatePortal { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes pulsePortal { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
+        /* --- GLITCH DELETE BUTTON --- */
+        .glitch-btn, .glitch-btn::after {
+            padding: 12px 30px; font-size: 16px; font-family: "Orbitron", sans-serif; font-weight: bold; border: none; border-radius: 2px;
+            color: #ff004d; background-color: transparent; position: relative; width: 100%; cursor: pointer;
+            border: 1px solid #ff004d; text-transform: uppercase; letter-spacing: 2px; transition: all 0.3s ease;
+        }
+        .glitch-btn::after {
+            --move1: inset(50% 50% 50% 50%); --move2: inset(31% 0 40% 0); --move3: inset(39% 0 15% 0); --move4: inset(45% 0 40% 0); --move5: inset(45% 0 6% 0); --move6: inset(14% 0 61% 0);
+            clip-path: var(--move1); content: attr(data-text); position: absolute; top: -1px; left: -1px; right: -1px; bottom: -1px; display: block; border: none;
+        }
+        .glitch-btn:hover::after {
+            animation: glitch_4011 1s; animation-timing-function: steps(2, end);
+            text-shadow: -3px -3px 0px #00e5ff, 3px 3px 0px #ff004d; background-color: transparent; border: 3px solid #00e5ff;
+        }
+        .glitch-btn:hover {
+            text-shadow: -1px -1px 0px #00e5ff, 1px 1px 0px #ff004d; background-color: rgba(255, 0, 77, 0.1); border: 1px solid #00e5ff; box-shadow: 0px 10px 15px -10px #00e5ff; color: #fff;
+        }
+        @keyframes glitch_4011 {
+            0% { clip-path: var(--move1); transform: translate(0px,-10px); }
+            10% { clip-path: var(--move2); transform: translate(-10px,10px); }
+            20% { clip-path: var(--move3); transform: translate(10px,0px); }
+            30% { clip-path: var(--move4); transform: translate(-10px,10px); }
+            40% { clip-path: var(--move5); transform: translate(10px,-10px); }
+            50% { clip-path: var(--move6); transform: translate(-10px,10px); }
+            60% { clip-path: var(--move1); transform: translate(10px,-10px); }
+            70% { clip-path: var(--move3); transform: translate(-10px,10px); }
+            80% { clip-path: var(--move2); transform: translate(10px,-10px); }
+            90% { clip-path: var(--move4); transform: translate(-10px,10px); }
+            100% { clip-path: var(--move1); transform: translate(0); }
+        }
+
         /* --- GLITCH ALERT BOX --- */
         .glitch-alert {
             position: relative; border: 1px solid #ff004d; background: rgba(20,0,0,0.85); color: #ff004d;
-            padding: 15px; font-family: 'Orbitron', sans-serif; text-transform: uppercase; text-align: center;
-            font-size: 12px; letter-spacing: 1px; box-shadow: 0 0 15px rgba(255,0,77,0.4), inset 0 0 10px rgba(255,0,77,0.2);
+            padding: 15px; font-family: 'Oswald', sans-serif; text-transform: uppercase; text-align: center;
+            font-size: 13px; letter-spacing: 1px; box-shadow: 0 0 15px rgba(255,0,77,0.4), inset 0 0 10px rgba(255,0,77,0.2);
             animation: alert-glitch 0.4s cubic-bezier(.25, .46, .45, .94) both infinite alternate; margin-bottom: 25px;
             backdrop-filter: blur(5px); display: none; z-index: 20;
         }
         .glitch-alert.success {
-            color: #00e5ff; border-color: #00e5ff; background: rgba(0,20,30,0.85); box-shadow: 0 0 15px rgba(0,229,255,0.4), inset 0 0 10px rgba(0,229,255,0.2); animation: none;
+            color: #c8aa6e; border-color: #c8aa6e; background: rgba(9,20,40,0.85); box-shadow: 0 0 15px rgba(200,170,110,0.4), inset 0 0 10px rgba(200,170,110,0.2); animation: none;
         }
         @keyframes alert-glitch {
             0% { transform: translate(0); }
@@ -213,7 +241,7 @@
 <body class="min-h-screen flex items-center justify-center p-4 overflow-x-hidden">
 
     <!-- HÁTTÉR ANIMÁCIÓ -->
-    <div class="star-container fixed inset-0 z-[-1] pointer-events-none">
+    <div class="star-container">
         <div id="stars"></div>
         <div id="stars2"></div>
         <div id="stars3"></div>
@@ -230,8 +258,8 @@
 
             <div id="alertBox" class="glitch-alert"></div>
 
-            <div class="text-center mb-10 border-b border-[#00e5ff]/30 pb-4">
-                <h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#00e5ff] to-[#ff0092] tracking-wider esport-font drop-shadow-[0_0_10px_rgba(0,229,255,0.5)]">Fiók beállításai</h1>
+            <div class="text-center mb-10 border-b border-[#c8aa6e]/30 pb-4">
+                <h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-wider esport-font drop-shadow-[0_0_10px_rgba(200,170,110,0.5)]">Fiók beállításai</h1>
                 <p class="text-slate-400 mt-2 text-xs uppercase tracking-widest font-bold cyber-font">Rendszer adatok és biztonság</p>
             </div>
 
@@ -260,9 +288,11 @@
                 </div>
             </div>
 
+            <div class="w-full h-px bg-gradient-to-r from-transparent via-[#c8aa6e]/50 to-transparent mb-8"></div>
+
             <!-- CHANGE PASSWORD FORM -->
             <form id="changePasswordForm">
-                <h2 class="text-xs font-bold text-[#00e5ff] uppercase tracking-widest mb-6 cyber-font text-center">Hitelesítő kód (Jelszó) Módosítása</h2>
+                <h2 class="text-xs font-bold text-[#c8aa6e] uppercase tracking-widest mb-6 cyber-font text-center">Hitelesítő kód (Jelszó) Módosítása</h2>
                 
                 <div class="input-group-wrapper">
                     <div class="input-container">
@@ -273,7 +303,7 @@
                             <div class="input-label">Jelenlegi jelszó</div>
                             <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div><div class="data-segment" style="--index: 4;"></div></div>
                             <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
-                            <div class="hex-decoration"></div><div class="power-indicator"></div>
+                            <div class="power-indicator"></div>
                         </div>
                     </div>
                     <div class="item-hints shrink-0">
@@ -293,7 +323,7 @@
                             <div class="input-label">Új jelszó</div>
                             <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div><div class="data-segment" style="--index: 4;"></div></div>
                             <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
-                            <div class="hex-decoration"></div><div class="power-indicator"></div>
+                            <div class="power-indicator"></div>
                         </div>
                     </div>
                     <div class="item-hints shrink-0">
@@ -313,7 +343,7 @@
                             <div class="input-label">Jelszó megerősítése</div>
                             <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div><div class="data-segment" style="--index: 4;"></div></div>
                             <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
-                            <div class="hex-decoration"></div><div class="power-indicator"></div>
+                            <div class="power-indicator"></div>
                         </div>
                     </div>
                     <div class="item-hints shrink-0">
@@ -324,26 +354,25 @@
                     </div>
                 </div>
 
-                <button type="submit" id="btnSave" class="cosmic-portal-btn">
-                    <span class="cosmic-btn-text">Mentés</span>
-                    <div class="portal-effect"></div>
-                </button>
+                <div class="cosmic-portal-btn-wrapper mt-4">
+                    <button type="submit" id="btnSave" class="cosmic-portal-btn">
+                        <span class="cosmic-btn-text">Mentés</span>
+                        <div class="portal-effect"></div>
+                    </button>
+                </div>
             </form>
             
             <div class="text-center mt-6">
-                <a href="/dashboard" class="text-slate-500 hover:text-[#00e5ff] font-bold transition-colors uppercase tracking-widest text-xs cyber-font">← Vissza a Központba</a>
+                <a href="/dashboard" class="text-slate-500 hover:text-[#c8aa6e] font-bold transition-colors uppercase tracking-widest text-xs cyber-font">← Vissza a Központba</a>
             </div>
         </div>
 
-        <!-- DANGER ZONE (Fiók törlése) -->
-        <div class="hex-panel-danger p-6 rounded-sm text-center">
+        <!-- DANGER ZONE (Fiók törlése, Glitch Gombbal) -->
+        <div class="hex-panel-danger p-8 rounded-sm text-center">
             <h2 class="text-xl font-bold text-[#ff004d] uppercase tracking-widest mb-2 esport-font">Veszélyzóna</h2>
-            <p class="text-slate-400 text-xs mb-6 cyber-font">A fiók és minden adatának végleges törlése.</p>
+            <p class="text-slate-400 text-xs mb-8 cyber-font">A fiók és minden adatának végleges törlése.</p>
             
-            <button onclick="deleteProfile()" class="cosmic-portal-btn btn-danger w-full mt-0">
-                <span class="cosmic-btn-text">Fiók törlése</span>
-                <div class="portal-effect"></div>
-            </button>
+            <button onclick="deleteProfile()" class="glitch-btn" data-text="Fiók Törlése">Fiók Törlése</button>
         </div>
     </div>
 

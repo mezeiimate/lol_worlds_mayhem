@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style> 
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
 
         body { 
@@ -16,14 +17,16 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             position: relative;
         } 
-        
         .esport-font { font-family: 'Oswald', sans-serif; text-transform: uppercase; }
-
+        .cyber-font { font-family: 'Orbitron', sans-serif; }
+        
         .hex-panel {
-            background: linear-gradient(135deg, #091428 0%, #010a13 100%);
-            border: 1px solid #c8aa6e;
-            box-shadow: 0 0 25px rgba(200, 170, 110, 0.15), inset 0 0 20px rgba(0,0,0,0.5);
+            background: linear-gradient(135deg, rgba(9, 20, 40, 0.9) 0%, rgba(1, 10, 19, 0.95) 100%);
+            border: 1px solid rgba(200, 170, 110, 0.3);
+            box-shadow: 0 0 25px rgba(200, 170, 110, 0.1), inset 0 0 20px rgba(0,0,0,0.8);
             position: relative;
+            backdrop-filter: blur(10px);
+            overflow: visible;
         }
         .hex-panel::before, .hex-panel::after {
             content: ''; position: absolute; width: 12px; height: 12px; border: 1px solid #c8aa6e; pointer-events: none;
@@ -36,7 +39,7 @@
         #stars, #stars2, #stars3 { background: transparent; }
         #stars { width: 1px; height: 1px; box-shadow: 501px 811px #c8aa6e, 1450px 1324px #fff, 1093px 1780px #fff, 1469px 678px #c8aa6e, 904px 741px #fff, 1160px 781px #fff, 1841px 1962px #fff, 1630px 1667px #fff, 1788px 676px #fff, 367px 1734px #fff, 1343px 156px #fff, 1283px 1142px #fff, 1062px 378px #fff, 1395px 467px #fff, 1017px 1891px #fff, 137px 1114px #fff, 1767px 1403px #fff, 1543px 11px #fff, 1078px 181px #fff, 1189px 1574px #fff, 1697px 1551px #fff, 439px 472px #fff, 1491px 677px #fff, 1364px 599px #fff, 34px 382px #fff, 1221px 1584px #c8aa6e, 1266px 1499px #fff, 169px 1907px #fff, 1219px 1125px #fff, 659px 18px #fff, 1731px 1959px #fff, 332px 1216px #fff, 1913px 788px #fff, 80px 712px #fff, 326px 1605px #fff, 574px 1502px #fff, 473px 1653px #fff, 404px 975px #fff, 322px 1797px #fff, 425px 1321px #fff, 1121px 1797px #fff, 731px 647px #fff, 891px 1584px #fff, 1523px 109px #fff, 1379px 244px #fff, 865px 1064px #fff, 493px 956px #fff, 624px 1380px #fff, 440px 619px #fff, 1630px 767px #fff, 955px 1196px #c8aa6e, 62px 729px #fff, 126px 946px #fff, 1256px 896px #fff, 1444px 256px #fff, 661px 1628px #fff, 1078px 1716px #fff, 300px 737px #fff, 1734px 413px #fff, 1296px 129px #fff; animation: animStar 50s linear infinite; }
         #stars2 { width: 2px; height: 2px; box-shadow: 1925px 1320px #fff, 693px 1778px #fff, 1016px 711px #c8aa6e, 1171px 563px #fff, 661px 1919px #fff, 1610px 44px #fff, 1275px 140px #fff, 1208px 1802px #fff, 1473px 1587px #fff, 11px 1117px #fff, 853px 1757px #fff, 1149px 937px #fff, 1353px 428px #fff, 270px 279px #fff, 258px 1404px #fff, 417px 1188px #fff, 286px 561px #fff, 393px 1765px #fff, 147px 881px #fff, 666px 1097px #fff, 1425px 1278px #fff, 806px 156px #c8aa6e, 1252px 561px #fff, 218px 52px #fff, 1371px 1980px #fff, 171px 745px #fff, 1424px 89px #fff, 137px 244px #fff, 939px 1922px #fff, 137px 1080px #fff, 1757px 50px #fff, 904px 536px #fff, 1938px 1001px #fff, 1172px 440px #fff, 72px 1475px #fff, 102px 121px #fff, 804px 1671px #fff, 1314px 270px #fff, 440px 1341px #fff, 1216px 511px #fff, 1061px 1523px #fff, 97px 274px #fff, 704px 1318px #fff, 52px 1872px #fff, 1962px 296px #fff, 111px 289px #fff, 1157px 1236px #fff, 1347px 1451px #fff, 820px 286px #fff, 1389px 1169px #fff; animation: animStar 100s linear infinite; }
-        #stars3 { width: 3px; height: 3px; box-shadow: 200px 981px #fff, 1731px 521px #fff, 132px 1039px #fff, 1888px 1547px #c8aa6e, 899px 1226px #fff, 1887px 580px #fff, 1548px 1092px #fff, 1626px 689px #fff, 254px 1072px #fff, 1684px 1211px #fff, 672px 1267px #fff, 939px 668px #fff, 1969px 645px #fff, 1126px 983px #fff, 457px 568px #fff, 476px 876px #fff, 829px 1896px #fff, 1364px 1846px #fff, 1507px 1120px #fff, 936px 1948px #fff, 1833px 832px #fff, 1424px 285px #fff, 1377px 1596px #fff, 432px 153px #fff, 1348px 1410px #fff, 1529px 954px #c8aa6e, 1102px 387px #fff, 264px 297px #fff, 811px 977px #fff, 1931px 673px #fff, 1734px 978px #fff, 1772px 1567px #fff, 1197px 1400px #fff, 764px 282px #fff, 1103px 822px #fff, 872px 1803px #fff, 1057px 1763px #fff, 52px 1299px #fff, 1312px 1236px #fff, 235px 1082px #fff, 299px 1086px #fff, 1017px 1602px #fff, 1950px 626px #fff, 1306px 132px #fff, 1358px 1618px #fff, 1873px 1718px #fff, 1447px 940px #fff, 1888px 1195px #fff, 1704px 1765px #fff, 872px 1357px #fff; animation: animStar 150s linear infinite; }
+        #stars3 { width: 3px; height: 3px; box-shadow: 200px 981px #fff, 1731px 521px #fff, 132px 1039px #fff, 1888px 1547px #c8aa6e, 899px 1226px #fff, 1887px 580px #fff, 1548px 1092px #fff, 1626px 689px #fff, 254px 1072px #fff, 1684px 1211px #fff, 672px 1267px #fff, 939px 668px #fff, 1969px 645px #fff, 1126px 983px #fff, 457px 568px #fff, 476px 876px #fff, 829px 1896px #fff, 1364px 1846px #fff, 1507px 1120px #fff, 936px 1948px #fff, 1833px 832px #fff, 1424px 285px #fff, 1377px 1596px #fff, 432px 153px #fff, 1348px 1410px #fff, 1529px 954px #c8aa6e, 1102px 387px #fff, 264px 297px #fff, 811px 977px #fff, 1931px 673px #fff, 1734px 978px #fff; animation: animStar 150s linear infinite; }
         #stars:after, #stars2:after, #stars3:after { content: " "; position: absolute; top: 2000px; width: inherit; height: inherit; box-shadow: inherit; }
         @keyframes animStar { from { transform: translateY(0px); } to { transform: translateY(-2000px); } }
 
@@ -47,19 +50,19 @@
         .val-shade { position: absolute; transform: translateX(-20px); opacity: 0.7; z-index: 10; background-color: white; width: 15px; height: 100%; animation: val-shiny 1.5s infinite; filter: blur(2px); }
         @keyframes val-shiny { 0% { transform: translateX(-20px) skewX(-20deg); } 100% { transform: translateX(150px) skewX(-20deg); } }
 
-        /* --- HEXTECH INPUT DESIGN --- */
+        /* --- HOLO INPUT DESIGN (Hextech Gold & Blue) --- */
         .input-group-wrapper { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 2rem; width: 100%; position: relative; }
         .input-container { position: relative; flex: 1; display: flex; flex-direction: column; align-items: center; z-index: 10; }
         .input-field-container { position: relative; width: 100%; }
         
         .holo-input {
             width: 100%; height: 50px; background: rgba(1, 10, 19, 0.7); border: none; outline: none;
-            padding: 0 45px 0 15px; color: #f0e6d2; font-family: "Segoe UI", sans-serif;
+            padding: 0 45px 0 15px; color: #f0e6d2; font-family: "Segoe UI", sans-serif; font-weight: 500;
             font-size: 14px; letter-spacing: 1px; backdrop-filter: blur(5px); border-radius: 2px;
             box-shadow: 0 0 15px rgba(200, 170, 110, 0.1), inset 0 0 10px rgba(0, 0, 0, 0.8);
             transition: all 0.3s ease; z-index: 1; position: relative;
         }
-        .holo-input::placeholder { color: rgba(200, 170, 110, 0.3); transition: all 0.3s ease; font-size: 12px; }
+        .holo-input::placeholder { color: rgba(200, 170, 110, 0.3); transition: all 0.3s ease; text-transform: uppercase; font-size: 12px; font-weight: bold; letter-spacing: 2px;}
         
         .input-border { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; border: 1px solid rgba(200, 170, 110, 0.3); border-radius: 2px; z-index: 2; }
         .input-border::before, .input-border::after { content: ""; position: absolute; width: 15px; height: 15px; border: 1px solid rgba(200, 170, 110, 0.7); z-index: 2; transition: all 0.3s ease; }
@@ -102,7 +105,8 @@
         @keyframes scan-animation { 0% { top: 0; opacity: 0; } 10%, 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
         @keyframes data-pulse { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.8); } }
 
-        .password-toggle-btn { position: absolute; right: 25px; top: 15px; z-index: 20; color: rgba(200,170,110,0.5); cursor: pointer; transition: color 0.3s; }
+        /* PASSWORD TOGGLE EYE */
+        .password-toggle-btn { position: absolute; right: 20px; top: 15px; z-index: 20; color: rgba(200,170,110,0.5); cursor: pointer; transition: color 0.3s; }
         .password-toggle-btn:hover { color: #c8aa6e; }
 
         /* --- TOOLTIP DESIGN --- */
@@ -118,7 +122,7 @@
         .item-hints .hint-content {
             position: absolute; right: 35px; bottom: 50%; transform: translateY(50%); width: 220px;
             background: rgba(9, 20, 40, 0.95); border: 1px solid #c8aa6e; border-left: 3px solid #f0e6d2;
-            padding: 12px; font-size: 11px; color: #f0e6d2; font-family: 'Segoe UI', sans-serif;
+            padding: 12px; font-size: 11px; color: #f0e6d2; font-family: 'Segoe UI', sans-serif; font-weight: 500;
             opacity: 0; visibility: hidden; transition: all 0.4s ease;
             box-shadow: 0 0 20px rgba(200, 170, 110, 0.15); pointer-events: none; z-index: 30;
         }
@@ -267,7 +271,7 @@
                 </div>
             </form>
 
-            <p class="text-center text-slate-400 text-sm mt-4">Nincs még fiókod? <a href="#" onclick="showSection('registerSection')" class="text-[#c8aa6e] hover:text-[#f0e6d2] font-bold transition-colors">Regisztráció</a></p>
+            <p class="text-center text-slate-400 text-sm mt-4 cyber-font">Nincs még fiókod? <a href="#" onclick="showSection('registerSection')" class="text-[#c8aa6e] hover:text-[#f0e6d2] font-bold transition-colors">Regisztráció</a></p>
         </div>
 
         <!-- REGISTER SECTION -->
@@ -363,14 +367,14 @@
                 </div>
             </form>
 
-            <p class="text-center text-slate-400 text-sm mt-4">Már van fiókod? <a href="#" onclick="showSection('loginSection')" class="text-[#c8aa6e] hover:text-[#f0e6d2] font-bold transition-colors">Belépés</a></p>
+            <p class="text-center text-slate-400 text-sm mt-4 cyber-font">Már van fiókod? <a href="#" onclick="showSection('loginSection')" class="text-[#c8aa6e] hover:text-[#f0e6d2] font-bold transition-colors">Belépés</a></p>
         </div>
 
         <!-- FORGOT PASSWORD SECTION -->
         <div id="forgotSection" class="hidden relative z-10">
             <div class="text-center mb-10 border-b border-[#c8aa6e]/30 pb-4">
                 <h1 class="text-3xl font-black text-[#c8aa6e] tracking-wider esport-font">Elfelejtett jelszó</h1>
-                <p class="text-slate-400 mt-2 text-xs uppercase tracking-widest font-bold">Visszaállító link küldése</p>
+                <p class="text-slate-400 mt-2 text-xs uppercase tracking-widest font-bold cyber-font">Visszaállító link küldése</p>
             </div>
 
             <form id="forgotForm">
@@ -401,14 +405,14 @@
                 </div>
             </form>
 
-            <p class="text-center text-slate-400 text-sm mt-4"><a href="#" onclick="showSection('loginSection')" class="text-slate-500 hover:text-[#c8aa6e] font-bold transition-colors uppercase tracking-widest text-xs">← Vissza a belépéshez</a></p>
+            <p class="text-center text-slate-400 text-sm mt-4 cyber-font"><a href="#" onclick="showSection('loginSection')" class="text-slate-500 hover:text-[#c8aa6e] font-bold transition-colors uppercase tracking-widest text-xs">← Vissza a belépéshez</a></p>
         </div>
 
         <!-- RESET PASSWORD SECTION -->
         <div id="resetSection" class="hidden relative z-10">
             <div class="text-center mb-10 border-b border-[#c8aa6e]/30 pb-4">
                 <h1 class="text-3xl font-black text-[#c8aa6e] tracking-wider esport-font">Új jelszó</h1>
-                <p class="text-slate-400 mt-2 text-xs uppercase tracking-widest font-bold">Fiók helyreállítása</p>
+                <p class="text-slate-400 mt-2 text-xs uppercase tracking-widest font-bold cyber-font">Fiók helyreállítása</p>
             </div>
 
             <form id="resetForm">
@@ -465,7 +469,7 @@
     </div>
 
     <script>
-        // Modal Logic (Csak legelső látogatáskor jelenik meg)
+        // Modal Logic (Csak legelső látogatáskor jelenik meg a localStorage segítségével)
         window.addEventListener('DOMContentLoaded', () => {
             if (!localStorage.getItem('valPopupShown')) {
                 setTimeout(() => {
