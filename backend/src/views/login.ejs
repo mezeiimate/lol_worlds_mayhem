@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style> 
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
 
         body { 
@@ -25,20 +25,15 @@
             box-shadow: 0 0 25px rgba(0, 229, 255, 0.1), inset 0 0 20px rgba(0,0,0,0.8);
             position: relative;
             backdrop-filter: blur(10px);
-            overflow: hidden;
+            overflow: visible;
         }
         .hex-panel::before, .hex-panel::after {
-            content: ''; position: absolute; width: 12px; height: 12px; border: 1px solid #00e5ff;
+            content: ''; position: absolute; width: 12px; height: 12px; border: 1px solid #00e5ff; pointer-events: none;
         }
         .hex-panel::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
         .hex-panel::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
-        
-        .input-hex {
-            background: #010a13; border: 1px solid rgba(0, 229, 255, 0.2); border-left: 2px solid #ff0092;
-        }
-        .input-hex:focus { border-color: #00e5ff; box-shadow: 0 0 15px rgba(0, 229, 255, 0.3); outline: none; }
 
-        /* --- CSILLAGOS HÁTTÉR --- */
+        /* --- HÁTTÉR ANIMÁCIÓ --- */
         .star-container { background: radial-gradient(ellipse at bottom, #091428 0%, #010a13 100%); }
         #stars, #stars2, #stars3 { background: transparent; }
         #stars { width: 1px; height: 1px; box-shadow: 501px 811px #00e5ff, 1450px 1324px #fff, 1093px 1780px #fff, 1469px 678px #ff0092, 904px 741px #fff, 1160px 781px #fff, 1841px 1962px #fff, 1630px 1667px #fff, 1788px 676px #fff, 367px 1734px #fff, 1343px 156px #fff, 1283px 1142px #fff, 1062px 378px #fff, 1395px 467px #fff, 1017px 1891px #fff, 137px 1114px #fff, 1767px 1403px #fff, 1543px 11px #fff, 1078px 181px #fff, 1189px 1574px #fff, 1697px 1551px #fff, 439px 472px #fff, 1491px 677px #fff, 1364px 599px #fff, 34px 382px #fff, 1221px 1584px #00e5ff, 1266px 1499px #fff, 169px 1907px #fff, 1219px 1125px #fff, 659px 18px #fff, 1731px 1959px #fff, 332px 1216px #fff, 1913px 788px #fff, 80px 712px #fff, 326px 1605px #fff, 574px 1502px #fff, 473px 1653px #fff, 404px 975px #fff, 322px 1797px #fff, 425px 1321px #fff, 1121px 1797px #fff, 731px 647px #fff, 891px 1584px #fff, 1523px 109px #fff, 1379px 244px #fff, 865px 1064px #fff, 493px 956px #fff, 624px 1380px #fff, 440px 619px #fff, 1630px 767px #fff, 955px 1196px #ff0092, 62px 729px #fff, 126px 946px #fff, 1256px 896px #fff, 1444px 256px #fff, 661px 1628px #fff, 1078px 1716px #fff, 300px 737px #fff, 1734px 413px #fff, 1296px 129px #fff; animation: animStar 50s linear infinite; }
@@ -47,50 +42,25 @@
         #stars:after, #stars2:after, #stars3:after { content: " "; position: absolute; top: 2000px; width: inherit; height: inherit; box-shadow: inherit; }
         @keyframes animStar { from { transform: translateY(0px); } to { transform: translateY(-2000px); } }
 
-        /* --- CYBER NEON SVG PATH (Background effect) --- */
+        /* --- CYBER NEON SVG PATH --- */
         .neon-svg-container { position: absolute; top: -50px; left: 50%; transform: translateX(-50%); width: 100%; height: 200px; pointer-events: none; z-index: 0; opacity: 0.5; display: flex; justify-content: center; align-items: center; }
         .neon-svg { position: absolute; width: 400px; fill: none; }
         .neon-svg:nth-child(2) { filter: blur(40px); }
-        .neon-svg path {
-            d: path("M0,25 C150,110 150, -60 300,25");
-            stroke: #00e5ff; stroke-width: 25; stroke-linecap: round;
-            transform: translate(50px,50%); animation: svgAnimate 3s ease-in-out infinite alternate;
-        }
-        @keyframes svgAnimate {
-            0% { stroke: #00e5ff; d: path("M0,25 C150,110 150, -60 300,25"); }
-            50% { stroke: #ff0092; d: path("M0,25 C160,-50 140, 110 300,25"); }
-            100% { stroke: #8949ff; d: path("M0,25 C140,100 160, -40 300,25"); }
-        }
+        .neon-svg path { d: path("M0,25 C150,110 150, -60 300,25"); stroke: #00e5ff; stroke-width: 25; stroke-linecap: round; transform: translate(50px,50%); animation: svgAnimate 3s ease-in-out infinite alternate; }
+        @keyframes svgAnimate { 0% { stroke: #00e5ff; d: path("M0,25 C150,110 150, -60 300,25"); } 50% { stroke: #ff0092; d: path("M0,25 C160,-50 140, 110 300,25"); } 100% { stroke: #8949ff; d: path("M0,25 C140,100 160, -40 300,25"); } }
 
-        /* --- INLINE TOOLTIP --- */
-        .item-hints { display: inline-flex; justify-content: center; align-items: center; cursor: help; }
-        .item-hints .hint { position: relative; display: flex; justify-content: center; align-items: center; }
-        .item-hints .hint-dot {
-            z-index: 3; border: 1px solid rgba(0, 229, 255, 0.5); border-radius: 50%;
-            width: 14px; height: 14px; display: flex; align-items: center; justify-content: center;
-            color: #00e5ff; font-size: 9px; font-weight: bold; transition: all 0.3s;
-        }
-        .item-hints .hint:hover .hint-dot { background-color: #00e5ff; color: #010a13; border-color: #00e5ff; }
-        .item-hints .hint-content {
-            width: 220px; position: absolute; z-index: 50; padding: 10px; background: #091428; border: 1px solid #00e5ff; border-radius: 2px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5); opacity: 0; visibility: hidden; pointer-events: none;
-            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-            color: #f0e6d2; font-size: 0.7rem; font-weight: normal; text-transform: none;
-            bottom: 150%; left: 50%; transform: translateX(-50%) translateY(10px); text-align: center; line-height: 1.4;
-        }
-        .item-hints .hint:hover .hint-content { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
-        .item-hints .hint-content::after {
-            content: ''; position: absolute; bottom: -5px; left: 50%; margin-left: -5px; width: 10px; height: 10px; background: #091428; border-bottom: 1px solid #00e5ff; border-right: 1px solid #00e5ff; transform: rotate(45deg);
-        }
+        /* --- VALORANT LOADER (MODAL) --- */
+        .val-loader { position: relative; width: 120px; height: 120px; margin: 0 auto; }
+        .val-pattern-1 { position: absolute; background-color: #ff4c5a; width: 100%; height: 100%; clip-path: polygon(0 10%, 70% 90%, 40% 90%, 0 45%); overflow: hidden; }
+        .val-pattern-2 { position: absolute; background-color: #ff4c5a; width: 110%; height: 95%; clip-path: polygon(100% 10%, 100% 45%, 83% 65%, 55% 65%); }
+        .val-shade { position: absolute; transform: translateX(-20px); opacity: 0.7; z-index: 10; background-color: white; width: 15px; height: 100%; animation: val-shiny 1.5s infinite; filter: blur(2px); }
+        @keyframes val-shiny { 0% { transform: translateX(-20px) skewX(-20deg); } 100% { transform: translateX(150px) skewX(-20deg); } }
 
         /* --- COSMIC PORTAL BUTTON --- */
-        .cosmic-portal-btn-wrapper { width: 100%; margin-top: 2rem; margin-bottom: 1rem; }
+        .cosmic-portal-btn-wrapper { width: 100%; margin-top: 2.5rem; margin-bottom: 1rem; }
         .cosmic-portal-btn {
-            --btn-bg: #010a13;
-            --btn-color: #00e5ff;
-            --btn-highlight: #091428;
-            --portal-color1: #ff0092;
-            --portal-color2: #00e5ff;
+            --btn-bg: #010a13; --btn-color: #00e5ff; --btn-highlight: #091428;
+            --portal-color1: #ff0092; --portal-color2: #00e5ff;
             position: relative; width: 100%; display: block; text-align: center;
             font-family: "Orbitron", sans-serif; font-size: 1.1em; font-weight: bold; letter-spacing: 0.1em; text-transform: uppercase;
             color: var(--btn-color); background-color: var(--btn-bg); border: none; padding: 1em 2em;
@@ -112,12 +82,120 @@
         @keyframes rotatePortal { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes pulsePortal { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
-        /* --- VALORANT LOADER (MODAL) --- */
-        .val-loader { position: relative; width: 120px; height: 120px; margin: 0 auto; }
-        .val-pattern-1 { position: absolute; background-color: #ff4c5a; width: 100%; height: 100%; clip-path: polygon(0 10%, 70% 90%, 40% 90%, 0 45%); overflow: hidden; }
-        .val-pattern-2 { position: absolute; background-color: #ff4c5a; width: 110%; height: 95%; clip-path: polygon(100% 10%, 100% 45%, 83% 65%, 55% 65%); }
-        .val-shade { position: absolute; transform: translateX(-20px); opacity: 0.7; z-index: 10; background-color: white; width: 15px; height: 100%; animation: val-shiny 1.5s infinite; filter: blur(2px); }
-        @keyframes val-shiny { 0% { transform: translateX(-20px) skewX(-20deg); } 100% { transform: translateX(150px) skewX(-20deg); } }
+        /* --- HOLO INPUT DESIGN --- */
+        .input-group-wrapper { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 2rem; width: 100%; position: relative; }
+        .input-container { position: relative; flex: 1; display: flex; flex-direction: column; align-items: center; z-index: 10; }
+        .input-field-container { position: relative; width: 100%; }
+        
+        .holo-input {
+            width: 100%; height: 50px; background: rgba(0, 12, 36, 0.7); border: none; outline: none;
+            padding: 0 45px 0 15px; color: rgba(0, 229, 255, 0.9); font-family: "Orbitron", sans-serif;
+            font-size: 14px; letter-spacing: 1px; backdrop-filter: blur(5px); border-radius: 2px;
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.1), inset 0 0 10px rgba(0, 0, 0, 0.8);
+            transition: all 0.3s ease; z-index: 1; position: relative;
+        }
+        .holo-input::placeholder { color: rgba(0, 150, 255, 0.3); transition: all 0.3s ease; text-transform: uppercase; font-size: 12px; }
+        
+        .input-border { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; border: 1px solid rgba(0, 229, 255, 0.3); border-radius: 2px; z-index: 2; }
+        .input-border::before, .input-border::after { content: ""; position: absolute; width: 15px; height: 15px; border: 1px solid rgba(0, 229, 255, 0.7); z-index: 2; transition: all 0.3s ease; }
+        .input-border::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+        .input-border::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+        
+        .holo-scan-line { position: absolute; width: 100%; height: 2px; background: linear-gradient(90deg, transparent 0%, rgba(0,229,255,0.5) 20%, rgba(255,255,255,0.8) 50%, rgba(0,229,255,0.5) 80%, transparent 100%); top: 0; left: 0; opacity: 0; filter: blur(1px); z-index: 3; pointer-events: none; transition: opacity 0.3s ease; }
+        .input-glow { position: absolute; width: 100%; height: 100%; top: 0; left: 0; background: radial-gradient(ellipse at center, rgba(0,229,255,0.15) 0%, transparent 70%); opacity: 0; z-index: 0; transition: opacity 0.3s ease; pointer-events: none; }
+        .input-active-indicator { position: absolute; width: 6px; height: 6px; background: rgba(0,229,255,0.7); border-radius: 50%; right: 15px; top: 22px; opacity: 0.3; box-shadow: 0 0 10px rgba(0,229,255,0.5); transition: all 0.3s ease; z-index: 2; pointer-events: none; }
+        
+        .input-label { position: absolute; top: -22px; left: 0; color: rgba(0,229,255,0.7); font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; transition: all 0.3s ease; pointer-events: none; font-family: 'Orbitron', sans-serif; }
+        
+        .input-data-visualization { position: absolute; width: calc(100% - 30px); height: 2px; bottom: 8px; left: 15px; display: flex; justify-content: space-between; z-index: 2; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+        .data-segment { width: 6%; height: 100%; background: rgba(0,229,255,0.4); transition: all 0.5s ease; }
+        .data-segment:nth-child(even) { height: 4px; transform: translateY(-1px); }
+        
+        .input-particles { position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 3; overflow: hidden; }
+        .input-particle { position: absolute; width: 3px; height: 3px; background: rgba(0,229,255,0.7); border-radius: 50%; opacity: 0; filter: blur(1px); transition: all 0.3s ease; }
+        
+        .interface-lines { position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; z-index: 2; }
+        .interface-line { position: absolute; background: rgba(0,229,255,0.3); transition: all 0.3s ease; }
+        .interface-line:nth-child(1) { width: 15px; height: 1px; top: 10px; right: 10px; }
+        .interface-line:nth-child(2) { width: 1px; height: 15px; top: 10px; right: 10px; }
+        .interface-line:nth-child(3) { width: 1px; height: 15px; bottom: 10px; left: 10px; }
+        .interface-line:nth-child(4) { width: 15px; height: 1px; bottom: 10px; left: 10px; }
+        
+        .hex-decoration { position: absolute; width: 20px; height: 23px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); border: 1px solid rgba(0,229,255,0.3); right: -10px; top: 50%; transform: translateY(-50%); transition: all 0.3s ease; z-index: 2; }
+        .power-indicator { position: absolute; width: 100%; height: 2px; background: linear-gradient(90deg, rgba(0,229,255,0.8) 0%, rgba(0,229,255,0.1) 100%); bottom: 0; left: 0; transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease; z-index: 3; }
+        
+        .holo-input:focus { background: rgba(0, 22, 46, 0.8); box-shadow: 0 0 20px rgba(0,229,255,0.3), inset 0 0 15px rgba(0,0,0,0.9); color: #fff; }
+        .holo-input:focus::placeholder { color: rgba(0,229,255,0.3); transform: translateX(10px); }
+        .holo-input:focus ~ .input-border { border-color: rgba(0,229,255,0.7); }
+        .holo-input:focus ~ .input-border::before, .holo-input:focus ~ .input-border::after { border-color: #00e5ff; width: 25px; height: 25px; }
+        .holo-input:focus ~ .holo-scan-line { opacity: 1; animation: scan-animation 2s infinite ease-in-out; }
+        .holo-input:focus ~ .input-glow { opacity: 1; }
+        .holo-input:focus ~ .input-active-indicator { opacity: 1; background: #00e5ff; box-shadow: 0 0 15px #00e5ff; transform: scale(1.2); }
+        .holo-input:focus ~ .input-label { color: #00e5ff; text-shadow: 0 0 10px rgba(0,229,255,0.7); transform: translateY(-3px); }
+        .holo-input:focus ~ .input-data-visualization { opacity: 1; }
+        .holo-input:focus ~ .input-data-visualization .data-segment { animation: data-pulse 2s infinite; animation-delay: calc(var(--index) * 0.1s); }
+        .holo-input:focus ~ .interface-lines .interface-line { background: rgba(0,229,255,0.6); }
+        .holo-input:focus ~ .hex-decoration { border-color: rgba(0,229,255,0.6); box-shadow: 0 0 10px rgba(0,229,255,0.3); transform: translateY(-50%) rotate(30deg); }
+        .holo-input:focus ~ .input-particles .input-particle { opacity: 1; animation: particle-float 3s infinite ease-in-out; animation-delay: calc(var(--index) * 0.2s); }
+        .holo-input:focus ~ .power-indicator { transform: scaleX(1); }
+        .holo-input:hover { background: rgba(0, 15, 40, 0.75); }
+        
+        @keyframes scan-animation { 0% { top: 0; opacity: 0; } 10%, 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+        @keyframes data-pulse { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.8); } }
+        @keyframes particle-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        /* PASSWORD TOGGLE EYE ADJUSTMENT */
+        .password-toggle-btn { position: absolute; right: 25px; top: 15px; z-index: 20; color: rgba(0,229,255,0.5); cursor: pointer; transition: color 0.3s; }
+        .password-toggle-btn:hover { color: #00e5ff; }
+
+        /* --- TOOLTIP DESIGN (Item-Hints adapted for inline) --- */
+        .item-hints { display: flex; align-items: center; justify-content: center; z-index: 20; position: relative; margin-top: 15px; }
+        .item-hints .hint { position: relative; display: flex; justify-content: center; align-items: center; }
+        .item-hints .hint-dot {
+            width: 22px; height: 22px; border: 1px solid rgba(0,229,255,0.4); border-radius: 50%;
+            color: #00e5ff; display: flex; align-items: center; justify-content: center;
+            font-weight: 900; cursor: help; font-size: 11px; transition: all 0.3s ease; font-family: 'Orbitron', sans-serif;
+            box-shadow: inset 0 0 5px rgba(0,229,255,0.2); background: rgba(0,10,20,0.5);
+        }
+        .item-hints .hint:hover .hint-dot { background-color: rgba(0,229,255,0.2); border-color: #00e5ff; box-shadow: 0 0 10px rgba(0,229,255,0.5); }
+        .item-hints .hint-content {
+            position: absolute; right: 35px; bottom: 50%; transform: translateY(50%); width: 220px;
+            background: rgba(1, 10, 19, 0.95); border: 1px solid #00e5ff; border-left: 3px solid #ff0092;
+            padding: 12px; font-size: 10px; color: #f0e6d2; text-transform: uppercase; font-family: 'Orbitron', sans-serif;
+            opacity: 0; visibility: hidden; transition: all 0.4s ease;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.15); pointer-events: none; z-index: 30; letter-spacing: 1px;
+        }
+        .item-hints .hint:hover .hint-content { opacity: 1; visibility: visible; }
+        .item-hints .hint-content::before {
+            content: ""; position: absolute; height: 1px; background: #00e5ff;
+            right: -30px; bottom: 50%; width: 0; transition: width 0.4s ease; transition-delay: 0.1s;
+        }
+        .item-hints .hint:hover .hint-content::before { width: 30px; }
+        .item-hints .hint-content::after {
+            content: ""; position: absolute; height: 1px; background: #ff0092;
+            right: -10px; bottom: 50%; transform-origin: right; transform: rotate(-45deg); width: 0; transition: width 0.4s ease;
+        }
+        .item-hints .hint:hover .hint-content::after { width: 15px; }
+
+        /* --- GLITCH ALERT BOX --- */
+        .glitch-alert {
+            position: relative; border: 1px solid #ff004d; background: rgba(20,0,0,0.85); color: #ff004d;
+            padding: 15px; font-family: 'Orbitron', sans-serif; text-transform: uppercase; text-align: center;
+            font-size: 12px; letter-spacing: 1px; box-shadow: 0 0 15px rgba(255,0,77,0.4), inset 0 0 10px rgba(255,0,77,0.2);
+            animation: alert-glitch 0.4s cubic-bezier(.25, .46, .45, .94) both infinite alternate; margin-bottom: 25px;
+            backdrop-filter: blur(5px); display: none; z-index: 20;
+        }
+        .glitch-alert.success {
+            color: #00e5ff; border-color: #00e5ff; background: rgba(0,20,30,0.85); box-shadow: 0 0 15px rgba(0,229,255,0.4), inset 0 0 10px rgba(0,229,255,0.2); animation: none;
+        }
+        @keyframes alert-glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 1px); }
+            40% { transform: translate(-1px, -1px); }
+            60% { transform: translate(2px, 1px); }
+            80% { transform: translate(1px, -1px); }
+            100% { transform: translate(0); }
+        }
 
     </style>
 </head>
@@ -141,36 +219,72 @@
         </div>
     </div>
 
-    <div class="max-w-md w-full hex-panel p-8 sm:p-10 rounded-sm">
+    <div class="max-w-[480px] w-full hex-panel p-8 sm:p-10 rounded-sm">
         
         <div class="neon-svg-container">
             <svg class="neon-svg" viewBox="0 0 400 100"><path/></svg>
             <svg class="neon-svg" viewBox="0 0 400 100"><path/></svg>
         </div>
 
-        <div id="alertBox" class="hidden mb-6 p-4 border text-sm text-center font-bold tracking-wide transition-all duration-300 relative z-10"></div>
+        <div id="alertBox" class="glitch-alert"></div>
 
         <div id="loginSection" class="block relative z-10">
-            <div class="text-center mb-8 border-b border-[#00e5ff]/30 pb-4">
+            <div class="text-center mb-10 border-b border-[#00e5ff]/30 pb-4">
                 <h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#00e5ff] to-[#ff0092] tracking-wider esport-font drop-shadow-[0_0_10px_rgba(0,229,255,0.5)]">LoL Worlds Mayhem</h1>
             </div>
 
-            <form id="loginForm" class="space-y-4">
-                <div>
-                    <label class="block text-[0.65rem] font-bold text-[#00e5ff] uppercase tracking-widest mb-1.5">Felhasználónév</label>
-                    <input type="text" id="loginUsername" required class="w-full input-hex px-4 py-3 text-white transition-colors placeholder-slate-600" placeholder="Felhasználónév">
+            <form id="loginForm">
+                <div class="input-group-wrapper">
+                    <div class="input-container">
+                        <div class="input-field-container">
+                            <input type="text" id="loginUsername" required class="holo-input" placeholder="Felhasználónév" />
+                            <div class="input-border"></div><div class="holo-scan-line"></div><div class="input-glow"></div><div class="input-active-indicator"></div>
+                            <div class="input-label">Felhasználónév</div>
+                            <div class="input-data-visualization">
+                                <div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div><div class="data-segment" style="--index: 4;"></div><div class="data-segment" style="--index: 5;"></div><div class="data-segment" style="--index: 6;"></div><div class="data-segment" style="--index: 7;"></div><div class="data-segment" style="--index: 8;"></div><div class="data-segment" style="--index: 9;"></div><div class="data-segment" style="--index: 10;"></div>
+                            </div>
+                            <div class="input-particles">
+                                <div class="input-particle" style="--index: 1; top: 20%; left: 10%;"></div><div class="input-particle" style="--index: 2; top: 65%; left: 45%;"></div><div class="input-particle" style="--index: 3; top: 40%; left: 80%;"></div>
+                            </div>
+                            <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
+                            <div class="hex-decoration"></div><div class="power-indicator"></div>
+                        </div>
+                    </div>
+                    <div class="item-hints shrink-0">
+                        <div class="hint">
+                            <span class="hint-dot">?</span>
+                            <div class="hint-content">Regisztrált felhasználónév (Min. 3 karakter).</div>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <div class="flex justify-between items-center mb-1.5">
-                        <label class="block text-[0.65rem] font-bold text-[#00e5ff] uppercase tracking-widest">Jelszó</label>
-                        <a href="#" onclick="showSection('forgotSection')" class="text-[0.65rem] text-slate-400 hover:text-[#ff0092] uppercase tracking-widest font-bold transition-colors">Elfelejtett jelszó?</a>
+
+                <div class="input-group-wrapper">
+                    <div class="input-container">
+                        <div class="input-field-container">
+                            <input type="password" id="loginPassword" required class="holo-input" placeholder="********" />
+                            <svg id="eyeLogin" onclick="toggleVisibility('loginPassword', 'eyeLogin')" class="w-4 h-4 password-toggle-btn" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                            <div class="input-border"></div><div class="holo-scan-line"></div><div class="input-glow"></div><div class="input-active-indicator"></div>
+                            <div class="input-label">Jelszó</div>
+                            <div class="input-data-visualization">
+                                <div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div><div class="data-segment" style="--index: 4;"></div><div class="data-segment" style="--index: 5;"></div><div class="data-segment" style="--index: 6;"></div><div class="data-segment" style="--index: 7;"></div><div class="data-segment" style="--index: 8;"></div><div class="data-segment" style="--index: 9;"></div><div class="data-segment" style="--index: 10;"></div>
+                            </div>
+                            <div class="input-particles">
+                                <div class="input-particle" style="--index: 1; top: 20%; left: 10%;"></div><div class="input-particle" style="--index: 2; top: 65%; left: 45%;"></div><div class="input-particle" style="--index: 3; top: 40%; left: 80%;"></div>
+                            </div>
+                            <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
+                            <div class="hex-decoration"></div><div class="power-indicator"></div>
+                        </div>
                     </div>
-                    <div class="relative">
-                        <input type="password" id="loginPassword" required class="w-full input-hex px-4 py-3 pr-12 text-white transition-colors">
-                        <button type="button" onclick="toggleVisibility('loginPassword', 'eyeLogin')" class="absolute inset-y-0 right-0 px-4 flex items-center text-slate-400 hover:text-[#00e5ff] focus:outline-none transition-colors">
-                            <svg id="eyeLogin" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                        </button>
+                    <div class="item-hints shrink-0">
+                        <div class="hint">
+                            <span class="hint-dot">?</span>
+                            <div class="hint-content">Biztonságos jelszó (Min. 6 karakter).</div>
+                        </div>
                     </div>
+                </div>
+
+                <div class="text-right mb-4">
+                    <a href="#" onclick="showSection('forgotSection')" class="text-[0.65rem] text-slate-400 hover:text-[#ff0092] uppercase tracking-widest font-bold transition-colors">Elfelejtett jelszó?</a>
                 </div>
 
                 <div class="cosmic-portal-btn-wrapper">
@@ -185,53 +299,86 @@
         </div>
 
         <div id="registerSection" class="hidden relative z-10">
-            <div class="text-center mb-8 border-b border-[#00e5ff]/30 pb-4">
+            <div class="text-center mb-10 border-b border-[#00e5ff]/30 pb-4">
                 <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#00e5ff] to-[#ff0092] tracking-wider esport-font">Regisztráció</h1>
             </div>
 
-            <form id="registerForm" class="space-y-4">
-                <div>
-                    <div class="flex items-center gap-2 mb-1.5">
-                        <label class="block text-[0.65rem] font-bold text-[#00e5ff] uppercase tracking-widest">Felhasználónév</label>
-                        <div class="item-hints">
-                            <div class="hint">
-                                <span class="hint-dot">?</span>
-                                <div class="hint-content">A felhasználónévnek minimum 3 karakter hosszúnak kell lennie.</div>
-                            </div>
+            <form id="registerForm">
+                <div class="input-group-wrapper">
+                    <div class="input-container">
+                        <div class="input-field-container">
+                            <input type="text" id="regUsername" required minlength="3" class="holo-input" placeholder="Felhasználónév" />
+                            <div class="input-border"></div><div class="holo-scan-line"></div><div class="input-glow"></div><div class="input-active-indicator"></div>
+                            <div class="input-label">Felhasználónév</div>
+                            <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div><div class="data-segment" style="--index: 4;"></div><div class="data-segment" style="--index: 5;"></div></div>
+                            <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
+                            <div class="hex-decoration"></div><div class="power-indicator"></div>
                         </div>
                     </div>
-                    <input type="text" id="regUsername" required minlength="3" class="w-full input-hex px-4 py-3 text-white transition-colors" placeholder="Felhasználónév">
-                </div>
-                
-                <div>
-                    <label class="block text-[0.65rem] font-bold text-[#00e5ff] uppercase tracking-widest mb-1.5">E-mail cím</label>
-                    <input type="email" id="regEmail" required class="w-full input-hex px-4 py-3 text-white transition-colors">
+                    <div class="item-hints shrink-0">
+                        <div class="hint">
+                            <span class="hint-dot">?</span>
+                            <div class="hint-content">Egyedi név a ranglistához (Min. 3 karakter).</div>
+                        </div>
+                    </div>
                 </div>
 
-                <div>
-                    <div class="flex items-center gap-2 mb-1.5">
-                        <label class="block text-[0.65rem] font-bold text-[#00e5ff] uppercase tracking-widest">Jelszó</label>
-                        <div class="item-hints">
-                            <div class="hint">
-                                <span class="hint-dot">?</span>
-                                <div class="hint-content">A jelszónak minimum 6 karakter hosszúnak kell lennie, a biztonság érdekében.</div>
-                            </div>
+                <div class="input-group-wrapper">
+                    <div class="input-container">
+                        <div class="input-field-container">
+                            <input type="email" id="regEmail" required class="holo-input" placeholder="E-mail cím" />
+                            <div class="input-border"></div><div class="holo-scan-line"></div><div class="input-glow"></div><div class="input-active-indicator"></div>
+                            <div class="input-label">E-mail cím</div>
+                            <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div><div class="data-segment" style="--index: 4;"></div><div class="data-segment" style="--index: 5;"></div></div>
+                            <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
+                            <div class="hex-decoration"></div><div class="power-indicator"></div>
                         </div>
                     </div>
-                    <div class="relative">
-                        <input type="password" id="regPassword" required minlength="6" class="w-full input-hex px-4 py-3 pr-12 text-white transition-colors">
-                        <button type="button" onclick="toggleVisibility('regPassword', 'eyeReg1')" class="absolute inset-y-0 right-0 px-4 flex items-center text-slate-400 hover:text-[#00e5ff] focus:outline-none transition-colors">
-                            <svg id="eyeReg1" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                        </button>
+                    <div class="item-hints shrink-0">
+                        <div class="hint">
+                            <span class="hint-dot">?</span>
+                            <div class="hint-content">Valós e-mail cím szükséges az aktiváláshoz.</div>
+                        </div>
                     </div>
                 </div>
-                <div>
-                    <label class="block text-[0.65rem] font-bold text-[#00e5ff] uppercase tracking-widest mb-1.5">Jelszó megerősítése</label>
-                    <div class="relative">
-                        <input type="password" id="regConfirmPassword" required minlength="6" class="w-full input-hex px-4 py-3 pr-12 text-white transition-colors">
-                        <button type="button" onclick="toggleVisibility('regConfirmPassword', 'eyeReg2')" class="absolute inset-y-0 right-0 px-4 flex items-center text-slate-400 hover:text-[#00e5ff] focus:outline-none transition-colors">
-                            <svg id="eyeReg2" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                        </button>
+
+                <div class="input-group-wrapper">
+                    <div class="input-container">
+                        <div class="input-field-container">
+                            <input type="password" id="regPassword" required minlength="6" class="holo-input" placeholder="********" />
+                            <svg id="eyeReg1" onclick="toggleVisibility('regPassword', 'eyeReg1')" class="w-4 h-4 password-toggle-btn" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                            <div class="input-border"></div><div class="holo-scan-line"></div><div class="input-glow"></div><div class="input-active-indicator"></div>
+                            <div class="input-label">Jelszó</div>
+                            <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div><div class="data-segment" style="--index: 4;"></div><div class="data-segment" style="--index: 5;"></div></div>
+                            <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
+                            <div class="hex-decoration"></div><div class="power-indicator"></div>
+                        </div>
+                    </div>
+                    <div class="item-hints shrink-0">
+                        <div class="hint">
+                            <span class="hint-dot">?</span>
+                            <div class="hint-content">Erős jelszó (Min. 6 karakter).</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group-wrapper">
+                    <div class="input-container">
+                        <div class="input-field-container">
+                            <input type="password" id="regConfirmPassword" required minlength="6" class="holo-input" placeholder="********" />
+                            <svg id="eyeReg2" onclick="toggleVisibility('regConfirmPassword', 'eyeReg2')" class="w-4 h-4 password-toggle-btn" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                            <div class="input-border"></div><div class="holo-scan-line"></div><div class="input-glow"></div><div class="input-active-indicator"></div>
+                            <div class="input-label">Jelszó megerősítése</div>
+                            <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div><div class="data-segment" style="--index: 4;"></div><div class="data-segment" style="--index: 5;"></div></div>
+                            <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
+                            <div class="hex-decoration"></div><div class="power-indicator"></div>
+                        </div>
+                    </div>
+                    <div class="item-hints shrink-0">
+                        <div class="hint">
+                            <span class="hint-dot">?</span>
+                            <div class="hint-content">Pontosan egyeznie kell az előzővel.</div>
+                        </div>
                     </div>
                 </div>
 
@@ -247,15 +394,29 @@
         </div>
 
         <div id="forgotSection" class="hidden relative z-10">
-            <div class="text-center mb-8 border-b border-[#00e5ff]/30 pb-4">
+            <div class="text-center mb-10 border-b border-[#00e5ff]/30 pb-4">
                 <h1 class="text-3xl font-black text-[#00e5ff] tracking-wider esport-font">Elfelejtett jelszó</h1>
-                <p class="text-slate-400 mt-2 text-sm">Add meg az e-mail címed a visszaállító linkhez.</p>
+                <p class="text-slate-400 mt-2 text-xs uppercase tracking-widest font-bold">Visszaállító link küldése</p>
             </div>
 
-            <form id="forgotForm" class="space-y-4">
-                <div>
-                    <label class="block text-[0.65rem] font-bold text-[#00e5ff] uppercase tracking-widest mb-1.5">E-mail cím</label>
-                    <input type="email" id="forgotEmail" required class="w-full input-hex px-4 py-3 text-white transition-colors">
+            <form id="forgotForm">
+                <div class="input-group-wrapper">
+                    <div class="input-container">
+                        <div class="input-field-container">
+                            <input type="email" id="forgotEmail" required class="holo-input" placeholder="E-mail cím" />
+                            <div class="input-border"></div><div class="holo-scan-line"></div><div class="input-glow"></div><div class="input-active-indicator"></div>
+                            <div class="input-label">E-mail cím</div>
+                            <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div></div>
+                            <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
+                            <div class="hex-decoration"></div><div class="power-indicator"></div>
+                        </div>
+                    </div>
+                    <div class="item-hints shrink-0">
+                        <div class="hint">
+                            <span class="hint-dot">?</span>
+                            <div class="hint-content">A regisztrációhoz használt e-mail cím.</div>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="cosmic-portal-btn-wrapper">
@@ -266,41 +427,54 @@
                 </div>
             </form>
 
-            <p class="text-center text-slate-400 text-sm mt-4"><a href="#" onclick="showSection('loginSection')" class="text-slate-500 hover:text-[#00e5ff] font-bold transition-colors">← Vissza a belépéshez</a></p>
+            <p class="text-center text-slate-400 text-sm mt-4"><a href="#" onclick="showSection('loginSection')" class="text-slate-500 hover:text-[#00e5ff] font-bold transition-colors uppercase tracking-widest text-xs">← Vissza a belépéshez</a></p>
         </div>
 
         <div id="resetSection" class="hidden relative z-10">
-            <div class="text-center mb-8 border-b border-[#00e5ff]/30 pb-4">
+            <div class="text-center mb-10 border-b border-[#00e5ff]/30 pb-4">
                 <h1 class="text-3xl font-black text-[#00e5ff] tracking-wider esport-font">Új jelszó</h1>
-                <p class="text-slate-400 mt-2 text-sm">Állítsd be a fiókod új jelszavát.</p>
+                <p class="text-slate-400 mt-2 text-xs uppercase tracking-widest font-bold">Fiók helyreállítása</p>
             </div>
 
-            <form id="resetForm" class="space-y-4">
+            <form id="resetForm">
                 <input type="hidden" id="resetTokenInput">
-                <div>
-                    <div class="flex items-center gap-2 mb-1.5">
-                        <label class="block text-[0.65rem] font-bold text-[#00e5ff] uppercase tracking-widest">Új jelszó</label>
-                        <div class="item-hints">
-                            <div class="hint">
-                                <span class="hint-dot">?</span>
-                                <div class="hint-content">A jelszónak minimum 6 karakter hosszúnak kell lennie.</div>
-                            </div>
+                <div class="input-group-wrapper">
+                    <div class="input-container">
+                        <div class="input-field-container">
+                            <input type="password" id="resetNewPassword" required minlength="6" class="holo-input" placeholder="********" />
+                            <svg id="eyeReset1" onclick="toggleVisibility('resetNewPassword', 'eyeReset1')" class="w-4 h-4 password-toggle-btn" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                            <div class="input-border"></div><div class="holo-scan-line"></div><div class="input-glow"></div><div class="input-active-indicator"></div>
+                            <div class="input-label">Új jelszó</div>
+                            <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div></div>
+                            <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
+                            <div class="hex-decoration"></div><div class="power-indicator"></div>
                         </div>
                     </div>
-                    <div class="relative">
-                        <input type="password" id="resetNewPassword" required minlength="6" class="w-full input-hex px-4 py-3 pr-12 text-white transition-colors">
-                        <button type="button" onclick="toggleVisibility('resetNewPassword', 'eyeReset1')" class="absolute inset-y-0 right-0 px-4 flex items-center text-slate-400 hover:text-[#00e5ff] focus:outline-none transition-colors">
-                            <svg id="eyeReset1" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                        </button>
+                    <div class="item-hints shrink-0">
+                        <div class="hint">
+                            <span class="hint-dot">?</span>
+                            <div class="hint-content">Új, biztonságos jelszó (Min. 6 karakter).</div>
+                        </div>
                     </div>
                 </div>
-                <div>
-                    <label class="block text-[0.65rem] font-bold text-[#00e5ff] uppercase tracking-widest mb-1.5">Új jelszó megerősítése</label>
-                    <div class="relative">
-                        <input type="password" id="resetConfirmPassword" required minlength="6" class="w-full input-hex px-4 py-3 pr-12 text-white transition-colors">
-                        <button type="button" onclick="toggleVisibility('resetConfirmPassword', 'eyeReset2')" class="absolute inset-y-0 right-0 px-4 flex items-center text-slate-400 hover:text-[#00e5ff] focus:outline-none transition-colors">
-                            <svg id="eyeReset2" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                        </button>
+
+                <div class="input-group-wrapper">
+                    <div class="input-container">
+                        <div class="input-field-container">
+                            <input type="password" id="resetConfirmPassword" required minlength="6" class="holo-input" placeholder="********" />
+                            <svg id="eyeReset2" onclick="toggleVisibility('resetConfirmPassword', 'eyeReset2')" class="w-4 h-4 password-toggle-btn" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                            <div class="input-border"></div><div class="holo-scan-line"></div><div class="input-glow"></div><div class="input-active-indicator"></div>
+                            <div class="input-label">Új jelszó megerősítése</div>
+                            <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div></div>
+                            <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
+                            <div class="hex-decoration"></div><div class="power-indicator"></div>
+                        </div>
+                    </div>
+                    <div class="item-hints shrink-0">
+                        <div class="hint">
+                            <span class="hint-dot">?</span>
+                            <div class="hint-content">Pontosan egyeznie kell az előzővel.</div>
+                        </div>
                     </div>
                 </div>
                 
@@ -324,7 +498,7 @@
                 modal.classList.remove('opacity-0', 'pointer-events-none');
                 content.classList.remove('scale-95');
                 content.classList.add('scale-100');
-            }, 500); // Fél másodperc késleltetés betöltés után
+            }, 500);
         });
 
         function closeModal(e) {
@@ -343,10 +517,16 @@
         const alertBox = document.getElementById('alertBox');
 
         function showAlert(msg, isError = false) {
-            alertBox.innerHTML = msg;
-            alertBox.classList.remove('hidden', 'bg-red-950/80', 'border-red-500/50', 'text-red-400', 'bg-emerald-950/80', 'border-emerald-500/50', 'text-emerald-400');
-            if (isError) { alertBox.classList.add('bg-red-950/80', 'border-red-500/50', 'text-red-400'); } 
-            else { alertBox.classList.add('bg-emerald-950/80', 'border-emerald-500/50', 'text-emerald-400'); }
+            alertBox.innerHTML = `[SYS.MSG] // ${msg}`;
+            alertBox.style.display = 'block';
+            alertBox.classList.remove('success');
+            
+            if (!isError) { alertBox.classList.add('success'); }
+            
+            // Re-trigger CSS animation
+            alertBox.style.animation = 'none';
+            alertBox.offsetHeight; /* trigger reflow */
+            alertBox.style.animation = null;
         }
 
         function showSection(sectionId) {
@@ -354,7 +534,7 @@
             document.getElementById('registerSection').classList.add('hidden');
             document.getElementById('forgotSection').classList.add('hidden');
             document.getElementById('resetSection').classList.add('hidden');
-            alertBox.classList.add('hidden');
+            alertBox.style.display = 'none';
             document.getElementById(sectionId).classList.remove('hidden');
         }
 
@@ -387,7 +567,7 @@
             e.preventDefault();
             const btn = e.submitter; 
             const btnText = btn.querySelector('.cosmic-btn-text');
-            btn.disabled = true; btnText.innerText = 'Belépés...';
+            btn.disabled = true; btnText.innerText = 'Autentikáció...';
             try {
                 const res = await fetch('/api/auth/login', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -396,7 +576,7 @@
                 const data = await res.json();
                 if (!res.ok) { showAlert(data.message, true); btn.disabled = false; btnText.innerText = 'Belépés'; } 
                 else { window.location.href = '/dashboard'; }
-            } catch(err) { showAlert('Szerver hiba történt.', true); btn.disabled = false; btnText.innerText = 'Belépés'; }
+            } catch(err) { showAlert('Kritikus szerver hiba.', true); btn.disabled = false; btnText.innerText = 'Belépés'; }
         });
 
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
@@ -407,7 +587,7 @@
 
             const btn = e.submitter; 
             const btnText = btn.querySelector('.cosmic-btn-text');
-            btn.disabled = true; btnText.innerText = 'Regisztráció...';
+            btn.disabled = true; btnText.innerText = 'Inicializálás...';
             
             try {
                 const res = await fetch('/api/auth/register', {
@@ -426,14 +606,14 @@
                     setTimeout(() => showSection('loginSection'), 4000);
                 }
                 btn.disabled = false; btnText.innerText = 'Regisztráció';
-            } catch(err) { showAlert('Szerver hiba történt.', true); btn.disabled = false; btnText.innerText = 'Regisztráció'; }
+            } catch(err) { showAlert('Kritikus szerver hiba.', true); btn.disabled = false; btnText.innerText = 'Regisztráció'; }
         });
 
         document.getElementById('forgotForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = e.submitter; 
             const btnText = btn.querySelector('.cosmic-btn-text');
-            btn.disabled = true; btnText.innerText = 'Küldés...';
+            btn.disabled = true; btnText.innerText = 'Feldolgozás...';
             try {
                 const res = await fetch('/api/auth/forgot-password', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -455,7 +635,7 @@
 
             const btn = e.submitter; 
             const btnText = btn.querySelector('.cosmic-btn-text');
-            btn.disabled = true; btnText.innerText = 'Frissítés...';
+            btn.disabled = true; btnText.innerText = 'Felülírás...';
             try {
                 const res = await fetch('/api/auth/reset-password', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -469,7 +649,7 @@
                 showAlert(data.message, !res.ok);
                 if (res.ok) { setTimeout(() => window.location.href = '/login', 2500); } 
                 else { btn.disabled = false; btnText.innerText = 'Jelszó frissítése'; }
-            } catch(err) { showAlert('Hiba történt a kommunikációban.', true); btn.disabled = false; btnText.innerText = 'Jelszó frissítése'; }
+            } catch(err) { showAlert('Kommunikációs hiba.', true); btn.disabled = false; btnText.innerText = 'Jelszó frissítése'; }
         });
     </script>
 </body>
