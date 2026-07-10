@@ -114,13 +114,19 @@ app.get('/login', (req: express.Request, res: express.Response) => {
 
 app.get('/profile', requireAuth, async (req: AuthRequest, res: express.Response) => {
     try {
-        const userResult = await pool.query('SELECT username, email FROM public.users WHERE id = $1', [req.user!.userId]);
+        const userId = req.user!.userId;
+        const userResult = await pool.query('SELECT username, email, trophies_count FROM public.users WHERE id = $1', [userId]);
         if ((userResult.rowCount ?? 0) === 0) return res.redirect('/login');
         
+        const friendsRes = await pool.query(`SELECT f.id as friendship_id, f.status, f.action_user_id, u.id as friend_id, u.username as friend_name, u.trophies_count FROM public.friendships f JOIN public.users u ON (u.id = f.user_id_1 OR u.id = f.user_id_2) WHERE (f.user_id_1 = $1 OR f.user_id_2 = $1) AND u.id != $1`, [userId]);
+
         res.render('profile', {
             title: 'Fiók beállításai | Worlds Mayhem',
+            userId: userId,
             username: userResult.rows[0].username,
-            email: userResult.rows[0].email
+            email: userResult.rows[0].email,
+            trophies: userResult.rows[0].trophies_count,
+            friends: friendsRes.rows
         });
     } catch (error) { res.redirect('/dashboard'); }
 });

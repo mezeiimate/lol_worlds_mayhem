@@ -6,6 +6,7 @@
     <title><%= title %></title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <style> 
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap');
@@ -14,7 +15,7 @@
             background-color: #010a13; 
             color: #f0e6d2; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            position: relative;
+            margin: 0; padding: 0; overflow: hidden;
         } 
         .esport-font { font-family: 'Oswald', sans-serif; text-transform: uppercase; }
         .cyber-font { font-family: 'Orbitron', sans-serif; }
@@ -22,28 +23,15 @@
         .hex-panel {
             background: linear-gradient(135deg, rgba(9, 20, 40, 0.9) 0%, rgba(1, 10, 19, 0.95) 100%);
             border: 1px solid rgba(200, 170, 110, 0.3);
-            box-shadow: 0 0 25px rgba(200, 170, 110, 0.1), inset 0 0 20px rgba(0,0,0,0.8);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
             position: relative;
-            backdrop-filter: blur(10px);
-            overflow: visible;
         }
-        .hex-panel::before, .hex-panel::after {
-            content: ''; position: absolute; width: 12px; height: 12px; border: 1px solid #c8aa6e; pointer-events: none;
-        }
-        .hex-panel::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
-        .hex-panel::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
 
-        .hex-panel-danger {
-            background: linear-gradient(135deg, rgba(40, 9, 20, 0.9) 0%, rgba(19, 1, 10, 0.95) 100%);
-            border: 1px solid rgba(255, 0, 77, 0.3);
-            box-shadow: 0 0 25px rgba(255, 0, 77, 0.1), inset 0 0 20px rgba(0,0,0,0.8);
-            position: relative;
-        }
-        .hex-panel-danger::before, .hex-panel-danger::after {
-            content: ''; position: absolute; width: 12px; height: 12px; border: 1px solid #ff004d; pointer-events: none;
-        }
-        .hex-panel-danger::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
-        .hex-panel-danger::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+        /* Görgetősáv styler */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(200,170,110,0.3); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #c8aa6e; }
 
         /* --- HÁTTÉR ANIMÁCIÓ --- */
         .star-container { background: radial-gradient(ellipse at bottom, #091428 0%, #010a13 100%); position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
@@ -54,19 +42,11 @@
         @keyframes animStar { from { transform: translateY(0px); } to { transform: translateY(-2000px); } }
 
         /* --- CYBER NEON SVG PATH (Background effect) --- */
-        .neon-svg-container { position: absolute; top: -50px; left: 50%; transform: translateX(-50%); width: 100%; height: 200px; pointer-events: none; z-index: 0; opacity: 0.5; display: flex; justify-content: center; align-items: center; }
+        .neon-svg-container { position: absolute; top: -50px; left: 50%; transform: translateX(-50%); width: 100%; height: 200px; pointer-events: none; z-index: 0; opacity: 0.3; display: flex; justify-content: center; align-items: center; }
         .neon-svg { position: absolute; width: 400px; fill: none; }
         .neon-svg:nth-child(2) { filter: blur(40px); }
-        .neon-svg path {
-            d: path("M0,25 C150,110 150, -60 300,25");
-            stroke: #c8aa6e; stroke-width: 25; stroke-linecap: round;
-            transform: translate(50px,50%); animation: svgAnimate 3s ease-in-out infinite alternate;
-        }
-        @keyframes svgAnimate {
-            0% { stroke: #c8aa6e; d: path("M0,25 C150,110 150, -60 300,25"); }
-            50% { stroke: #f0e6d2; d: path("M0,25 C160,-50 140, 110 300,25"); }
-            100% { stroke: #c8aa6e; d: path("M0,25 C140,100 160, -40 300,25"); }
-        }
+        .neon-svg path { d: path("M0,25 C150,110 150, -60 300,25"); stroke: #c8aa6e; stroke-width: 25; stroke-linecap: round; transform: translate(50px,50%); animation: svgAnimate 3s ease-in-out infinite alternate; }
+        @keyframes svgAnimate { 0% { stroke: #c8aa6e; d: path("M0,25 C150,110 150, -60 300,25"); } 50% { stroke: #f0e6d2; d: path("M0,25 C160,-50 140, 110 300,25"); } 100% { stroke: #c8aa6e; d: path("M0,25 C140,100 160, -40 300,25"); } }
 
         /* --- HOLO INPUT DESIGN --- */
         .input-group-wrapper { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 2rem; width: 100%; position: relative; }
@@ -126,7 +106,6 @@
         @keyframes scan-animation { 0% { top: 0; opacity: 0; } 10%, 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
         @keyframes data-pulse { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.8); } }
 
-        /* PASSWORD TOGGLE EYE */
         .password-toggle-btn { position: absolute; right: 20px; top: 15px; z-index: 20; color: rgba(200,170,110,0.5); cursor: pointer; transition: color 0.3s; }
         .password-toggle-btn:hover { color: #c8aa6e; }
 
@@ -148,27 +127,19 @@
             box-shadow: 0 0 20px rgba(200, 170, 110, 0.15); pointer-events: none; z-index: 30;
         }
         .item-hints .hint:hover .hint-content { opacity: 1; visibility: visible; }
-        .item-hints .hint-content::before {
-            content: ""; position: absolute; height: 1px; background: #c8aa6e;
-            right: -30px; bottom: 50%; width: 0; transition: width 0.4s ease; transition-delay: 0.1s;
-        }
+        .item-hints .hint-content::before { content: ""; position: absolute; height: 1px; background: #c8aa6e; right: -30px; bottom: 50%; width: 0; transition: width 0.4s ease; transition-delay: 0.1s; }
         .item-hints .hint:hover .hint-content::before { width: 30px; }
-        .item-hints .hint-content::after {
-            content: ""; position: absolute; height: 1px; background: #f0e6d2;
-            right: -10px; bottom: 50%; transform-origin: right; transform: rotate(-45deg); width: 0; transition: width 0.4s ease;
-        }
+        .item-hints .hint-content::after { content: ""; position: absolute; height: 1px; background: #f0e6d2; right: -10px; bottom: 50%; transform-origin: right; transform: rotate(-45deg); width: 0; transition: width 0.4s ease; }
         .item-hints .hint:hover .hint-content::after { width: 15px; }
 
         /* --- COSMIC PORTAL BUTTON --- */
-        .cosmic-portal-btn-wrapper { width: 100%; margin-top: 2rem; margin-bottom: 1rem; }
         .cosmic-portal-btn {
             --btn-bg: #010a13; --btn-color: #c8aa6e; --btn-highlight: #091428;
             --portal-color1: #c8aa6e; --portal-color2: #f0e6d2;
-            position: relative; width: 100%; display: block; text-align: center;
-            font-family: "Oswald", sans-serif; font-size: 1.1em; font-weight: bold; letter-spacing: 0.1em; text-transform: uppercase;
-            color: var(--btn-color); background-color: var(--btn-bg); border: none; padding: 1em 2em;
-            cursor: pointer; overflow: hidden; transition: all 0.3s ease;
-            clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 90% 100%, 10% 100%, 0% 70%);
+            position: relative; font-family: "Oswald", sans-serif; font-size: 1em; font-weight: bold;
+            letter-spacing: 0.1em; text-transform: uppercase; color: var(--btn-color); background-color: var(--btn-bg);
+            border: none; padding: 0.8em 1.5em; cursor: pointer; overflow: hidden; transition: all 0.3s ease;
+            clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 90% 100%, 10% 100%, 0% 70%); width: 100%; display: block; text-align: center;
         }
         .cosmic-portal-btn::before {
             content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
@@ -180,16 +151,16 @@
         .cosmic-btn-text { position: relative; z-index: 2; text-shadow: 0 0 10px rgba(200, 170, 110, 0.5); }
         .portal-effect { position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, var(--btn-highlight), transparent 50%); opacity: 0; transition: opacity 0.3s ease; z-index: 1; }
         .cosmic-portal-btn:hover .portal-effect { opacity: 1; animation: pulsePortal 2s ease-in-out infinite; }
-        .cosmic-portal-btn:hover { transform: translateY(-3px); filter: drop-shadow(0 5px 15px rgba(200, 170, 110, 0.4)); color: #fff; }
+        .cosmic-portal-btn:hover { transform: translateY(-2px); filter: drop-shadow(0 5px 10px rgba(200, 170, 110, 0.4)); color: #fff; }
         .cosmic-portal-btn:active { transform: translateY(0); }
         @keyframes rotatePortal { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes pulsePortal { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
-        /* --- GLITCH DELETE BUTTON --- */
+        /* --- GLITCH BUTTON (For Delete) --- */
         .glitch-btn, .glitch-btn::after {
-            padding: 12px 30px; font-size: 16px; font-family: "Orbitron", sans-serif; font-weight: bold; border: none; border-radius: 2px;
+            padding: 10px 30px; font-size: 14px; font-family: "Orbitron", sans-serif; font-weight: bold; border: none; border-radius: 2px;
             color: #ff004d; background-color: transparent; position: relative; width: 100%; cursor: pointer;
-            border: 1px solid #ff004d; text-transform: uppercase; letter-spacing: 2px; transition: all 0.3s ease;
+            border: 1px solid #ff004d; text-transform: uppercase; letter-spacing: 2px; transition: all 0.3s ease; display: block;
         }
         .glitch-btn::after {
             --move1: inset(50% 50% 50% 50%); --move2: inset(31% 0 40% 0); --move3: inset(39% 0 15% 0); --move4: inset(45% 0 40% 0); --move5: inset(45% 0 6% 0); --move6: inset(14% 0 61% 0);
@@ -199,208 +170,548 @@
             animation: glitch_4011 1s; animation-timing-function: steps(2, end);
             text-shadow: -3px -3px 0px #00e5ff, 3px 3px 0px #ff004d; background-color: transparent; border: 3px solid #00e5ff;
         }
-        .glitch-btn:hover {
-            text-shadow: -1px -1px 0px #00e5ff, 1px 1px 0px #ff004d; background-color: rgba(255, 0, 77, 0.1); border: 1px solid #00e5ff; box-shadow: 0px 10px 15px -10px #00e5ff; color: #fff;
-        }
-        @keyframes glitch_4011 {
-            0% { clip-path: var(--move1); transform: translate(0px,-10px); }
-            10% { clip-path: var(--move2); transform: translate(-10px,10px); }
-            20% { clip-path: var(--move3); transform: translate(10px,0px); }
-            30% { clip-path: var(--move4); transform: translate(-10px,10px); }
-            40% { clip-path: var(--move5); transform: translate(10px,-10px); }
-            50% { clip-path: var(--move6); transform: translate(-10px,10px); }
-            60% { clip-path: var(--move1); transform: translate(10px,-10px); }
-            70% { clip-path: var(--move3); transform: translate(-10px,10px); }
-            80% { clip-path: var(--move2); transform: translate(10px,-10px); }
-            90% { clip-path: var(--move4); transform: translate(-10px,10px); }
-            100% { clip-path: var(--move1); transform: translate(0); }
-        }
+        .glitch-btn:hover { text-shadow: -1px -1px 0px #00e5ff, 1px 1px 0px #ff004d; background-color: rgba(255, 0, 77, 0.1); border: 1px solid #00e5ff; box-shadow: 0px 10px 15px -10px #00e5ff; color: #fff; }
+        @keyframes glitch_4011 { 0% { clip-path: var(--move1); transform: translate(0px,-10px); } 10% { clip-path: var(--move2); transform: translate(-10px,10px); } 20% { clip-path: var(--move3); transform: translate(10px,0px); } 30% { clip-path: var(--move4); transform: translate(-10px,10px); } 40% { clip-path: var(--move5); transform: translate(10px,-10px); } 50% { clip-path: var(--move6); transform: translate(-10px,10px); } 60% { clip-path: var(--move1); transform: translate(10px,-10px); } 70% { clip-path: var(--move3); transform: translate(-10px,10px); } 80% { clip-path: var(--move2); transform: translate(10px,-10px); } 90% { clip-path: var(--move4); transform: translate(-10px,10px); } 100% { clip-path: var(--move1); transform: translate(0); } }
 
         /* --- GLITCH ALERT BOX --- */
         .glitch-alert {
             position: relative; border: 1px solid #ff004d; background: rgba(20,0,0,0.85); color: #ff004d;
-            padding: 15px; font-family: 'Oswald', sans-serif; text-transform: uppercase; text-align: center;
-            font-size: 13px; letter-spacing: 1px; box-shadow: 0 0 15px rgba(255,0,77,0.4), inset 0 0 10px rgba(255,0,77,0.2);
-            animation: alert-glitch 0.4s cubic-bezier(.25, .46, .45, .94) both infinite alternate; margin-bottom: 25px;
+            padding: 12px; font-family: 'Oswald', sans-serif; text-transform: uppercase; text-align: center;
+            font-size: 12px; letter-spacing: 1px; box-shadow: 0 0 15px rgba(255,0,77,0.4), inset 0 0 10px rgba(255,0,77,0.2);
+            animation: alert-glitch 0.4s cubic-bezier(.25, .46, .45, .94) both infinite alternate; margin-bottom: 20px;
             backdrop-filter: blur(5px); display: none; z-index: 20;
         }
-        .glitch-alert.success {
-            color: #c8aa6e; border-color: #c8aa6e; background: rgba(9,20,40,0.85); box-shadow: 0 0 15px rgba(200,170,110,0.4), inset 0 0 10px rgba(200,170,110,0.2); animation: none;
-        }
-        @keyframes alert-glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 1px); }
-            40% { transform: translate(-1px, -1px); }
-            60% { transform: translate(2px, 1px); }
-            80% { transform: translate(1px, -1px); }
-            100% { transform: translate(0); }
-        }
+        .glitch-alert.success { color: #c8aa6e; border-color: #c8aa6e; background: rgba(9,20,40,0.85); box-shadow: 0 0 15px rgba(200,170,110,0.4), inset 0 0 10px rgba(200,170,110,0.2); animation: none; }
+        @keyframes alert-glitch { 0% { transform: translate(0); } 20% { transform: translate(-2px, 1px); } 40% { transform: translate(-1px, -1px); } 60% { transform: translate(2px, 1px); } 80% { transform: translate(1px, -1px); } 100% { transform: translate(0); } }
+
+        /* --- SOCIAL PANEL (RIGHT) --- */
+        .social-panel { width: 340px; background: #091428; border-left: 1px solid rgba(200, 170, 110, 0.4); display: flex; flex-direction: column; height: 100%; z-index: 20; box-shadow: -10px 0 30px rgba(0,0,0,0.5); flex-shrink: 0; }
+        .social-header { padding: 1.25rem; border-bottom: 1px solid rgba(200, 170, 110, 0.3); background: #010a13; display: flex; flex-direction: column; gap: 1rem; flex-shrink: 0; }
+        
+        .settings-btn { display: flex; align-items: center; justify-content: center; gap: 6px; background: rgba(200, 170, 110, 0.1); border: 1px solid rgba(200, 170, 110, 0.5); padding: 6px 12px; border-radius: 2px; color: #c8aa6e; font-family: 'Orbitron', sans-serif; font-size: 9px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 0 10px rgba(200, 170, 110, 0.1); flex: 1; }
+        .settings-btn:hover { background: rgba(200, 170, 110, 0.2); box-shadow: 0 0 15px rgba(200, 170, 110, 0.4); color: #fff; transform: translateY(-2px); }
+        
+        .logout-btn { display: flex; align-items: center; justify-content: center; gap: 6px; background: rgba(255, 0, 77, 0.1); border: 1px solid rgba(255, 0, 77, 0.5); padding: 6px 12px; border-radius: 2px; color: #ff004d; font-family: 'Orbitron', sans-serif; font-size: 9px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 0 10px rgba(255, 0, 77, 0.1); flex: 1; }
+        .logout-btn:hover { background: rgba(255, 0, 77, 0.2); box-shadow: 0 0 15px rgba(255, 0, 77, 0.4); color: #fff; transform: translateY(-2px); }
+
+        .chat-overlay { position: fixed; bottom: 0; right: 350px; width: 600px; height: 400px; background: #010a13; border-top: 1px solid rgba(200, 170, 110, 0.4); border-left: 1px solid rgba(200, 170, 110, 0.4); border-right: 1px solid rgba(200, 170, 110, 0.4); display: flex; z-index: 50; border-top-left-radius: 6px; border-top-right-radius: 6px; box-shadow: 0 0 30px rgba(0,0,0,0.8); }
+        .chat-msg { display: flex; flex-direction: column; margin-bottom: 4px; }
+        .chat-msg .sender { color: #c8aa6e; font-weight: bold; margin-bottom: 2px; font-size: 11px; }
+        .chat-msg.self .sender { color: #f0e6d2; }
+        .chat-msg .text { color: #e0e0e0; word-break: break-word; margin-left: 5px; border-left: 2px solid rgba(200,170,110,0.3); padding-left: 8px; font-size: 12px; }
+        .chat-msg.self .text { border-left: 2px solid rgba(240,230,210,0.3); }
+        .sys-msg { color: #94a3b8; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; text-align: center; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid rgba(148, 163, 184, 0.2); }
 
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4 overflow-x-hidden">
+<body class="h-screen w-full flex overflow-hidden bg-[#010a13]">
 
     <!-- HÁTTÉR ANIMÁCIÓ -->
     <div class="star-container">
-        <div id="stars"></div>
-        <div id="stars2"></div>
-        <div id="stars3"></div>
+        <div id="stars"></div><div id="stars2"></div><div id="stars3"></div>
     </div>
 
-    <div class="max-w-[500px] w-full relative z-10 flex flex-col gap-6 my-8">
-        
-        <!-- HEADER / ALAPADATOK PANEL -->
-        <div class="hex-panel p-8 sm:p-10 rounded-sm">
-            <div class="neon-svg-container">
-                <svg class="neon-svg" viewBox="0 0 400 100"><path/></svg>
-                <svg class="neon-svg" viewBox="0 0 400 100"><path/></svg>
+    <!-- MAIN CONTENT (Bal oldal, beállítások) -->
+    <div class="flex-1 flex flex-col h-full p-4 md:p-6 lg:p-8 gap-4 overflow-y-auto relative z-10 bg-[url('/map.png')] bg-cover bg-center bg-no-repeat bg-fixed">
+        <div class="absolute inset-0 bg-[#010a13]/80 z-0 pointer-events-none"></div>
+
+        <div class="max-w-[800px] w-full mx-auto relative z-10 flex flex-col gap-6">
+            
+            <div class="text-center md:text-left border-b border-[#c8aa6e]/30 pb-4 shrink-0">
+                <h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-wider esport-font drop-shadow-[0_0_8px_rgba(200,170,110,0.3)]">Fiók Beállításai</h1>
+                <p class="text-slate-400 uppercase tracking-widest text-xs font-bold cyber-font mt-1">Rendszer adatok és biztonság</p>
             </div>
 
             <div id="alertBox" class="glitch-alert"></div>
 
-            <div class="text-center mb-10 border-b border-[#c8aa6e]/30 pb-4">
-                <h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-wider esport-font drop-shadow-[0_0_10px_rgba(200,170,110,0.5)]">Fiók beállításai</h1>
-                <p class="text-slate-400 mt-2 text-xs uppercase tracking-widest font-bold cyber-font">Rendszer adatok és biztonság</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- BAL OSZLOP: Alapadatok és Törlés -->
+                <div class="flex flex-col gap-6">
+                    <div class="hex-panel p-6 rounded-sm">
+                        <div class="neon-svg-container">
+                            <svg class="neon-svg" viewBox="0 0 400 100"><path/></svg>
+                        </div>
+                        <h2 class="text-sm font-bold text-[#c8aa6e] uppercase tracking-widest border-b border-[#c8aa6e]/30 pb-2 mb-6 cyber-font">Alapadatok</h2>
+                        
+                        <div class="space-y-6">
+                            <div class="input-group-wrapper !mb-0">
+                                <div class="input-container">
+                                    <div class="input-field-container">
+                                        <input type="text" readonly value="<%= username %>" class="holo-input" />
+                                        <div class="input-border"></div>
+                                        <div class="input-label">Felhasználónév</div>
+                                        <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input-group-wrapper !mb-0">
+                                <div class="input-container">
+                                    <div class="input-field-container">
+                                        <input type="email" readonly value="<%= email %>" class="holo-input" />
+                                        <div class="input-border"></div>
+                                        <div class="input-label">E-mail cím</div>
+                                        <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FIÓK MEGSZÜNTETÉSE -->
+                    <div class="hex-panel border-[#ff004d]/40 p-6 rounded-sm text-center">
+                        <h2 class="text-sm font-bold text-[#ff004d] uppercase tracking-widest mb-2 cyber-font">Fiók Megszüntetése</h2>
+                        <p class="text-slate-400 text-[0.65rem] mb-6">A fiók és minden hozzá tartozó adat végleges törlése.</p>
+                        <button onclick="deleteProfile()" class="glitch-btn" data-text="Fiók Törlése">Fiók Törlése</button>
+                    </div>
+                </div>
+
+                <!-- JOBB OSZLOP: Jelszó módosítás -->
+                <div class="hex-panel p-6 rounded-sm h-fit">
+                    <form id="changePasswordForm">
+                        <h2 class="text-sm font-bold text-[#c8aa6e] uppercase tracking-widest border-b border-[#c8aa6e]/30 pb-2 mb-6 cyber-font">Jelszó Módosítása</h2>
+                        
+                        <div class="input-group-wrapper">
+                            <div class="input-container">
+                                <div class="input-field-container">
+                                    <input type="password" id="currentPassword" required minlength="6" class="holo-input" placeholder="********" />
+                                    <svg id="eyePass0" onclick="toggleVisibility('currentPassword', 'eyePass0')" class="w-4 h-4 password-toggle-btn" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                                    <div class="input-border"></div><div class="holo-scan-line"></div><div class="input-glow"></div><div class="input-active-indicator"></div>
+                                    <div class="input-label">Jelenlegi jelszó</div>
+                                    <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div></div>
+                                    <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
+                                    <div class="power-indicator"></div>
+                                </div>
+                            </div>
+                            <div class="item-hints shrink-0"><div class="hint"><span class="hint-dot">?</span><div class="hint-content">Biztonsági okokból szükséges.</div></div></div>
+                        </div>
+
+                        <div class="input-group-wrapper">
+                            <div class="input-container">
+                                <div class="input-field-container">
+                                    <input type="password" id="newPassword" required minlength="6" class="holo-input" placeholder="********" />
+                                    <svg id="eyePass1" onclick="toggleVisibility('newPassword', 'eyePass1')" class="w-4 h-4 password-toggle-btn" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                                    <div class="input-border"></div><div class="holo-scan-line"></div><div class="input-glow"></div><div class="input-active-indicator"></div>
+                                    <div class="input-label">Új jelszó</div>
+                                    <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div></div>
+                                    <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
+                                    <div class="power-indicator"></div>
+                                </div>
+                            </div>
+                            <div class="item-hints shrink-0"><div class="hint"><span class="hint-dot">?</span><div class="hint-content">Erős jelszó (Min. 6 karakter).</div></div></div>
+                        </div>
+
+                        <div class="input-group-wrapper">
+                            <div class="input-container">
+                                <div class="input-field-container">
+                                    <input type="password" id="confirmNewPassword" required minlength="6" class="holo-input" placeholder="********" />
+                                    <svg id="eyePass2" onclick="toggleVisibility('confirmNewPassword', 'eyePass2')" class="w-4 h-4 password-toggle-btn" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                                    <div class="input-border"></div><div class="holo-scan-line"></div><div class="input-glow"></div><div class="input-active-indicator"></div>
+                                    <div class="input-label">Jelszó megerősítése</div>
+                                    <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div></div>
+                                    <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
+                                    <div class="power-indicator"></div>
+                                </div>
+                            </div>
+                            <div class="item-hints shrink-0"><div class="hint"><span class="hint-dot">?</span><div class="hint-content">Pontosan egyeznie kell.</div></div></div>
+                        </div>
+
+                        <button type="submit" id="btnSave" class="cosmic-portal-btn mt-6 w-full">
+                            <span class="cosmic-btn-text">Mentés</span>
+                            <div class="portal-effect"></div>
+                        </button>
+                    </form>
+                </div>
             </div>
-
-            <!-- READONLY USER DATA -->
-            <div class="space-y-6 mb-8">
-                <div class="input-group-wrapper !mb-0">
-                    <div class="input-container">
-                        <div class="input-field-container">
-                            <input type="text" readonly value="<%= username %>" class="holo-input" />
-                            <div class="input-border"></div>
-                            <div class="input-label">Felhasználónév</div>
-                            <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="input-group-wrapper !mb-0">
-                    <div class="input-container">
-                        <div class="input-field-container">
-                            <input type="email" readonly value="<%= email %>" class="holo-input" />
-                            <div class="input-border"></div>
-                            <div class="input-label">E-mail cím (Azonosító)</div>
-                            <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="w-full h-px bg-gradient-to-r from-transparent via-[#c8aa6e]/50 to-transparent mb-8"></div>
-
-            <!-- CHANGE PASSWORD FORM -->
-            <form id="changePasswordForm">
-                <h2 class="text-xs font-bold text-[#c8aa6e] uppercase tracking-widest mb-6 cyber-font text-center">Hitelesítő kód (Jelszó) Módosítása</h2>
-                
-                <div class="input-group-wrapper">
-                    <div class="input-container">
-                        <div class="input-field-container">
-                            <input type="password" id="currentPassword" required minlength="6" class="holo-input" placeholder="********" />
-                            <svg id="eyePass0" onclick="toggleVisibility('currentPassword', 'eyePass0')" class="w-4 h-4 password-toggle-btn" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                            <div class="input-border"></div><div class="holo-scan-line"></div><div class="input-glow"></div><div class="input-active-indicator"></div>
-                            <div class="input-label">Jelenlegi jelszó</div>
-                            <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div><div class="data-segment" style="--index: 4;"></div></div>
-                            <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
-                            <div class="power-indicator"></div>
-                        </div>
-                    </div>
-                    <div class="item-hints shrink-0">
-                        <div class="hint">
-                            <span class="hint-dot">?</span>
-                            <div class="hint-content">Biztonsági okokból szükséges a jelenlegi jelszavad.</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="input-group-wrapper">
-                    <div class="input-container">
-                        <div class="input-field-container">
-                            <input type="password" id="newPassword" required minlength="6" class="holo-input" placeholder="********" />
-                            <svg id="eyePass1" onclick="toggleVisibility('newPassword', 'eyePass1')" class="w-4 h-4 password-toggle-btn" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                            <div class="input-border"></div><div class="holo-scan-line"></div><div class="input-glow"></div><div class="input-active-indicator"></div>
-                            <div class="input-label">Új jelszó</div>
-                            <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div><div class="data-segment" style="--index: 4;"></div></div>
-                            <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
-                            <div class="power-indicator"></div>
-                        </div>
-                    </div>
-                    <div class="item-hints shrink-0">
-                        <div class="hint">
-                            <span class="hint-dot">?</span>
-                            <div class="hint-content">Erős jelszó (Min. 6 karakter).</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="input-group-wrapper">
-                    <div class="input-container">
-                        <div class="input-field-container">
-                            <input type="password" id="confirmNewPassword" required minlength="6" class="holo-input" placeholder="********" />
-                            <svg id="eyePass2" onclick="toggleVisibility('confirmNewPassword', 'eyePass2')" class="w-4 h-4 password-toggle-btn" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                            <div class="input-border"></div><div class="holo-scan-line"></div><div class="input-glow"></div><div class="input-active-indicator"></div>
-                            <div class="input-label">Jelszó megerősítése</div>
-                            <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div><div class="data-segment" style="--index: 4;"></div></div>
-                            <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
-                            <div class="power-indicator"></div>
-                        </div>
-                    </div>
-                    <div class="item-hints shrink-0">
-                        <div class="hint">
-                            <span class="hint-dot">?</span>
-                            <div class="hint-content">Pontosan egyeznie kell az előzővel.</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="cosmic-portal-btn-wrapper mt-4">
-                    <button type="submit" id="btnSave" class="cosmic-portal-btn">
-                        <span class="cosmic-btn-text">Mentés</span>
-                        <div class="portal-effect"></div>
-                    </button>
-                </div>
-            </form>
             
-            <div class="text-center mt-6">
-                <a href="/dashboard" class="text-slate-500 hover:text-[#c8aa6e] font-bold transition-colors uppercase tracking-widest text-xs cyber-font">← Vissza a Központba</a>
-            </div>
-        </div>
-
-        <!-- DANGER ZONE (Fiók törlése, Glitch Gombbal) -->
-        <div class="hex-panel-danger p-8 rounded-sm text-center">
-            <h2 class="text-xl font-bold text-[#ff004d] uppercase tracking-widest mb-2 esport-font">Veszélyzóna</h2>
-            <p class="text-slate-400 text-xs mb-8 cyber-font">A fiók és minden adatának végleges törlése.</p>
-            
-            <button onclick="deleteProfile()" class="glitch-btn" data-text="Fiók Törlése">Fiók Törlése</button>
         </div>
     </div>
 
+    <!-- RIGHT SIDEBAR (Social Panel) -->
+    <div class="social-panel">
+        <div class="social-header">
+            <div class="flex items-center gap-4">
+                <div class="relative shrink-0">
+                    <img src="https://ui-avatars.com/api/?name=<%= typeof username !== 'undefined' ? username : 'User' %>&background=091428&color=c8aa6e&bold=true" class="w-14 h-14 rounded-sm border-2 border-[#c8aa6e]/50">
+                    <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-[#010a13]"></div>
+                </div>
+                <div class="min-w-0">
+                    <div class="font-bold text-base text-white cyber-font truncate"><%= typeof username !== 'undefined' ? username : 'User' %></div>
+                    <div class="text-sm text-[#c8aa6e] font-black tracking-widest mt-1">🏆 <%= typeof trophies !== 'undefined' ? trophies : 0 %> Trófea</div>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="window.location.href='/dashboard'" class="settings-btn">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    Központ
+                </button>
+                <button onclick="logout()" class="logout-btn">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                    Kilépés
+                </button>
+            </div>
+        </div>
+
+        <div class="p-4 border-b border-[#c8aa6e]/20 bg-[#091428] shrink-0">
+            <div class="flex gap-2">
+                <input type="text" id="friendSearchInput" class="flex-1 bg-[#010a13] border border-[#c8aa6e]/30 rounded-sm py-2 px-3 text-sm text-[#f0e6d2] focus:outline-none focus:border-[#c8aa6e]" placeholder="Keresés..." onkeypress="if(event.key === 'Enter') searchFriends()">
+                <button onclick="searchFriends()" class="bg-[#1e2328] hover:bg-[#c8aa6e] hover:text-[#010a13] border border-[#c8aa6e]/50 text-[#c8aa6e] px-3 font-bold rounded-sm transition-colors text-sm">🔍</button>
+            </div>
+        </div>
+        <div id="searchResults" class="p-3 space-y-2 empty:hidden border-b border-[#c8aa6e]/20 bg-[#010a13] shrink-0"></div>
+
+        <!-- Friends List -->
+        <div class="flex-1 overflow-y-auto p-3 space-y-5">
+            <% 
+            const safeFriends = typeof friends !== 'undefined' ? friends : [];
+            const accepted = safeFriends.filter(f => f.status === 'ACCEPTED');
+            const pendingRequests = safeFriends.filter(f => f.status === 'PENDING' && f.action_user_id !== (typeof userId !== 'undefined' ? userId : ''));
+            %>
+
+            <div id="pendingRequestsContainer" class="<%= pendingRequests.length > 0 ? '' : 'hidden' %>">
+                <% if (pendingRequests.length > 0) { %>
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 px-2 cyber-font">Jelölések (<%= pendingRequests.length %>)</div>
+                    <div class="space-y-1.5">
+                        <% pendingRequests.forEach(req => { %>
+                            <div class="bg-[#1e2328] border border-blue-500/30 p-2.5 rounded-sm flex justify-between items-center">
+                                <span class="text-sm font-bold text-white truncate"><%= req.friend_name %></span>
+                                <div class="flex gap-1.5 shrink-0">
+                                    <button onclick="handleFriendAction('accept', '<%= req.friend_id %>')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[0.65rem] px-2 py-1 rounded-sm">✓</button>
+                                    <button onclick="handleFriendAction('remove', '<%= req.friend_id %>')" class="bg-red-600 hover:bg-red-500 text-white text-[0.65rem] px-2 py-1 rounded-sm">✕</button>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                <% } %>
+            </div>
+
+            <div id="acceptedFriendsContainer">
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 px-2 cyber-font">Kapcsolatok (<%= accepted.length %>)</div>
+                <div class="space-y-1">
+                    <% if (accepted.length === 0) { %>
+                        <p class="text-slate-600 text-xs italic px-2">Nincs aktív kapcsolat.</p>
+                    <% } else { %>
+                        <% accepted.forEach(friend => { %>
+                            <div class="group flex justify-between items-center p-2.5 rounded-sm cursor-pointer hover:bg-[#1e2328] transition-colors" onclick="openFriendChat('<%= friend.friend_id %>', '<%= friend.friend_name %>')">
+                                <div class="flex items-center gap-3">
+                                    <div class="relative">
+                                        <img src="https://ui-avatars.com/api/?name=<%= friend.friend_name %>&background=1e2328&color=c8aa6e&bold=true&size=40" class="w-8 h-8 rounded-sm border border-[#c8aa6e]/30 group-hover:border-[#c8aa6e]">
+                                        <span id="unread_<%= friend.friend_id %>" class="hidden absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#ff0092] animate-pulse shadow-[0_0_5px_#ff0092]"></span>
+                                    </div>
+                                    <span class="text-sm font-bold text-slate-300 group-hover:text-white truncate max-w-[130px]"><%= friend.friend_name %></span>
+                                </div>
+                                <button onclick="event.stopPropagation(); handleFriendAction('remove', '<%= friend.friend_id %>')" class="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-400 text-xs transition-opacity uppercase font-bold px-2 py-1">X</button>
+                            </div>
+                        <% }) %>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4 border-t border-[#c8aa6e]/30 bg-[#010a13] shrink-0">
+            <button onclick="toggleChatOverlay()" class="w-full flex items-center justify-center gap-2 bg-[#1e2328] border border-[#c8aa6e]/50 text-[#c8aa6e] py-3 rounded-sm hover:bg-[#c8aa6e] hover:text-[#010a13] transition-colors font-bold uppercase tracking-widest text-xs cyber-font">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                Chat Panel
+            </button>
+        </div>
+    </div>
+
+    <!-- FLOATING CHAT OVERLAY -->
+    <div id="chatOverlay" class="chat-overlay hidden">
+        <div class="w-1/3 border-r border-[#c8aa6e]/30 bg-[#091428] flex flex-col">
+            <div class="p-3 border-b border-[#c8aa6e]/30 text-[#c8aa6e] text-xs font-bold uppercase tracking-widest bg-[#1e2328] cyber-font text-center">Nyitott Csatornák</div>
+            <div id="activeChatSessionsList" class="flex-1 overflow-y-auto bg-[#010a13]"></div>
+        </div>
+        <div class="w-2/3 flex flex-col relative">
+            <div class="p-3 border-b border-[#c8aa6e]/30 bg-[#1e2328] flex justify-between items-center shrink-0">
+                <div class="flex items-center gap-2">
+                    <div class="w-2.5 h-2.5 bg-emerald-500 rounded-full shadow-[0_0_5px_#10b981]"></div>
+                    <span id="currentChatFriendName" class="text-white text-sm font-bold cyber-font">Válassz partnert</span>
+                </div>
+                <button onclick="toggleChatOverlay()" class="text-slate-400 hover:text-[#c8aa6e] text-lg font-bold">✕</button>
+            </div>
+            <div id="chatMessageList" class="flex-1 overflow-y-auto p-4 flex flex-col bg-gradient-to-b from-[#010a13] to-[#091428] gap-1"></div>
+            <div class="p-3 border-t border-[#c8aa6e]/30 bg-[#091428] shrink-0">
+                <input type="text" id="chatInputField" class="w-full bg-[#010a13] border border-[#c8aa6e]/50 rounded-sm px-3 py-2 text-[#f0e6d2] focus:outline-none focus:border-[#c8aa6e] focus:shadow-[0_0_8px_rgba(200,170,110,0.3)] text-sm font-sans transition-all" placeholder="Üzenet küldése..." onkeypress="handleChatInput(event)">
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toastContainer" class="fixed bottom-4 right-[360px] z-50 flex flex-col gap-2 pointer-events-none"></div>
+
     <script>
-        const alertBox = document.getElementById('alertBox');
+        const socket = io();
+        const USER_ID = '<%= typeof userId !== "undefined" ? userId : "" %>';
+        const USERNAME = '<%= typeof username !== "undefined" ? username : "" %>';
+
+        let activeChats = [];
+        let currentChatFriendId = null;
+        let lastSender = null;
+
+        if (USER_ID) { socket.emit('identify', { userId: USER_ID }); }
+
+        socket.on('receive_private_message', (data) => {
+            if (currentChatFriendId === data.senderId && !document.getElementById('chatOverlay').classList.contains('hidden')) {
+                appendChatMessage(data.senderName, data.message, false);
+            } else {
+                const unreadDot = document.getElementById(`unread_${data.senderId}`);
+                if(unreadDot) unreadDot.classList.remove('hidden');
+            }
+        });
+
+        socket.on('friend_update', () => { refreshFriendsUI(); });
+        socket.on('lobby_invite_received', (data) => { showToast('MEGHÍVÓ', `<span class="font-bold text-[#c8aa6e]">${data.fromUser}</span> lobbiba hívott!`, 'invite', data); });
+
+        function appendChatMessage(sender, msg, isSelf, isSystem = false) {
+            const list = document.getElementById('chatMessageList');
+            
+            if (isSystem) {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'sys-msg';
+                msgDiv.textContent = `[ ${msg} ]`;
+                list.appendChild(msgDiv);
+                lastSender = null; 
+                return;
+            }
+
+            const textClass = `text block w-fit max-w-[90%] rounded-sm px-2.5 py-1.5 mt-1 text-xs break-words ${isSelf ? 'bg-[#1e2328] border border-[#c8aa6e]/30 self-end text-right' : 'bg-[#c8aa6e]/10 border border-[#c8aa6e]/20 self-start text-left'}`;
+
+            if (sender === lastSender) {
+                const msgDiv = list.lastElementChild;
+                if (msgDiv && !msgDiv.classList.contains('sys-msg')) {
+                    const textSpan = document.createElement('span');
+                    textSpan.className = textClass;
+                    textSpan.textContent = msg;
+                    msgDiv.appendChild(textSpan);
+                } else {
+                    lastSender = null;
+                    appendChatMessage(sender, msg, isSelf, false);
+                    return;
+                }
+            } else {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `chat-msg flex flex-col w-full mt-2 ${isSelf ? 'items-end' : 'items-start'}`;
+                
+                const senderSpan = document.createElement('span');
+                senderSpan.className = 'sender text-[0.65rem] text-[#c8aa6e] font-bold uppercase tracking-widest px-1';
+                senderSpan.textContent = isSelf ? 'Te' : sender;
+                
+                const textSpan = document.createElement('span');
+                textSpan.className = textClass;
+                textSpan.textContent = msg; 
+                
+                msgDiv.appendChild(senderSpan);
+                msgDiv.appendChild(textSpan);
+                list.appendChild(msgDiv);
+                
+                lastSender = sender;
+            }
+
+            const allTexts = list.querySelectorAll('.text');
+            if (allTexts.length > 10) {
+                const oldestText = allTexts[0];
+                const parent = oldestText.parentElement;
+                oldestText.remove();
+                if (parent.querySelectorAll('.text').length === 0) { parent.remove(); }
+            }
+            list.scrollTop = list.scrollHeight;
+        }
+
+        function renderActiveChatsList() {
+            const container = document.getElementById('activeChatSessionsList');
+            container.innerHTML = '';
+            if (activeChats.length === 0) {
+                container.innerHTML = '<p class="text-slate-600 text-xs italic text-center mt-4">Nincs nyitott csatorna.</p>';
+                return;
+            }
+            activeChats.forEach(chat => {
+                const isActive = chat.id === currentChatFriendId;
+                container.innerHTML += `
+                    <div class="flex items-center justify-between p-3 cursor-pointer border-l-4 ${isActive ? 'bg-[#1e2328] border-[#c8aa6e]' : 'border-transparent hover:bg-[#091428]'}" onclick="openFriendChat('${chat.id}', '${chat.name}')">
+                        <div class="flex items-center gap-3">
+                            <img src="https://ui-avatars.com/api/?name=${chat.name}&background=010a13&color=c8aa6e&bold=true&size=32" class="w-8 h-8 rounded-sm border border-[#c8aa6e]/30">
+                            <span class="text-sm ${isActive ? 'text-white font-bold' : 'text-slate-400 font-semibold'} truncate max-w-[100px]">${chat.name}</span>
+                        </div>
+                        <button onclick="event.stopPropagation(); closeChatSession('${chat.id}')" class="text-slate-500 hover:text-red-500 font-bold px-2 py-1">✕</button>
+                    </div>
+                `;
+            });
+        }
+
+        function toggleChatOverlay() {
+            const overlay = document.getElementById('chatOverlay');
+            if (overlay.classList.contains('hidden')) {
+                overlay.classList.remove('hidden');
+                renderActiveChatsList();
+            } else {
+                overlay.classList.add('hidden');
+            }
+        }
+
+        function closeChatSession(id) {
+            activeChats = activeChats.filter(c => c.id !== id);
+            if (currentChatFriendId === id) {
+                currentChatFriendId = null;
+                document.getElementById('currentChatFriendName').textContent = 'Válassz partnert';
+                document.getElementById('chatMessageList').innerHTML = '';
+                lastSender = null;
+            }
+            renderActiveChatsList();
+        }
+
+        function openFriendChat(friendId, friendName) {
+            document.getElementById('chatOverlay').classList.remove('hidden');
+            
+            const unreadDot = document.getElementById(`unread_${friendId}`);
+            if(unreadDot) unreadDot.classList.add('hidden');
+
+            if (!activeChats.find(c => c.id === friendId)) { activeChats.push({ id: friendId, name: friendName }); }
+            
+            currentChatFriendId = friendId;
+            document.getElementById('currentChatFriendName').textContent = friendName;
+            renderActiveChatsList();
+
+            const list = document.getElementById('chatMessageList');
+            list.innerHTML = ''; lastSender = null;
+
+            socket.emit('fetch_private_history', { userId: USER_ID, friendId: friendId }, (res) => {
+                list.innerHTML = ''; 
+                appendChatMessage('SYSTEM', `Titkosítás: Aktív.`, false, true);
+                if (res.status === 'success') {
+                    res.messages.forEach(m => { appendChatMessage(m.sender_name, m.content, m.sender_id === USER_ID); });
+                }
+            });
+
+            setTimeout(() => document.getElementById('chatInputField').focus(), 100);
+        }
+
+        function handleChatInput(e) {
+            if (e.key === 'Enter') {
+                const input = document.getElementById('chatInputField');
+                const msg = input.value.trim();
+                
+                if (msg && currentChatFriendId) {
+                    appendChatMessage(USERNAME, msg, true);
+                    socket.emit('send_private_message', { senderId: USER_ID, targetId: currentChatFriendId, message: msg.substring(0, 250) });
+                    input.value = '';
+                }
+            }
+        }
+
+        async function refreshFriendsUI() {
+            try {
+                const res = await fetch('/api/friends/all');
+                if (!res.ok) return;
+                const friends = await res.json();
+                
+                const accepted = friends.filter(f => f.status === 'ACCEPTED');
+                const pendingRequests = friends.filter(f => f.status === 'PENDING' && f.action_user_id !== USER_ID);
+
+                const pendingContainer = document.getElementById('pendingRequestsContainer');
+                if (pendingRequests.length > 0) {
+                    let html = `<div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 px-2 cyber-font">Jelölések (${pendingRequests.length})</div><div class="space-y-1.5">`;
+                    pendingRequests.forEach(req => {
+                        html += `<div class="bg-[#1e2328] border border-blue-500/30 p-2.5 rounded-sm flex justify-between items-center"><span class="text-sm font-bold text-white truncate">${req.friend_name}</span><div class="flex gap-1.5 shrink-0"><button onclick="handleFriendAction('accept', '${req.friend_id}')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[0.65rem] px-2 py-1 rounded-sm">✓</button><button onclick="handleFriendAction('remove', '${req.friend_id}')" class="bg-red-600 hover:bg-red-500 text-white text-[0.65rem] px-2 py-1 rounded-sm">✕</button></div></div>`;
+                    });
+                    html += '</div>'; pendingContainer.innerHTML = html; pendingContainer.classList.remove('hidden');
+                } else { pendingContainer.innerHTML = ''; pendingContainer.classList.add('hidden'); }
+
+                const acceptedContainer = document.getElementById('acceptedFriendsContainer');
+                let acceptedHtml = `<div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 px-2 cyber-font">Kapcsolatok (${accepted.length})</div><div class="space-y-1">`;
+                if (accepted.length === 0) { acceptedHtml += '<p class="text-slate-600 text-xs italic px-2">Nincs aktív kapcsolat.</p>'; } 
+                else {
+                    accepted.forEach(friend => {
+                        acceptedHtml += `
+                            <div class="group flex justify-between items-center p-2.5 rounded-sm cursor-pointer hover:bg-[#1e2328] transition-colors" onclick="openFriendChat('${friend.friend_id}', '${friend.friend_name}')">
+                                <div class="flex items-center gap-3">
+                                    <div class="relative">
+                                        <img src="https://ui-avatars.com/api/?name=${friend.friend_name}&background=1e2328&color=c8aa6e&bold=true&size=40" class="w-8 h-8 rounded-sm border border-[#c8aa6e]/30 group-hover:border-[#c8aa6e]">
+                                        <span id="unread_${friend.friend_id}" class="hidden absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#ff0092] animate-pulse shadow-[0_0_5px_#ff0092]"></span>
+                                    </div>
+                                    <span class="text-sm font-bold text-slate-300 group-hover:text-white truncate max-w-[130px]">${friend.friend_name}</span>
+                                </div>
+                                <button onclick="event.stopPropagation(); handleFriendAction('remove', '${friend.friend_id}')" class="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-400 text-xs transition-opacity uppercase font-bold px-2 py-1">X</button>
+                            </div>
+                        `;
+                    });
+                }
+                acceptedHtml += '</div>'; acceptedContainer.innerHTML = acceptedHtml;
+            } catch (error) { console.error("Hiba:", error); }
+        }
+
+        function showToast(title, message, type, extraData = null) {
+            const toast = document.createElement('div');
+            toast.className = `bg-[#091428] border ${type === 'success' ? 'border-[#c8aa6e]' : 'border-red-500'} p-3 rounded-sm shadow-xl min-w-[250px] pointer-events-auto transform transition-all translate-x-full opacity-0 relative overflow-hidden`;
+            
+            let actionHtml = '';
+            if (type === 'invite') {
+                actionHtml = `<div class="mt-2 flex gap-2"><button onclick="acceptInvite('${extraData.inviteCode}')" class="flex-1 bg-[#c8aa6e] text-[#010a13] px-2 py-1 text-[0.65rem] font-bold uppercase tracking-widest rounded-sm hover:bg-white transition-colors">Csatlakozás</button></div>`;
+            }
+
+            toast.innerHTML = `
+                <h4 class="text-[${type === 'success' ? '#c8aa6e' : '#fff'}] font-bold text-[0.7rem] tracking-wider uppercase cyber-font">${title}</h4>
+                <p class="text-slate-300 text-[0.65rem] mt-1">${message}</p>
+                ${actionHtml}
+            `;
+
+            document.getElementById('toastContainer').appendChild(toast);
+            setTimeout(() => { toast.classList.remove('translate-x-full', 'opacity-0'); }, 50);
+
+            if (type !== 'invite') { setTimeout(() => { toast.classList.add('translate-x-full', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, 5000); }
+        }
+
+        function acceptInvite(code) {
+            socket.emit('join_lobby', { userId: USER_ID, inviteCode: code }, (response) => {
+                if (response.status === 'success') { window.location.href = `/lobby/${response.lobbyId}`; } else { alert(response.message); }
+            });
+        }
+
+        async function logout() { await fetch('/api/auth/logout', { method: 'POST' }); window.location.href = '/login'; }
+
+        async function searchFriends() {
+            const q = document.getElementById('friendSearchInput').value.trim();
+            if(q.length < 3) return alert('Min. 3 karakter.');
+            try {
+                const res = await fetch(`/api/friends/search?q=${encodeURIComponent(q)}`); const data = await res.json();
+                const resultsContainer = document.getElementById('searchResults'); resultsContainer.innerHTML = '';
+                if (data.length === 0) { resultsContainer.innerHTML = '<p class="text-[0.6rem] text-slate-500 italic px-2">Nincs találat.</p>'; return; }
+                data.forEach(user => { resultsContainer.innerHTML += `<div id="search-result-${user.id}" class="bg-transparent py-2 flex justify-between items-center border-b border-[#c8aa6e]/20 last:border-0"><div class="flex flex-col"><span class="text-sm font-bold text-white cyber-font">${user.username}</span><span class="text-xs text-[#c8aa6e] font-bold mt-0.5">🏆 ${user.trophies_count}</span></div><button id="addBtn_${user.id}" onclick="sendFriendRequest('${user.id}')" class="bg-[#1e2328] hover:bg-[#c8aa6e] hover:text-[#010a13] border border-[#c8aa6e]/50 text-[#c8aa6e] text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-sm transition-colors">Jelölés</button></div>`; });
+            } catch (error) { alert('Hálózat megszakadt.'); }
+        }
+
+        async function sendFriendRequest(targetId) {
+            const btn = document.getElementById(`addBtn_${targetId}`);
+            if(btn) { btn.innerText = '...'; btn.disabled = true; }
+            try {
+                const res = await fetch('/api/friends/request', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ targetUserId: targetId }) });
+                const data = await res.json();
+                if (data.status !== 'success') { alert(data.error || 'Hiba történt.'); if(btn) { btn.innerText = 'Jelölés'; btn.disabled = false; } } 
+                else { showToast('Jelölés elküldve!', 'Sikeres.', 'success'); const resultCard = document.getElementById(`search-result-${targetId}`); if (resultCard) { resultCard.style.opacity = '0'; setTimeout(() => resultCard.remove(), 300); } }
+            } catch (error) { alert('Hálózati hiba.'); if(btn) { btn.innerText = 'Jelölés'; btn.disabled = false; } }
+        }
+
+        async function handleFriendAction(action, targetId) {
+            try {
+                const res = await fetch(`/api/friends/${action}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ targetUserId: targetId }) });
+                const data = await res.json();
+                if (data.status !== 'success') { alert(data.error || 'Művelet megtagadva.'); } else { refreshFriendsUI(); }
+            } catch (error) { alert('Hálózati hiba.'); }
+        }
 
         function showAlert(msg, isError = false) {
+            const alertBox = document.getElementById('alertBox');
             alertBox.innerHTML = `[SYS.MSG] // ${msg}`;
             alertBox.style.display = 'block';
             alertBox.classList.remove('success');
-            
             if (!isError) { alertBox.classList.add('success'); }
-            
-            alertBox.style.animation = 'none';
-            alertBox.offsetHeight; 
-            alertBox.style.animation = null;
+            alertBox.style.animation = 'none'; alertBox.offsetHeight; alertBox.style.animation = null;
         }
 
         function toggleVisibility(inputId, iconId) {
-            const input = document.getElementById(inputId);
-            const icon = document.getElementById(iconId);
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />`;
-            } else {
-                input.type = 'password';
-                icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />`;
-            }
+            const input = document.getElementById(inputId); const icon = document.getElementById(iconId);
+            if (input.type === 'password') { input.type = 'text'; icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />`; } 
+            else { input.type = 'password'; icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />`; }
         }
 
         document.getElementById('changePasswordForm').addEventListener('submit', async (e) => {
@@ -411,54 +722,27 @@
             
             if (p1 !== p2) return showAlert('Az új jelszavak nem egyeznek!', true);
 
-            const btn = e.submitter; 
-            const btnText = btn.querySelector('.cosmic-btn-text');
+            const btn = e.submitter; const btnText = btn.querySelector('.cosmic-btn-text');
             btn.disabled = true; btnText.innerText = 'Feldolgozás...';
             
             try {
-                const res = await fetch('/api/user/change-password', {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ currentPassword: pCurrent, newPassword: p1, confirmNewPassword: p2 })
-                });
-                
-                let data = {};
-                try { data = await res.json(); } catch(e) {}
-
-                if (res.ok) { 
-                    showAlert(data.message || 'Jelszó sikeresen frissítve.', false); 
-                    document.getElementById('changePasswordForm').reset();
-                } else { 
-                    showAlert(data.message || 'Művelet megtagadva.', true); 
-                }
-            } catch(err) { 
-                showAlert('Kommunikációs hiba a szerverrel.', true); 
-            } finally {
-                btn.disabled = false; btnText.innerText = 'Mentés';
-            }
+                const res = await fetch('/api/user/change-password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ currentPassword: pCurrent, newPassword: p1, confirmNewPassword: p2 }) });
+                let data = {}; try { data = await res.json(); } catch(e) {}
+                if (res.ok) { showAlert(data.message || 'Jelszó sikeresen frissítve.', false); document.getElementById('changePasswordForm').reset(); } 
+                else { showAlert(data.message || 'Művelet megtagadva.', true); }
+            } catch(err) { showAlert('Kommunikációs hiba a szerverrel.', true); } 
+            finally { btn.disabled = false; btnText.innerText = 'Mentés'; }
         });
 
         async function deleteProfile() {
             const pwd = prompt("Biztosan törölni akarod a fiókodat? Ez a művelet végleges. Kérlek, add meg a jelszavad a folytatáshoz:");
-            
             if (pwd) {
                 try {
-                    const res = await fetch('/api/user/profile', {
-                        method: 'DELETE',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ password: pwd })
-                    });
-                    
+                    const res = await fetch('/api/user/profile', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: pwd }) });
                     const data = await res.json();
-                    
-                    if (res.ok) {
-                        alert("A fiókod sikeresen törlésre került.");
-                        window.location.href = '/login';
-                    } else {
-                        showAlert(data.message || 'Hiba történt a törlés során. Valószínűleg hibás jelszó.', true);
-                    }
-                } catch (error) {
-                    showAlert('Szerver hiba történt.', true);
-                }
+                    if (res.ok) { alert("A fiókod sikeresen törlésre került."); window.location.href = '/login'; } 
+                    else { showAlert(data.message || 'Hiba történt a törlés során. Valószínűleg hibás jelszó.', true); }
+                } catch (error) { showAlert('Szerver hiba történt.', true); }
             }
         }
     </script>
