@@ -10,13 +10,12 @@
     <style> 
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
 
         body { 
             background-color: #010a13; 
             color: #f0e6d2; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            position: relative;
+            margin: 0; padding: 0;
         } 
         
         .esport-font { font-family: 'Oswald', sans-serif; text-transform: uppercase; }
@@ -24,70 +23,24 @@
 
         .hex-panel {
             background: linear-gradient(135deg, rgba(9, 20, 40, 0.9) 0%, rgba(1, 10, 19, 0.95) 100%);
-            border: 1px solid rgba(0, 229, 255, 0.3);
-            box-shadow: 0 0 25px rgba(0, 229, 255, 0.1), inset 0 0 20px rgba(0,0,0,0.8);
+            border: 1px solid rgba(200, 170, 110, 0.3);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
             position: relative;
-            backdrop-filter: blur(10px);
         }
-        .hex-panel::before, .hex-panel::after {
-            content: ''; position: absolute; width: 12px; height: 12px; border: 1px solid #00e5ff; pointer-events: none;
-        }
-        .hex-panel::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
-        .hex-panel::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+        
+        /* Görgetősáv styler */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #010a13; }
+        ::-webkit-scrollbar-thumb { background: rgba(200,170,110,0.3); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #c8aa6e; }
 
-        /* --- HÁTTÉR ANIMÁCIÓ --- */
-        .star-container { background: radial-gradient(ellipse at bottom, #091428 0%, #010a13 100%); }
-        #stars, #stars2, #stars3 { background: transparent; }
-        #stars { width: 1px; height: 1px; box-shadow: 501px 811px #00e5ff, 1450px 1324px #fff, 1093px 1780px #fff, 1469px 678px #ff0092, 904px 741px #fff, 1160px 781px #fff, 1841px 1962px #fff, 1630px 1667px #fff, 1788px 676px #fff, 367px 1734px #fff, 1343px 156px #fff, 1283px 1142px #fff, 1062px 378px #fff, 1395px 467px #fff, 1017px 1891px #fff, 137px 1114px #fff, 1767px 1403px #fff, 1543px 11px #fff, 1078px 181px #fff, 1189px 1574px #fff, 1697px 1551px #fff, 439px 472px #fff, 1491px 677px #fff, 1364px 599px #fff, 34px 382px #fff, 1221px 1584px #00e5ff, 1266px 1499px #fff, 169px 1907px #fff, 1219px 1125px #fff, 659px 18px #fff, 1731px 1959px #fff, 332px 1216px #fff, 1913px 788px #fff, 80px 712px #fff, 326px 1605px #fff, 574px 1502px #fff, 473px 1653px #fff, 404px 975px #fff, 322px 1797px #fff, 425px 1321px #fff, 1121px 1797px #fff, 731px 647px #fff, 891px 1584px #fff, 1523px 109px #fff, 1379px 244px #fff, 865px 1064px #fff, 493px 956px #fff, 624px 1380px #fff, 440px 619px #fff, 1630px 767px #fff, 955px 1196px #ff0092, 62px 729px #fff, 126px 946px #fff, 1256px 896px #fff, 1444px 256px #fff, 661px 1628px #fff, 1078px 1716px #fff, 300px 737px #fff, 1734px 413px #fff, 1296px 129px #fff, 1771px 1678px #fff, 977px 1764px #fff, 1879px 549px #fff, 665px 1531px #fff, 89px 701px #fff, 1084px 1183px #fff, 1597px 1576px #fff, 1354px 1774px #fff, 554px 1471px #fff, 1469px 287px #fff, 887px 106px #fff, 1962px 766px #fff, 638px 805px #fff, 1651px 741px #fff, 1517px 1826px #fff, 24px 1152px #fff, 507px 558px #fff, 1262px 652px #fff, 246px 1048px #fff, 1077px 421px #fff, 1866px 1847px #fff, 1986px 1561px #fff, 704px 632px #fff, 1991px 1875px #00e5ff, 1227px 395px #fff, 45px 1116px #fff, 247px 786px #fff, 890px 607px #fff, 787px 1235px #fff, 557px 524px #fff, 1582px 1285px #fff, 1725px 1366px #fff, 952px 747px #fff, 251px 458px #fff, 1500px 1250px #fff, 1999px 1734px #fff, 1336px 1955px #fff, 1705px 1464px #fff, 728px 697px #fff, 594px 510px #fff, 1345px 1990px #fff, 1919px 1803px #fff, 1117px 966px #fff, 1629px 97px #fff, 1046px 1196px #fff, 810px 1092px #fff, 722px 976px #fff, 406px 18px #fff, 1665px 1860px #fff, 1758px 1628px #fff, 1183px 463px #fff, 564px 239px #ff0092, 13px 1767px #fff, 1482px 1472px #fff, 1700px 347px #fff, 1362px 244px #fff, 1141px 1708px #fff, 22px 885px #fff, 374px 1309px #fff, 1034px 1037px #fff, 1725px 1086px #fff, 1343px 1921px #fff, 596px 903px #fff, 1061px 478px #fff, 18px 1409px #fff, 729px 1364px #fff, 264px 911px #fff, 677px 1442px #fff, 123px 33px #fff, 1303px 646px #fff, 1945px 792px #fff, 1305px 938px #fff, 918px 1536px #fff, 620px 948px #00e5ff, 183px 646px #fff, 695px 687px #fff, 881px 272px #fff, 1521px 1212px #fff, 1423px 1022px #fff, 1545px 1271px #fff, 1393px 348px #fff, 685px 1910px #fff, 1446px 856px #fff, 73px 1201px #fff, 736px 999px #fff, 673px 796px #fff, 469px 850px #fff, 1912px 142px #fff, 1278px 664px #fff, 184px 1990px #fff, 1173px 1312px #fff, 782px 1879px #fff, 323px 1035px #fff, 611px 908px #fff, 565px 1449px #fff, 748px 1713px #fff, 1047px 490px #fff, 1040px 1872px #fff, 1818px 1659px #fff, 1806px 1327px #fff, 386px 575px #fff, 1550px 463px #fff, 148px 687px #fff, 651px 1683px #fff, 1588px 1194px #fff, 1831px 2px #fff, 581px 876px #fff, 1396px 1743px #fff, 1212px 1810px #00e5ff, 421px 1920px #fff, 658px 1461px #fff, 1859px 1809px #fff, 1456px 388px #fff, 186px 1627px #fff, 1528px 1145px #fff, 171px 97px #fff, 674px 1072px #fff, 676px 1052px #fff, 1165px 1131px #fff, 1088px 781px #fff, 1231px 948px #fff, 330px 257px #fff, 426px 1046px #fff, 549px 652px #fff, 1338px 74px #fff, 1749px 364px #fff, 931px 369px #fff, 383px 1428px #fff, 1558px 389px #fff, 927px 133px #fff, 234px 1888px #fff, 1785px 1617px #fff, 556px 643px #fff, 401px 275px #fff, 406px 1644px #fff, 1253px 1852px #fff, 1599px 883px #fff, 744px 1721px #fff, 524px 1297px #fff, 1226px 1177px #fff, 1679px 55px #fff, 874px 1811px #fff, 838px 790px #fff, 1241px 430px #fff, 1676px 652px #fff, 1191px 568px #fff, 53px 1990px #ff0092, 1163px 237px #fff, 61px 223px #fff, 592px 456px #fff; animation: animStar 50s linear infinite; }
-        #stars2 { width: 2px; height: 2px; box-shadow: 1925px 1320px #fff, 693px 1778px #fff, 1016px 711px #00e5ff, 1171px 563px #fff, 661px 1919px #fff, 1610px 44px #fff, 1275px 140px #fff, 1208px 1802px #fff, 1473px 1587px #fff, 11px 1117px #fff, 853px 1757px #fff, 1149px 937px #fff, 1353px 428px #fff, 270px 279px #fff, 258px 1404px #fff, 417px 1188px #fff, 286px 561px #fff, 393px 1765px #fff, 147px 881px #fff, 666px 1097px #fff, 1425px 1278px #fff, 806px 156px #ff0092, 1252px 561px #fff, 218px 52px #fff, 1371px 1980px #fff, 171px 745px #fff, 1424px 89px #fff, 137px 244px #fff, 939px 1922px #fff, 137px 1080px #fff, 1757px 50px #fff, 904px 536px #fff, 1938px 1001px #fff, 1172px 440px #fff, 72px 1475px #fff, 102px 121px #fff, 804px 1671px #fff, 1314px 270px #fff, 440px 1341px #fff, 1216px 511px #fff, 1061px 1523px #fff, 97px 274px #fff, 704px 1318px #fff, 52px 1872px #fff, 1962px 296px #fff, 111px 289px #fff, 1157px 1236px #fff, 1347px 1451px #fff, 820px 286px #fff, 1389px 1169px #fff; animation: animStar 100s linear infinite; }
-        #stars3 { width: 3px; height: 3px; box-shadow: 200px 981px #fff, 1731px 521px #fff, 132px 1039px #fff, 1888px 1547px #ff0092, 899px 1226px #fff, 1887px 580px #fff, 1548px 1092px #fff, 1626px 689px #fff, 254px 1072px #fff, 1684px 1211px #fff, 672px 1267px #fff, 939px 668px #fff, 1969px 645px #fff, 1126px 983px #fff, 457px 568px #fff, 476px 876px #fff, 829px 1896px #fff, 1364px 1846px #fff, 1507px 1120px #fff, 936px 1948px #fff, 1833px 832px #fff, 1424px 285px #fff, 1377px 1596px #fff, 432px 153px #fff, 1348px 1410px #fff, 1529px 954px #00e5ff, 1102px 387px #fff, 264px 297px #fff, 811px 977px #fff, 1931px 673px #fff, 1734px 978px #fff, 1772px 1567px #fff, 1197px 1400px #fff, 764px 282px #fff, 1103px 822px #fff, 872px 1803px #fff, 1057px 1763px #fff, 52px 1299px #fff, 1312px 1236px #fff, 235px 1082px #fff, 299px 1086px #fff, 1017px 1602px #fff, 1950px 626px #fff, 1306px 132px #fff, 1358px 1618px #fff, 1873px 1718px #fff, 1447px 940px #fff, 1888px 1195px #fff, 1704px 1765px #fff, 872px 1357px #fff; animation: animStar 150s linear infinite; }
-        #stars:after, #stars2:after, #stars3:after { content: " "; position: absolute; top: 2000px; width: inherit; height: inherit; box-shadow: inherit; }
-        @keyframes animStar { from { transform: translateY(0px); } to { transform: translateY(-2000px); } }
-
-        /* --- VALORANT LOADER (MODAL) --- */
-        .val-loader { position: relative; width: 120px; height: 120px; margin: 0 auto; }
-        .val-pattern-1 { position: absolute; background-color: #ff4c5a; width: 100%; height: 100%; clip-path: polygon(0 10%, 70% 90%, 40% 90%, 0 45%); overflow: hidden; }
-        .val-pattern-2 { position: absolute; background-color: #ff4c5a; width: 110%; height: 95%; clip-path: polygon(100% 10%, 100% 45%, 83% 65%, 55% 65%); }
-        .val-shade { position: absolute; transform: translateX(-20px); opacity: 0.7; z-index: 10; background-color: white; width: 15px; height: 100%; animation: val-shiny 1.5s infinite; filter: blur(2px); }
-        @keyframes val-shiny { 0% { transform: translateX(-20px) skewX(-20deg); } 100% { transform: translateX(150px) skewX(-20deg); } }
-
-        /* --- ANIMATED LOGOUT BUTTON --- */
-        .logout-btn {
-            display: flex; align-items: center; justify-content: flex-start;
-            width: 40px; height: 40px; border: none; border-radius: 50%;
-            cursor: pointer; position: relative; overflow: hidden;
-            transition-duration: .3s; box-shadow: 0 0 15px rgba(255, 0, 146, 0.4);
-            background-color: #ff0092; z-index: 10;
-        }
-        .logout-sign { width: 100%; transition-duration: .3s; display: flex; align-items: center; justify-content: center; }
-        .logout-sign svg { width: 15px; }
-        .logout-sign svg path { fill: white; }
-        .logout-text { position: absolute; right: 0%; width: 0%; opacity: 0; color: white; font-size: 12px; font-weight: 700; transition-duration: .3s; text-transform: uppercase; font-family: 'Orbitron', sans-serif;}
-        .logout-btn:hover { width: 110px; border-radius: 20px; transition-duration: .3s; }
-        .logout-btn:hover .logout-sign { width: 30%; transition-duration: .3s; padding-left: 10px; }
-        .logout-btn:hover .logout-text { opacity: 1; width: 70%; transition-duration: .3s; padding-right: 10px; }
-        .logout-btn:active { transform: translate(2px ,2px); }
-
-        /* --- SETTINGS BUTTON (Fiók) --- */
-        .settings-btn {
-            display: flex; align-items: center; justify-content: center; gap: 6px;
-            background: rgba(0, 229, 255, 0.1); border: 1px solid rgba(0, 229, 255, 0.5);
-            padding: 8px 16px; border-radius: 4px; color: #00e5ff; font-family: 'Orbitron', sans-serif;
-            font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;
-            cursor: pointer; transition: all 0.3s ease; box-shadow: 0 0 10px rgba(0, 229, 255, 0.1);
-        }
-        .settings-btn:hover {
-            background: rgba(0, 229, 255, 0.2); box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
-            color: #fff; transform: translateY(-2px);
-        }
-
-        /* --- COSMIC PORTAL BUTTON --- */
+        /* --- COSMIC PORTAL BUTTON (HEXTECH COLORS) --- */
         .cosmic-portal-btn {
-            --btn-bg: #010a13; --btn-color: #00e5ff; --btn-highlight: #091428;
-            --portal-color1: #ff0092; --portal-color2: #00e5ff;
-            position: relative; font-family: "Orbitron", sans-serif; font-size: 1em; font-weight: bold;
+            --btn-bg: #010a13; --btn-color: #c8aa6e; --btn-highlight: #091428;
+            --portal-color1: #c8aa6e; --portal-color2: #f0e6d2;
+            position: relative; font-family: "Oswald", sans-serif; font-size: 1.1em; font-weight: bold;
             letter-spacing: 0.1em; text-transform: uppercase; color: var(--btn-color); background-color: var(--btn-bg);
-            border: none; padding: 1em 2em; cursor: pointer; overflow: hidden; transition: all 0.3s ease;
+            border: none; padding: 0.8em 1.5em; cursor: pointer; overflow: hidden; transition: all 0.3s ease;
             clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 90% 100%, 10% 100%, 0% 70%);
         }
         .cosmic-portal-btn::before {
@@ -97,306 +50,97 @@
         }
         .cosmic-portal-btn:hover::before { opacity: 1; }
         .cosmic-portal-btn::after { content: ""; position: absolute; inset: 2px; background-color: var(--btn-bg); clip-path: inherit; z-index: 1; }
-        .btn-text { position: relative; z-index: 2; text-shadow: 0 0 10px rgba(0, 229, 255, 0.5); }
+        .cosmic-btn-text { position: relative; z-index: 2; text-shadow: 0 0 10px rgba(200, 170, 110, 0.5); }
         .portal-effect { position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, var(--btn-highlight), transparent 50%); opacity: 0; transition: opacity 0.3s ease; z-index: 1; }
         .cosmic-portal-btn:hover .portal-effect { opacity: 1; animation: pulsePortal 2s ease-in-out infinite; }
-        .cosmic-portal-btn:hover { transform: translateY(-3px); filter: drop-shadow(0 5px 15px rgba(0, 229, 255, 0.4)); color: #fff; }
+        .cosmic-portal-btn:hover { transform: translateY(-2px); filter: drop-shadow(0 5px 10px rgba(200, 170, 110, 0.4)); color: #fff; }
         .cosmic-portal-btn:active { transform: translateY(0); }
         @keyframes rotatePortal { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes pulsePortal { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
-        /* --- COSMIC SEARCH BAR --- */
-        .search-container { position: relative; display: flex; align-items: center; justify-content: center; width: 100%; height: 50px; margin-bottom: 1rem; }
-        .search-input {
-            background-color: rgba(5, 7, 27, 0.8); border: 1px solid rgba(0,229,255,0.3); width: 100%; height: 100%; border-radius: 10px;
-            color: #00e5ff; padding-left: 45px; padding-right: 45px; font-size: 14px; font-family: 'Orbitron', sans-serif;
-            backdrop-filter: blur(5px); transition: all 0.3s ease;
-        }
-        .search-input::placeholder { color: rgba(0,229,255,0.4); text-transform: uppercase; font-size: 12px; }
-        .search-input:focus { outline: none; border-color: #00e5ff; box-shadow: 0 0 15px rgba(0,229,255,0.3); }
-        
-        .search-nebula, .search-starfield { position: absolute; top:0; left:0; width: 100%; height: 100%; border-radius: 10px; pointer-events: none; z-index: -1; overflow: hidden; filter: blur(2px); opacity: 0.5; }
-        .search-nebula::before {
-            content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(60deg); width: 200%; height: 400%;
-            background-image: conic-gradient(transparent, rgba(0,229,255,0.4) 5%, transparent 38%, transparent 50%, rgba(255,0,146,0.4) 60%, transparent 87%);
-            transition: all 1s ease; animation: rotate 10s linear infinite;
-        }
-        .search-container:hover .search-nebula::before { opacity: 0.8; }
-        
-        .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); pointer-events: none; }
-        .wormhole-btn { position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background: linear-gradient(180deg, #1c2452, #05071b, #2a3875); border: 1px solid rgba(0,229,255,0.3); border-radius: 8px; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.3s ease; overflow: hidden; }
-        .wormhole-btn::before {
-            content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 150%; height: 150%;
-            background-image: conic-gradient(transparent, #00e5ff, transparent 50%, transparent 50%, #ff0092, transparent 100%);
-            animation: rotate 4s linear infinite; opacity: 0; transition: opacity 0.3s; pointer-events: none;
-        }
-        .wormhole-btn:hover::before { opacity: 0.5; }
-        .wormhole-btn:hover { box-shadow: 0 0 10px #00e5ff; }
-        .wormhole-btn svg { position: relative; z-index: 2; }
-        @keyframes rotate { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
-
-        /* --- TERMINAL CHAT --- */
-        .terminal-container { width: 100%; height: 400px; background: #0a0a0a; border-radius: 5px; box-shadow: 0 0 20px rgba(0, 229, 255, 0.15); overflow: hidden; display: flex; flex-direction: column; border: 1px solid rgba(0,229,255,0.3); transition: all 0.3s ease; }
-        .terminal-toolbar { display: flex; height: 35px; align-items: center; padding: 0 15px; background: #111; justify-content: space-between; border-bottom: 1px solid rgba(0,229,255,0.2); }
-        .terminal-butt { display: flex; align-items: center; }
-        .terminal-btn { height: 12px; width: 12px; border-radius: 50%; margin-right: 8px; border: none; cursor: pointer; transition: transform 0.2s ease; }
-        .terminal-btn:hover { transform: scale(1.2); }
-        .t-btn-r { background: #ff5f56; } .t-btn-y { background: #ffbd2e; } .t-btn-g { background: #27c93f; }
-        .terminal-user-title { color: #00e5ff; font-size: 12px; font-weight: bold; font-family: 'Orbitron', monospace; letter-spacing: 1px; }
-        .terminal-body { background: rgba(5,7,20,0.9); flex: 1; padding: 15px; font-family: "Consolas", monospace; font-size: 13px; line-height: 1.6; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
-        
-        /* Görgetősáv */
-        .terminal-body::-webkit-scrollbar { width: 6px; }
-        .terminal-body::-webkit-scrollbar-track { background: transparent; }
-        .terminal-body::-webkit-scrollbar-thumb { background: rgba(0,229,255,0.3); border-radius: 3px; }
-        .terminal-body::-webkit-scrollbar-thumb:hover { background: #00e5ff; }
-
-        .chat-msg { display: flex; flex-direction: column; margin-bottom: 4px;}
-        .chat-msg .sender { color: #ff0092; font-weight: bold; margin-bottom: 2px; text-shadow: 0 0 5px rgba(255,0,146,0.5); }
-        .chat-msg.self .sender { color: #00e5ff; text-shadow: 0 0 5px rgba(0,229,255,0.5); }
-        .chat-msg .text { color: #e0e0e0; word-break: break-word; margin-left: 10px; border-left: 2px solid rgba(0,229,255,0.3); padding-left: 8px;}
-        .chat-msg.self .text { border-left: 2px solid rgba(255,0,146,0.3); }
-
-        .sys-msg { color: #facc15; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; text-align: center; opacity: 0.7; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid rgba(250, 204, 21, 0.2); }
-        
-        .terminal-prompt { display: flex; align-items: center; padding: 10px 15px; background: #050505; border-top: 1px solid rgba(0,229,255,0.2); }
-        .terminal-prompt span { margin-right: 6px; font-family: "Consolas", monospace; font-size: 13px; }
-        .term-user { color: #00e5ff; }
-        .term-loc { color: #ff0092; }
-        .term-bling { color: #f0e6d2; }
-        .term-input { background: transparent; border: none; outline: none; color: #fff; flex: 1; font-family: "Consolas", monospace; font-size: 13px; caret-color: #00e5ff; }
-        .term-cursor { display: inline-block; width: 6px; height: 15px; background: #00e5ff; animation: blink 1s step-end infinite; margin-left: 2px; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        /* --- CHAT OVERLAY --- */
+        .chat-msg { display: flex; flex-direction: column; margin-bottom: 4px; }
+        .chat-msg .sender { color: #c8aa6e; font-weight: bold; margin-bottom: 2px; font-size: 11px; }
+        .chat-msg.self .sender { color: #f0e6d2; }
+        .chat-msg .text { color: #e0e0e0; word-break: break-word; margin-left: 5px; border-left: 2px solid rgba(200,170,110,0.3); padding-left: 8px; font-size: 12px; }
+        .chat-msg.self .text { border-left: 2px solid rgba(240,230,210,0.3); }
+        .sys-msg { color: #94a3b8; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; text-align: center; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid rgba(148, 163, 184, 0.2); }
 
     </style>
 </head>
-<body class="p-4 md:p-8 min-h-screen overflow-x-hidden">
+<body class="h-screen flex overflow-hidden bg-[#010a13]">
 
-    <!-- HÁTTÉR ANIMÁCIÓ -->
-    <div class="star-container fixed inset-0 z-[-1] pointer-events-none">
-        <div id="stars"></div><div id="stars2"></div><div id="stars3"></div>
-    </div>
-
-    <!-- VALORANT POPUP MODAL -->
-    <div id="valorantModal" class="fixed inset-0 z-[100] flex items-center justify-center bg-[#010a13]/90 backdrop-blur-sm transition-opacity duration-500 opacity-0 pointer-events-none" onclick="closeModal(event)">
-        <div class="bg-[#0f1923] border border-[#ff4c5a]/50 p-10 rounded-sm text-center relative max-w-sm w-full mx-4 shadow-[0_0_50px_rgba(255,76,90,0.15)] transform scale-95 transition-transform duration-500" id="valorantModalContent">
-            <button onclick="closeModalBtn()" class="absolute top-2 right-4 text-slate-500 hover:text-[#ff4c5a] font-bold text-2xl transition-colors">&times;</button>
-            <div class="val-loader mb-8 mt-4">
-                <div class="val-pattern-1"><div class="val-shade"></div></div>
-                <div class="val-pattern-2"></div>
+    <!-- MAIN CONTENT (Left Side) -->
+    <div class="flex-1 flex flex-col h-full overflow-y-auto p-8 bg-[url('/map.png')] bg-cover bg-center bg-no-repeat bg-fixed relative">
+        <div class="absolute inset-0 bg-[#010a13]/80 z-0"></div> <!-- Sötétítő overlay a háttérre -->
+        
+        <div class="relative z-10 max-w-[1200px] mx-auto w-full flex flex-col gap-8">
+            <!-- HEADER -->
+            <div class="text-center md:text-left border-b border-[#c8aa6e]/30 pb-6 mb-4">
+                <h1 class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-wider esport-font drop-shadow-[0_0_10px_rgba(200,170,110,0.3)]">LoL Worlds Mayhem</h1>
+                <p class="text-slate-400 mt-2 uppercase tracking-widest text-sm font-bold cyber-font">Központi Irányítópult</p>
             </div>
-            <h2 class="text-4xl font-black text-white tracking-widest uppercase" style="font-family: 'Russo One', sans-serif;">SOON...</h2>
-            <p class="text-slate-400 text-xs mt-3 font-bold uppercase tracking-widest">LoL Worlds Mayhem x Valorant</p>
-        </div>
-    </div>
 
-    <div class="max-w-[1600px] mx-auto relative z-10">
-        <div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
-
-        <!-- HEADER -->
-        <header class="hex-panel p-5 mb-8 flex flex-col md:flex-row justify-between items-center gap-4 relative">
-            <div class="z-10">
-                <h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#00e5ff] to-[#ff0092] tracking-wider esport-font drop-shadow-[0_0_10px_rgba(0,229,255,0.3)]">LoL Worlds Mayhem</h1>
-                <p class="text-slate-400 mt-1 uppercase tracking-widest text-xs font-bold cyber-font">Központi Terminál</p>
-            </div>
-            
-            <div class="flex items-center gap-6 z-10">
-                <div class="flex items-center gap-4 bg-[#010a13] border border-[#00e5ff]/30 px-5 py-2 rounded-sm shadow-[0_0_10px_rgba(0,229,255,0.1)]">
-                    <div class="text-right">
-                        <div class="font-bold text-lg text-white cyber-font tracking-wide"><%= username %></div>
-                    </div>
-                    <div class="h-8 w-px bg-[#00e5ff]/50 mx-2"></div>
-                    <div class="flex flex-col items-center">
-                        <span class="text-2xl leading-none font-black text-[#ff0092] drop-shadow-[0_0_8px_rgba(255,0,146,0.6)]"><%= trophies %></span>
-                        <span class="text-[0.6rem] uppercase tracking-widest text-slate-400 font-bold mt-1 cyber-font">Trófea</span>
-                    </div>
+            <!-- LOBBY ACTIONS -->
+            <div class="hex-panel p-8 rounded-sm flex flex-col md:flex-row gap-8 items-center justify-center">
+                <div class="flex-1 text-center border-r border-[#c8aa6e]/30 pr-8">
+                    <h2 class="text-xl font-bold text-white uppercase tracking-widest mb-2 esport-font">Új Szimuláció</h2>
+                    <p class="text-slate-400 text-xs mb-6 cyber-font">Állítsd fel a szobát és dominálj!</p>
+                    <button id="createLobbyBtn" class="cosmic-portal-btn w-full">
+                        <span class="cosmic-btn-text">Létrehozás</span>
+                        <div class="portal-effect"></div>
+                    </button>
                 </div>
                 
-                <div class="flex items-center gap-3">
-                    <!-- BEÁLLÍTÁSOK -->
-                    <button onclick="window.location.href='/profile'" class="settings-btn">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                        Fiók
-                    </button>
-                    
-                    <!-- KILÉPÉS -->
-                    <button onclick="logout()" class="logout-btn">
-                        <div class="logout-sign">
-                            <svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z" /></svg>
-                        </div>
-                        <div class="logout-text">Kilépés</div>
-                    </button>
-                </div>
-            </div>
-        </header>
-
-        <main class="grid grid-cols-1 xl:grid-cols-12 gap-6">
-            
-            <!-- LEFT COLUMN: FRIENDS & CHAT -->
-            <div class="xl:col-span-3 space-y-6 flex flex-col">
-                <div class="hex-panel p-5 flex-shrink-0">
-                    <h2 class="text-sm font-bold text-[#00e5ff] uppercase tracking-widest border-b border-[#00e5ff]/30 pb-2 mb-4 cyber-font">Kapcsolatok</h2>
-                    
-                    <div class="search-container">
-                        <div class="search-nebula"></div>
-                        <input type="text" id="friendSearchInput" class="search-input" placeholder="Felhasználó keresése..." onkeypress="if(event.key === 'Enter') searchFriends()">
-                        <div class="search-icon">
-                            <svg stroke-linejoin="round" stroke-linecap="round" stroke-width="2" stroke="#00e5ff" fill="none" height="20" width="20" viewBox="0 0 24 24">
-                                <circle r="8" cy="11" cx="11" />
-                                <line y2="16.65" x2="16.65" y1="21" x1="21" />
-                            </svg>
-                        </div>
-                        <button onclick="searchFriends()" class="wormhole-btn">
-                            <svg stroke-linejoin="round" stroke-linecap="round" stroke-width="2" stroke="#ff0092" fill="none" height="20" width="20" viewBox="0 0 24 24">
-                                <circle r="10" cy="12" cx="12" />
-                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                                <path d="M2 12h20" />
-                            </svg>
-                        </button>
-                    </div>
-
-                    <div id="searchResults" class="space-y-2 mb-6 empty:hidden max-h-40 overflow-y-auto pr-1"></div>
-
-                    <% 
-                    const accepted = friends.filter(f => f.status === 'ACCEPTED');
-                    const pendingRequests = friends.filter(f => f.status === 'PENDING' && f.action_user_id !== userId);
-                    %>
-
-                    <div id="pendingRequestsContainer" class="<%= pendingRequests.length > 0 ? '' : 'hidden' %>">
-                        <% if (pendingRequests.length > 0) { %>
-                            <h3 class="text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest mb-2 cyber-font">Bejövő jelölések</h3>
-                            <div class="space-y-2 mb-4">
-                                <% pendingRequests.forEach(req => { %>
-                                    <div class="bg-[#010a13] border border-[#00e5ff]/30 p-2 rounded-sm flex justify-between items-center">
-                                        <span class="text-xs font-bold text-white"><%= req.friend_name %></span>
-                                        <div class="flex gap-1">
-                                            <button onclick="handleFriendAction('accept', '<%= req.friend_id %>')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[0.6rem] px-2 py-1 rounded-sm">✓</button>
-                                            <button onclick="handleFriendAction('remove', '<%= req.friend_id %>')" class="bg-red-600 hover:bg-red-500 text-white text-[0.6rem] px-2 py-1 rounded-sm">✕</button>
-                                        </div>
-                                    </div>
-                                <% }) %>
-                            </div>
-                        <% } %>
-                    </div>
-
-                    <div id="acceptedFriendsContainer">
-                        <h3 class="text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest mb-2 cyber-font">Barátaim (<%= accepted.length %>)</h3>
-                        <div class="space-y-2 max-h-48 overflow-y-auto pr-1">
-                            <% if (accepted.length === 0) { %>
-                                <p class="text-slate-500 text-[0.7rem] italic cyber-font">Nincs aktív kapcsolat.</p>
-                            <% } else { %>
-                                <% accepted.forEach(friend => { %>
-                                    <div class="bg-[#010a13] border border-[#00e5ff]/20 p-2 rounded-sm flex justify-between items-center group cursor-pointer hover:border-[#ff0092]/50 transition-colors" onclick="openFriendChat('<%= friend.friend_id %>', '<%= friend.friend_name %>')">
-                                        <div class="flex items-center gap-2">
-                                            <span id="unread_<%= friend.friend_id %>" class="hidden w-2 h-2 rounded-full bg-[#ff0092] animate-pulse shadow-[0_0_5px_#ff0092]"></span>
-                                            <div class="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_5px_#00e5ff] group-hover:bg-[#ff0092] group-hover:shadow-[0_0_5px_#ff0092] transition-colors"></div>
-                                            <span class="text-xs font-bold text-slate-200"><%= friend.friend_name %></span>
-                                        </div>
-                                        <div class="flex items-center gap-2">
-                                            <span class="text-[0.6rem] text-[#ff0092] font-bold">🏆 <%= friend.trophies_count %></span>
-                                            <button onclick="event.stopPropagation(); handleFriendAction('remove', '<%= friend.friend_id %>')" class="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-400 text-[0.6rem] transition-opacity uppercase font-bold">Del</button>
-                                        </div>
-                                    </div>
-                                <% }) %>
-                            <% } %>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- TERMINAL CHAT BOX -->
-                <div id="terminalChatContainer" class="hidden flex-1">
-                    <div class="terminal-container">
-                        <div class="terminal-toolbar">
-                            <div class="terminal-butt">
-                                <button class="terminal-btn t-btn-r" onclick="closeChat()"></button>
-                                <button class="terminal-btn t-btn-y"></button>
-                                <button class="terminal-btn t-btn-g"></button>
-                            </div>
-                            <p class="terminal-user-title" id="terminalHeaderName">SYS.COM</p>
-                            <div class="text-slate-600 text-xs">v1.0</div>
-                        </div>
-                        <div class="terminal-body" id="chatMessageList">
-                            <!-- JS tölti fel -->
-                        </div>
-                        <div class="terminal-prompt">
-                            <span class="term-user"><%= username.substring(0,5) %>@sys:</span>
-                            <span class="term-loc">~</span>
-                            <span class="term-bling">$</span>
-                            <input type="text" id="chatInputField" class="term-input" autocomplete="off" onkeypress="handleChatInput(event)">
-                            <span class="term-cursor"></span>
-                        </div>
+                <div class="flex-1 text-center pl-8">
+                    <h2 class="text-xl font-bold text-[#c8aa6e] uppercase tracking-widest mb-2 esport-font">Csatlakozás</h2>
+                    <p class="text-slate-400 text-xs mb-6 cyber-font">Kód alapú szinkronizáció.</p>
+                    <div class="flex gap-2">
+                        <input type="text" id="inviteCodeInput" placeholder="XXXXXX" maxlength="6" class="w-full bg-[#010a13] border border-[#c8aa6e]/50 rounded-sm px-4 py-2 text-center text-lg font-mono text-[#c8aa6e] uppercase tracking-widest focus:outline-none focus:border-[#f0e6d2] focus:shadow-[0_0_10px_rgba(200,170,110,0.3)] transition-all">
+                        <button id="joinLobbyBtn" class="bg-[#1e2328] hover:bg-[#c8aa6e] hover:text-[#010a13] border border-[#c8aa6e]/50 text-[#c8aa6e] px-5 font-bold rounded-sm transition-colors uppercase text-sm cyber-font">→</button>
                     </div>
                 </div>
             </div>
 
-            <!-- CENTER COLUMN: LOBBY & HISTORY -->
-            <div class="xl:col-span-6 space-y-6">
-                <!-- LOBBY ACTIONS -->
-                <div class="hex-panel p-8 flex flex-col md:flex-row gap-8 items-center justify-center relative">
-                    <div class="flex-1 text-center border-r border-[#00e5ff]/30 pr-8">
-                        <h2 class="text-xl font-bold text-white uppercase tracking-widest mb-2 esport-font">LoL Worlds Mayhem</h2>
-                        <p class="text-slate-400 text-xs mb-4 cyber-font">Állítsd fel a szobát és dominálj!</p>
-                        <div class="w-full">
-                            <button id="createLobbyBtn" class="cosmic-portal-btn w-full !py-3">
-                                <span class="btn-text">Létrehozás</span>
-                                <div class="portal-effect"></div>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="flex-1 text-center pl-8">
-                        <h2 class="text-xl font-bold text-[#ff0092] uppercase tracking-widest mb-2 esport-font">Csatlakozás</h2>
-                        <p class="text-slate-400 text-xs mb-4 cyber-font">Kód alapú szinkronizáció.</p>
-                        <div class="flex gap-2">
-                            <input type="text" id="inviteCodeInput" placeholder="XXXXXX" maxlength="6" class="w-full bg-[#010a13] border border-[#ff0092]/50 rounded-sm px-4 py-2 text-center text-lg font-mono text-[#ff0092] uppercase tracking-widest focus:outline-none focus:border-[#00e5ff] focus:shadow-[0_0_10px_rgba(0,229,255,0.3)] transition-all">
-                            <button id="joinLobbyBtn" class="bg-[#1e2328] hover:bg-[#ff0092] border border-[#ff0092]/50 text-white px-5 font-bold rounded-sm transition-colors uppercase text-sm cyber-font">→</button>
-                        </div>
-                    </div>
-                </div>
-
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- MATCH HISTORY -->
-                <div class="hex-panel p-6">
-                    <div class="flex justify-between items-center border-b border-[#00e5ff]/30 pb-2 mb-4 cursor-pointer group" onclick="toggleHistory()">
-                        <h2 class="text-sm font-bold text-[#00e5ff] uppercase tracking-widest cyber-font group-hover:text-white transition-colors">Archívum (Utolsó 5)</h2>
-                        <span id="historyToggleIcon" class="text-[#00e5ff] transition-transform duration-300">▼</span>
-                    </div>
+                <div class="hex-panel p-6 rounded-sm">
+                    <h2 class="text-sm font-bold text-[#c8aa6e] uppercase tracking-widest cyber-font border-b border-[#c8aa6e]/30 pb-2 mb-4">Archívum (Utolsó 5)</h2>
                     
-                    <div id="historyContainer" class="hidden">
-                        <% const validMatches = matchHistory ? matchHistory.slice(0, 5) : []; %>
-                        <% if (validMatches.length === 0) { %>
-                            <div class="text-center py-6 border border-dashed border-slate-700/50">
-                                <p class="text-slate-500 text-[0.7rem] tracking-widest uppercase font-bold cyber-font">Üres adatbázis.</p>
-                            </div>
-                        <% } else { %>
-                            <div class="space-y-3 max-h-[400px] overflow-y-auto pr-2" style="scrollbar-width: thin; scrollbar-color: #00e5ff transparent;">
-                                <% validMatches.forEach(match => { %>
-                                    <div class="bg-[#010a13] border <%= match.final_position === 1 ? 'border-yellow-500/50 shadow-[0_0_10px_rgba(234,179,8,0.1)]' : 'border-[#00e5ff]/20' %> p-3 rounded-sm flex flex-col md:flex-row items-center justify-between gap-4 transition-all hover:border-[#ff0092]/50">
-                                        <div class="flex-1 min-w-0 text-center md:text-left">
-                                            <div class="text-[0.6rem] text-slate-500 font-mono mb-0.5"><%= new Date(match.played_at).toLocaleDateString('hu-HU') %></div>
-                                            <div class="font-bold text-slate-200 text-sm tracking-wide truncate cyber-font"><%= match.lobby_name %></div>
-                                            <div class="text-[0.7rem] font-bold tracking-widest mt-1 uppercase <%= match.final_position === 1 ? 'text-yellow-400' : 'text-[#ff0092]' %>">
-                                                <%= match.final_position === 1 ? '🏆 Bajnok' : `SYS.RANK: ${match.final_position}.` %>
-                                            </div>
+                    <% const validMatches = matchHistory ? matchHistory.slice(0, 5) : []; %>
+                    <% if (validMatches.length === 0) { %>
+                        <div class="text-center py-6 border border-dashed border-slate-700/50">
+                            <p class="text-slate-500 text-[0.7rem] tracking-widest uppercase font-bold cyber-font">Üres adatbázis.</p>
+                        </div>
+                    <% } else { %>
+                        <div class="space-y-3">
+                            <% validMatches.forEach(match => { %>
+                                <div class="bg-[#010a13] border <%= match.final_position === 1 ? 'border-yellow-500/50 shadow-[0_0_10px_rgba(234,179,8,0.1)]' : 'border-[#c8aa6e]/20' %> p-3 rounded-sm flex flex-col items-start gap-2 hover:border-[#c8aa6e]/50 transition-colors">
+                                    <div class="w-full flex justify-between items-center border-b border-[#c8aa6e]/10 pb-1">
+                                        <div class="font-bold text-slate-200 text-sm tracking-wide truncate cyber-font"><%= match.lobby_name %></div>
+                                        <div class="text-[0.6rem] text-slate-500 font-mono"><%= new Date(match.played_at).toLocaleDateString('hu-HU') %></div>
+                                    </div>
+                                    <div class="w-full flex justify-between items-center">
+                                        <div class="text-[0.7rem] font-bold tracking-widest uppercase <%= match.final_position === 1 ? 'text-yellow-400' : 'text-[#c8aa6e]' %>">
+                                            <%= match.final_position === 1 ? '🏆 Bajnok' : `SYS.RANK: ${match.final_position}.` %>
                                         </div>
-                                        <div class="flex gap-1.5 bg-[#091428] p-1.5 rounded-sm border border-[#00e5ff]/20">
-                                            <img src="/images/players/<%= match.roster_summary.top.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg';" class="w-8 h-8 rounded-sm object-cover object-top border border-[#c8aa6e]/30 grayscale hover:grayscale-0 transition-all" title="<%= match.roster_summary.top %> (Top)">
-                                            <img src="/images/players/<%= match.roster_summary.jng.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg';" class="w-8 h-8 rounded-sm object-cover object-top border border-[#c8aa6e]/30 grayscale hover:grayscale-0 transition-all" title="<%= match.roster_summary.jng %> (Jungle)">
-                                            <img src="/images/players/<%= match.roster_summary.mid.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg';" class="w-8 h-8 rounded-sm object-cover object-top border border-[#c8aa6e]/30 grayscale hover:grayscale-0 transition-all" title="<%= match.roster_summary.mid %> (Mid)">
-                                            <img src="/images/players/<%= match.roster_summary.adc.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg';" class="w-8 h-8 rounded-sm object-cover object-top border border-[#c8aa6e]/30 grayscale hover:grayscale-0 transition-all" title="<%= match.roster_summary.adc %> (ADC)">
-                                            <img src="/images/players/<%= match.roster_summary.sup.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg';" class="w-8 h-8 rounded-sm object-cover object-top border border-[#c8aa6e]/30 grayscale hover:grayscale-0 transition-all" title="<%= match.roster_summary.sup %> (Support)">
+                                        <div class="flex gap-1">
+                                            <img src="/images/players/<%= match.roster_summary.top.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg';" class="w-6 h-6 rounded-sm object-cover object-top border border-[#c8aa6e]/30" title="Top">
+                                            <img src="/images/players/<%= match.roster_summary.jng.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg';" class="w-6 h-6 rounded-sm object-cover object-top border border-[#c8aa6e]/30" title="Jungle">
+                                            <img src="/images/players/<%= match.roster_summary.mid.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg';" class="w-6 h-6 rounded-sm object-cover object-top border border-[#c8aa6e]/30" title="Mid">
+                                            <img src="/images/players/<%= match.roster_summary.adc.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg';" class="w-6 h-6 rounded-sm object-cover object-top border border-[#c8aa6e]/30" title="ADC">
+                                            <img src="/images/players/<%= match.roster_summary.sup.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg';" class="w-6 h-6 rounded-sm object-cover object-top border border-[#c8aa6e]/30" title="Support">
                                         </div>
                                     </div>
-                                <% }) %>
-                            </div>
-                        <% } %>
-                    </div>
+                                </div>
+                            <% }) %>
+                        </div>
+                    <% } %>
                 </div>
-            </div>
 
-            <!-- RIGHT COLUMN: LEADERBOARD -->
-            <div class="xl:col-span-3 space-y-6">
-                <div class="hex-panel p-5">
-                    <h2 class="text-sm font-bold text-[#00e5ff] uppercase tracking-widest border-b border-[#00e5ff]/30 pb-2 mb-4 cyber-font">Globális ranglista</h2>
+                <!-- LEADERBOARD -->
+                <div class="hex-panel p-6 rounded-sm">
+                    <h2 class="text-sm font-bold text-[#c8aa6e] uppercase tracking-widest border-b border-[#c8aa6e]/30 pb-2 mb-4 cyber-font">Globális ranglista</h2>
                     <div class="space-y-2">
                         <% 
                         const validLeaderboard = leaderboard
@@ -405,55 +149,148 @@
                         
                         validLeaderboard.forEach((user, index) => { 
                             let rankColor = 'text-slate-400';
-                            let bgClass = 'bg-[#010a13] border-[#00e5ff]/20 hover:border-[#00e5ff]/50 transition-colors';
+                            let bgClass = 'bg-[#010a13] border-[#c8aa6e]/20 hover:border-[#c8aa6e]/50 transition-colors';
                             
                             if(index === 0) { rankColor = 'text-yellow-400 font-black drop-shadow-[0_0_5px_rgba(234,179,8,0.5)]'; bgClass = 'bg-[#091428] border-yellow-500/50 shadow-[0_0_10px_rgba(234,179,8,0.1)]'; }
                             else if(index === 1) { rankColor = 'text-slate-300 font-bold'; bgClass = 'bg-[#091428] border-slate-400/50'; }
                             else if(index === 2) { rankColor = 'text-orange-500 font-bold'; bgClass = 'bg-[#091428] border-orange-700/50'; }
                         %>
-                            <div class="border <%= bgClass %> p-2 rounded-sm flex justify-between items-center group">
+                            <div class="border <%= bgClass %> p-2 rounded-sm flex justify-between items-center">
                                 <div class="flex items-center gap-2">
                                     <span class="font-mono w-5 text-center text-xs <%= rankColor %>"><%= index + 1 %>.</span>
-                                    <span class="text-xs font-bold text-slate-200 truncate max-w-[100px] cyber-font"><%= user.username %></span>
+                                    <span class="text-xs font-bold text-slate-200 truncate max-w-[150px] cyber-font"><%= user.username %></span>
                                 </div>
-                                <span class="text-[#ff0092] font-bold text-xs tracking-wider group-hover:drop-shadow-[0_0_5px_rgba(255,0,146,0.5)] transition-all">🏆 <%= user.trophies_count %></span>
+                                <span class="text-[#c8aa6e] font-bold text-xs tracking-wider">🏆 <%= user.trophies_count %></span>
                             </div>
                         <% }) %>
                     </div>
                 </div>
             </div>
-
-        </main>
+        </div>
     </div>
+
+    <!-- RIGHT SIDEBAR (Social Panel) -->
+    <div class="w-80 bg-[#091428] border-l border-[#c8aa6e]/30 flex flex-col h-full z-20 shadow-[-10px_0_30px_rgba(0,0,0,0.5)]">
+        <!-- Profile Header -->
+        <div class="p-4 border-b border-[#c8aa6e]/30 bg-[#010a13] flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="relative">
+                    <img src="https://ui-avatars.com/api/?name=<%= username %>&background=091428&color=c8aa6e&bold=true" class="w-10 h-10 rounded-sm border border-[#c8aa6e]/50">
+                    <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border border-[#010a13]"></div>
+                </div>
+                <div>
+                    <div class="font-bold text-sm text-white cyber-font truncate w-32"><%= username %></div>
+                    <div class="text-[0.65rem] text-[#c8aa6e] font-bold">🏆 <%= trophies %> Trófea</div>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="window.location.href='/profile'" class="text-slate-400 hover:text-[#c8aa6e] transition-colors" title="Beállítások">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                </button>
+                <button onclick="logout()" class="text-slate-400 hover:text-red-500 transition-colors" title="Kilépés">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Social Search -->
+        <div class="p-3 border-b border-[#c8aa6e]/20 bg-[#091428]">
+            <div class="relative">
+                <input type="text" id="friendSearchInput" class="w-full bg-[#010a13] border border-[#c8aa6e]/30 rounded-sm py-1.5 pl-8 pr-2 text-xs text-[#f0e6d2] focus:outline-none focus:border-[#c8aa6e]" placeholder="Keresés..." onkeypress="if(event.key === 'Enter') searchFriends()">
+                <svg class="w-3.5 h-3.5 text-[#c8aa6e] absolute left-2.5 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </div>
+        </div>
+
+        <div id="searchResults" class="p-2 space-y-1 empty:hidden border-b border-[#c8aa6e]/20 bg-[#010a13]"></div>
+
+        <!-- Friends List -->
+        <div class="flex-1 overflow-y-auto p-2 space-y-4">
+            
+            <% 
+            const accepted = friends.filter(f => f.status === 'ACCEPTED');
+            const pendingRequests = friends.filter(f => f.status === 'PENDING' && f.action_user_id !== userId);
+            %>
+
+            <div id="pendingRequestsContainer" class="<%= pendingRequests.length > 0 ? '' : 'hidden' %>">
+                <% if (pendingRequests.length > 0) { %>
+                    <div class="text-[0.6rem] font-bold text-slate-400 uppercase tracking-widest mb-1 px-2">Jelölések (<%= pendingRequests.length %>)</div>
+                    <div class="space-y-1">
+                        <% pendingRequests.forEach(req => { %>
+                            <div class="bg-[#1e2328] border border-blue-500/30 p-2 rounded-sm flex justify-between items-center">
+                                <span class="text-xs font-bold text-white truncate"><%= req.friend_name %></span>
+                                <div class="flex gap-1 shrink-0">
+                                    <button onclick="handleFriendAction('accept', '<%= req.friend_id %>')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[0.6rem] px-1.5 py-0.5 rounded-sm">✓</button>
+                                    <button onclick="handleFriendAction('remove', '<%= req.friend_id %>')" class="bg-red-600 hover:bg-red-500 text-white text-[0.6rem] px-1.5 py-0.5 rounded-sm">✕</button>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                <% } %>
+            </div>
+
+            <div id="acceptedFriendsContainer">
+                <div class="text-[0.6rem] font-bold text-slate-400 uppercase tracking-widest mb-1 px-2">Kapcsolatok (<%= accepted.length %>)</div>
+                <div class="space-y-0.5">
+                    <% if (accepted.length === 0) { %>
+                        <p class="text-slate-600 text-[0.65rem] italic px-2">Nincs aktív kapcsolat.</p>
+                    <% } else { %>
+                        <% accepted.forEach(friend => { %>
+                            <div class="group flex justify-between items-center p-2 rounded-sm cursor-pointer hover:bg-[#1e2328] transition-colors" onclick="openFriendChat('<%= friend.friend_id %>', '<%= friend.friend_name %>')">
+                                <div class="flex items-center gap-2">
+                                    <div class="relative">
+                                        <img src="https://ui-avatars.com/api/?name=<%= friend.friend_name %>&background=1e2328&color=c8aa6e&bold=true&size=32" class="w-6 h-6 rounded-sm border border-[#c8aa6e]/30 group-hover:border-[#c8aa6e]">
+                                        <span id="unread_<%= friend.friend_id %>" class="hidden absolute -top-1 -right-1 w-2 h-2 rounded-full bg-[#ff0092] animate-pulse shadow-[0_0_5px_#ff0092]"></span>
+                                    </div>
+                                    <span class="text-xs font-bold text-slate-300 group-hover:text-white truncate max-w-[120px]"><%= friend.friend_name %></span>
+                                </div>
+                                <button onclick="event.stopPropagation(); handleFriendAction('remove', '<%= friend.friend_id %>')" class="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-400 text-[0.6rem] transition-opacity uppercase font-bold">X</button>
+                            </div>
+                        <% }) %>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FLOATING CHAT OVERLAY (LoL Style) -->
+    <div id="chatOverlay" class="fixed bottom-0 right-[320px] w-[550px] h-[320px] bg-[#010a13] border-t border-l border-r border-[#c8aa6e]/40 flex z-50 hidden rounded-t-md shadow-[-5px_-5px_20px_rgba(0,0,0,0.5)]">
+        <!-- Bal panel: Aktív beszélgetések -->
+        <div class="w-1/3 border-r border-[#c8aa6e]/20 bg-[#091428] flex flex-col">
+            <div class="p-2 border-b border-[#c8aa6e]/20 text-[#c8aa6e] text-[0.6rem] font-bold uppercase tracking-widest bg-[#1e2328]">Aktív Csevegések</div>
+            <div id="activeChatSessionsList" class="flex-1 overflow-y-auto bg-[#010a13]">
+                <!-- Javascript tölti fel -->
+            </div>
+        </div>
+        <!-- Jobb panel: Üzenetek -->
+        <div class="w-2/3 flex flex-col relative">
+            <div class="p-2 border-b border-[#c8aa6e]/20 bg-[#1e2328] flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                    <span id="currentChatFriendName" class="text-[#f0e6d2] text-xs font-bold cyber-font"></span>
+                </div>
+                <button onclick="closeChatOverlay()" class="text-slate-400 hover:text-[#c8aa6e] text-sm">✕</button>
+            </div>
+            <div id="chatMessageList" class="flex-1 overflow-y-auto p-3 flex flex-col bg-gradient-to-b from-[#010a13] to-[#091428]">
+                <!-- Javascript tölti fel -->
+            </div>
+            <div class="p-2 border-t border-[#c8aa6e]/20 bg-[#091428]">
+                <input type="text" id="chatInputField" class="w-full bg-[#010a13] border border-[#c8aa6e]/30 rounded-sm px-3 py-1.5 text-[#f0e6d2] focus:outline-none focus:border-[#c8aa6e] text-xs font-sans" placeholder="Üzenet küldése..." onkeypress="handleChatInput(event)">
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toastContainer" class="fixed bottom-4 right-[340px] z-50 flex flex-col gap-2 pointer-events-none"></div>
 
     <script>
         const socket = io();
         const USER_ID = '<%= userId %>';
         const USERNAME = '<%= username %>';
 
-        // CHAT ÁLLAPOT ÉS LOGIKA
+        // CHAT ÁLLAPOT
+        let activeChats = []; // { id, name }
         let currentChatFriendId = null;
         let lastSender = null;
-
-        window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                const modal = document.getElementById('valorantModal');
-                const content = document.getElementById('valorantModalContent');
-                modal.classList.remove('opacity-0', 'pointer-events-none');
-                content.classList.remove('scale-95');
-                content.classList.add('scale-100');
-            }, 500);
-        });
-
-        function closeModal(e) { if (e.target.id === 'valorantModal') { closeModalBtn(); } }
-
-        function closeModalBtn() {
-            const modal = document.getElementById('valorantModal');
-            const content = document.getElementById('valorantModalContent');
-            content.classList.remove('scale-100');
-            content.classList.add('scale-95');
-            modal.classList.add('opacity-0', 'pointer-events-none');
-        }
 
         socket.emit('identify', { userId: USER_ID });
 
@@ -467,9 +304,9 @@
         });
 
         socket.on('friend_update', () => { refreshFriendsUI(); });
-        socket.on('lobby_invite_received', (data) => { showToast('SYS.INVITE', `<span class="font-bold text-[#00e5ff]">${data.fromUser}</span> szinkronizációt kezdeményezett!`, 'invite', data); });
+        socket.on('lobby_invite_received', (data) => { showToast('MEGHÍVÓ', `<span class="font-bold text-[#c8aa6e]">${data.fromUser}</span> lobbiba hívott!`, 'invite', data); });
 
-        // Név csoportosítás és kliens limitáció (10 szöveg max)
+        // Biztonságos renderelés (Névcsoportosítás, 10 üzenet kliens limit)
         function appendChatMessage(sender, msg, isSelf, isSystem = false) {
             const list = document.getElementById('chatMessageList');
             
@@ -487,7 +324,7 @@
                 msgDiv = list.lastElementChild;
                 if (msgDiv && !msgDiv.classList.contains('sys-msg')) {
                     const textSpan = document.createElement('span');
-                    textSpan.className = `text mt-1 block ml-3 border-l-2 pl-2 ${isSelf ? 'border-[#ff0092]/30' : 'border-[#00e5ff]/30'}`;
+                    textSpan.className = `text mt-0.5 block`;
                     textSpan.textContent = msg;
                     msgDiv.appendChild(textSpan);
                 } else {
@@ -497,14 +334,14 @@
                 }
             } else {
                 msgDiv = document.createElement('div');
-                msgDiv.className = `chat-msg ${isSelf ? 'self' : ''}`;
+                msgDiv.className = `chat-msg ${isSelf ? 'self items-end' : 'items-start'}`;
                 
                 const senderSpan = document.createElement('span');
                 senderSpan.className = 'sender';
-                senderSpan.textContent = `${sender}:`;
+                senderSpan.textContent = isSelf ? 'Te' : sender;
                 
                 const textSpan = document.createElement('span');
-                textSpan.className = `text block ml-3 border-l-2 pl-2 ${isSelf ? 'border-[#ff0092]/30' : 'border-[#00e5ff]/30'}`;
+                textSpan.className = `text block max-w-[85%] rounded-sm px-2 py-1 ${isSelf ? 'bg-[#1e2328] border border-[#c8aa6e]/30' : 'bg-[#c8aa6e]/10 border border-[#c8aa6e]/20'}`;
                 textSpan.textContent = msg; 
                 
                 msgDiv.appendChild(senderSpan);
@@ -514,7 +351,6 @@
                 lastSender = sender;
             }
 
-            // Kliens oldali Garbage Collection: 10 darab '.text' elemnél régebbi törlése
             const allTexts = list.querySelectorAll('.text');
             if (allTexts.length > 10) {
                 const oldestText = allTexts[0];
@@ -526,13 +362,33 @@
             list.scrollTop = list.scrollHeight;
         }
 
+        function renderActiveChatsList() {
+            const container = document.getElementById('activeChatSessionsList');
+            container.innerHTML = '';
+            activeChats.forEach(chat => {
+                const isActive = chat.id === currentChatFriendId;
+                container.innerHTML += `
+                    <div class="flex items-center gap-2 p-2 cursor-pointer border-l-2 ${isActive ? 'bg-[#1e2328] border-[#c8aa6e]' : 'border-transparent hover:bg-[#091428]'}" onclick="openFriendChat('${chat.id}', '${chat.name}')">
+                        <img src="https://ui-avatars.com/api/?name=${chat.name}&background=010a13&color=c8aa6e&bold=true&size=24" class="w-6 h-6 rounded-sm border border-[#c8aa6e]/30">
+                        <span class="text-xs ${isActive ? 'text-white font-bold' : 'text-slate-400'} truncate">${chat.name}</span>
+                    </div>
+                `;
+            });
+        }
+
         function openFriendChat(friendId, friendName) {
-            currentChatFriendId = friendId;
-            document.getElementById('terminalChatContainer').classList.remove('hidden');
-            document.getElementById('terminalHeaderName').textContent = `SEC_CHANNEL // ${friendName}`;
+            document.getElementById('chatOverlay').classList.remove('hidden');
             
             const unreadDot = document.getElementById(`unread_${friendId}`);
             if(unreadDot) unreadDot.classList.add('hidden');
+
+            if (!activeChats.find(c => c.id === friendId)) {
+                activeChats.push({ id: friendId, name: friendName });
+            }
+            
+            currentChatFriendId = friendId;
+            document.getElementById('currentChatFriendName').textContent = friendName;
+            renderActiveChatsList();
 
             const list = document.getElementById('chatMessageList');
             list.innerHTML = ''; 
@@ -540,8 +396,7 @@
 
             socket.emit('fetch_private_history', { userId: USER_ID, friendId: friendId }, (res) => {
                 list.innerHTML = ''; 
-                appendChatMessage('SYSTEM', `Titkosítás: Aktív. Csatorna nyitva: ${friendName}`, false, true);
-                
+                appendChatMessage('SYSTEM', `Titkosítás: Aktív.`, false, true);
                 if (res.status === 'success') {
                     res.messages.forEach(m => { appendChatMessage(m.sender_name, m.content, m.sender_id === USER_ID); });
                 }
@@ -550,10 +405,11 @@
             document.getElementById('chatInputField').focus();
         }
 
-        function closeChat() {
+        function closeChatOverlay() {
+            document.getElementById('chatOverlay').classList.add('hidden');
             currentChatFriendId = null;
             lastSender = null;
-            document.getElementById('terminalChatContainer').classList.add('hidden');
+            renderActiveChatsList();
         }
 
         function handleChatInput(e) {
@@ -569,13 +425,6 @@
             }
         }
 
-        function toggleHistory() {
-            const container = document.getElementById('historyContainer');
-            const icon = document.getElementById('historyToggleIcon');
-            if (container.classList.contains('hidden')) { container.classList.remove('hidden'); icon.style.transform = 'rotate(180deg)'; } 
-            else { container.classList.add('hidden'); icon.style.transform = 'rotate(0deg)'; }
-        }
-
         async function refreshFriendsUI() {
             try {
                 const res = await fetch('/api/friends/all');
@@ -587,19 +436,30 @@
 
                 const pendingContainer = document.getElementById('pendingRequestsContainer');
                 if (pendingRequests.length > 0) {
-                    let html = '<h3 class="text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest mb-2 cyber-font">Bejövő jelölések</h3><div class="space-y-2 mb-4">';
+                    let html = '<div class="text-[0.6rem] font-bold text-slate-400 uppercase tracking-widest mb-1 px-2">Jelölések ('+pendingRequests.length+')</div><div class="space-y-1">';
                     pendingRequests.forEach(req => {
-                        html += `<div class="bg-[#010a13] border border-[#00e5ff]/30 p-2 rounded-sm flex justify-between items-center"><span class="text-xs font-bold text-white">${req.friend_name}</span><div class="flex gap-1"><button onclick="handleFriendAction('accept', '${req.friend_id}')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[0.6rem] px-2 py-1 rounded-sm">✓</button><button onclick="handleFriendAction('remove', '${req.friend_id}')" class="bg-red-600 hover:bg-red-500 text-white text-[0.6rem] px-2 py-1 rounded-sm">✕</button></div></div>`;
+                        html += `<div class="bg-[#1e2328] border border-blue-500/30 p-2 rounded-sm flex justify-between items-center"><span class="text-xs font-bold text-white truncate">${req.friend_name}</span><div class="flex gap-1 shrink-0"><button onclick="handleFriendAction('accept', '${req.friend_id}')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[0.6rem] px-1.5 py-0.5 rounded-sm">✓</button><button onclick="handleFriendAction('remove', '${req.friend_id}')" class="bg-red-600 hover:bg-red-500 text-white text-[0.6rem] px-1.5 py-0.5 rounded-sm">✕</button></div></div>`;
                     });
                     html += '</div>'; pendingContainer.innerHTML = html; pendingContainer.classList.remove('hidden');
                 } else { pendingContainer.innerHTML = ''; pendingContainer.classList.add('hidden'); }
 
                 const acceptedContainer = document.getElementById('acceptedFriendsContainer');
-                let acceptedHtml = `<h3 class="text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest mb-2 cyber-font">Barátaim (${accepted.length})</h3><div class="space-y-2 max-h-48 overflow-y-auto pr-1">`;
-                if (accepted.length === 0) { acceptedHtml += '<p class="text-slate-500 text-[0.7rem] italic cyber-font">Nincs aktív kapcsolat.</p>'; } 
+                let acceptedHtml = `<div class="text-[0.6rem] font-bold text-slate-400 uppercase tracking-widest mb-1 px-2">Kapcsolatok (${accepted.length})</div><div class="space-y-0.5">`;
+                if (accepted.length === 0) { acceptedHtml += '<p class="text-slate-600 text-[0.65rem] italic px-2">Nincs aktív kapcsolat.</p>'; } 
                 else {
                     accepted.forEach(friend => {
-                        acceptedHtml += `<div class="bg-[#010a13] border border-[#00e5ff]/20 p-2 rounded-sm flex justify-between items-center group cursor-pointer hover:border-[#ff0092]/50 transition-colors" onclick="openFriendChat('${friend.friend_id}', '${friend.friend_name}')"><div class="flex items-center gap-2"><span id="unread_${friend.friend_id}" class="hidden w-2 h-2 rounded-full bg-[#ff0092] animate-pulse shadow-[0_0_5px_#ff0092]"></span><div class="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_5px_#00e5ff] group-hover:bg-[#ff0092] transition-colors"></div><span class="text-xs font-bold text-slate-200">${friend.friend_name}</span></div><div class="flex items-center gap-2"><span class="text-[0.6rem] text-[#ff0092] font-bold">🏆 ${friend.trophies_count}</span><button onclick="event.stopPropagation(); handleFriendAction('remove', '${friend.friend_id}')" class="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-400 text-[0.6rem] transition-opacity uppercase font-bold">Del</button></div></div>`;
+                        acceptedHtml += `
+                            <div class="group flex justify-between items-center p-2 rounded-sm cursor-pointer hover:bg-[#1e2328] transition-colors" onclick="openFriendChat('${friend.friend_id}', '${friend.friend_name}')">
+                                <div class="flex items-center gap-2">
+                                    <div class="relative">
+                                        <img src="https://ui-avatars.com/api/?name=${friend.friend_name}&background=1e2328&color=c8aa6e&bold=true&size=32" class="w-6 h-6 rounded-sm border border-[#c8aa6e]/30 group-hover:border-[#c8aa6e]">
+                                        <span id="unread_${friend.friend_id}" class="hidden absolute -top-1 -right-1 w-2 h-2 rounded-full bg-[#ff0092] animate-pulse shadow-[0_0_5px_#ff0092]"></span>
+                                    </div>
+                                    <span class="text-xs font-bold text-slate-300 group-hover:text-white truncate max-w-[120px]">${friend.friend_name}</span>
+                                </div>
+                                <button onclick="event.stopPropagation(); handleFriendAction('remove', '${friend.friend_id}')" class="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-400 text-[0.6rem] transition-opacity uppercase font-bold">X</button>
+                            </div>
+                        `;
                     });
                 }
                 acceptedHtml += '</div>'; acceptedContainer.innerHTML = acceptedHtml;
@@ -608,14 +468,18 @@
 
         function showToast(title, message, type, extraData = null) {
             const toast = document.createElement('div');
-            toast.className = `bg-[#091428] border ${type === 'success' ? 'border-[#00e5ff]' : 'border-[#ff0092]'} p-4 rounded-sm shadow-xl min-w-[280px] pointer-events-auto transform transition-all translate-x-full opacity-0 relative overflow-hidden`;
-            const scanLine = `<div class="absolute w-full h-[2px] bg-[${type === 'success' ? '#00e5ff' : '#ff0092'}]/50 top-0 left-0 animate-[scan_2s_infinite]"></div>`;
+            toast.className = `bg-[#091428] border ${type === 'success' ? 'border-[#c8aa6e]' : 'border-red-500'} p-3 rounded-sm shadow-xl min-w-[250px] pointer-events-auto transform transition-all translate-x-full opacity-0 relative overflow-hidden`;
             
             let actionHtml = '';
             if (type === 'invite') {
-                actionHtml = `<div class="mt-3 flex gap-2"><button onclick="acceptInvite('${extraData.inviteCode}')" class="flex-1 bg-[#00e5ff] text-[#010a13] px-3 py-1.5 text-[0.7rem] font-bold uppercase tracking-widest rounded-sm hover:bg-white transition-colors">Csatlakozás</button><button onclick="this.parentElement.parentElement.remove()" class="flex-1 bg-transparent text-slate-400 px-3 py-1.5 text-[0.7rem] uppercase tracking-widest rounded-sm border border-[#ff0092]/50 hover:bg-[#ff0092]/10 transition-colors">Figyelmen kívül</button></div>`;
+                actionHtml = `<div class="mt-2 flex gap-2"><button onclick="acceptInvite('${extraData.inviteCode}')" class="flex-1 bg-[#c8aa6e] text-[#010a13] px-2 py-1 text-[0.65rem] font-bold uppercase tracking-widest rounded-sm hover:bg-white transition-colors">Csatlakozás</button></div>`;
             }
-            toast.innerHTML = `${scanLine}<h4 class="text-[${type === 'success' ? '#00e5ff' : '#ff0092'}] font-bold text-[0.75rem] tracking-wider uppercase cyber-font">${title}</h4><p class="text-white text-xs mt-1 leading-relaxed">${message}</p>${actionHtml}`;
+
+            toast.innerHTML = `
+                <h4 class="text-[${type === 'success' ? '#c8aa6e' : '#fff'}] font-bold text-[0.7rem] tracking-wider uppercase cyber-font">${title}</h4>
+                <p class="text-slate-300 text-[0.65rem] mt-1">${message}</p>
+                ${actionHtml}
+            `;
 
             document.getElementById('toastContainer').appendChild(toast);
             setTimeout(() => { toast.classList.remove('translate-x-full', 'opacity-0'); }, 50);
@@ -630,39 +494,39 @@
         }
 
         document.getElementById('createLobbyBtn').addEventListener('click', () => {
-            document.getElementById('createLobbyBtn').querySelector('.btn-text').innerText = 'Inicializálás...';
+            document.getElementById('createLobbyBtn').querySelector('.cosmic-btn-text').innerText = 'Inicializálás...';
             socket.emit('create_lobby', { userId: USER_ID }, (response) => {
-                if (response.status === 'success') { window.location.href = `/lobby/${response.lobbyId}`; } else { alert(response.message); document.getElementById('createLobbyBtn').querySelector('.btn-text').innerText = 'Létrehozás'; }
+                if (response.status === 'success') { window.location.href = `/lobby/${response.lobbyId}`; } else { alert(response.message); document.getElementById('createLobbyBtn').querySelector('.cosmic-btn-text').innerText = 'Létrehozás'; }
             });
         });
 
         document.getElementById('joinLobbyBtn').addEventListener('click', () => {
             const code = document.getElementById('inviteCodeInput').value.trim().toUpperCase();
-            if (code.length !== 6) return alert('SYS.ERR: Érvénytelen szinkronizációs kód!'); acceptInvite(code);
+            if (code.length !== 6) return alert('Érvénytelen kód!'); acceptInvite(code);
         });
 
         async function logout() { await fetch('/api/auth/logout', { method: 'POST' }); window.location.href = '/login'; }
 
         async function searchFriends() {
             const q = document.getElementById('friendSearchInput').value.trim();
-            if(q.length < 3) return alert('Min. 3 karakter szükséges a protokoll futtatásához.');
+            if(q.length < 3) return alert('Min. 3 karakter.');
             try {
                 const res = await fetch(`/api/friends/search?q=${encodeURIComponent(q)}`); const data = await res.json();
                 const resultsContainer = document.getElementById('searchResults'); resultsContainer.innerHTML = '';
-                if (data.length === 0) { resultsContainer.innerHTML = '<p class="text-[0.65rem] text-slate-500 italic cyber-font">Nincs regisztrált entitás.</p>'; return; }
-                data.forEach(user => { resultsContainer.innerHTML += `<div id="search-result-${user.id}" class="bg-transparent border-b border-[#00e5ff]/20 py-2 flex justify-between items-center transition-all duration-300"><div class="flex flex-col"><span class="text-xs font-bold text-white cyber-font">${user.username}</span><span class="text-[0.6rem] text-[#ff0092] font-bold">🏆 ${user.trophies_count}</span></div><button id="addBtn_${user.id}" onclick="sendFriendRequest('${user.id}')" class="bg-transparent hover:bg-[#00e5ff]/10 border border-[#00e5ff]/50 text-[#00e5ff] text-[0.65rem] font-bold uppercase tracking-widest px-3 py-1.5 rounded-sm transition-colors">Jelölés</button></div>`; });
+                if (data.length === 0) { resultsContainer.innerHTML = '<p class="text-[0.6rem] text-slate-500 italic">Nincs találat.</p>'; return; }
+                data.forEach(user => { resultsContainer.innerHTML += `<div id="search-result-${user.id}" class="bg-transparent py-1 flex justify-between items-center transition-all duration-300"><div class="flex flex-col"><span class="text-xs font-bold text-white cyber-font">${user.username}</span><span class="text-[0.55rem] text-[#c8aa6e] font-bold">🏆 ${user.trophies_count}</span></div><button id="addBtn_${user.id}" onclick="sendFriendRequest('${user.id}')" class="bg-transparent hover:bg-[#c8aa6e]/10 border border-[#c8aa6e]/50 text-[#c8aa6e] text-[0.55rem] font-bold uppercase tracking-widest px-2 py-1 rounded-sm transition-colors">+</button></div>`; });
             } catch (error) { alert('Hálózat megszakadt.'); }
         }
 
         async function sendFriendRequest(targetId) {
             const btn = document.getElementById(`addBtn_${targetId}`);
-            if(btn) { btn.innerText = 'Küldés...'; btn.disabled = true; }
+            if(btn) { btn.innerText = '...'; btn.disabled = true; }
             try {
                 const res = await fetch('/api/friends/request', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ targetUserId: targetId }) });
                 const data = await res.json();
-                if (data.status !== 'success') { alert(data.error || 'Hiba történt.'); if(btn) { btn.innerText = 'Jelölés'; btn.disabled = false; } } 
-                else { showToast('Jelölés elküldve!', 'Adatcsomag sikeresen továbbítva a célponthoz.', 'success'); const resultCard = document.getElementById(`search-result-${targetId}`); if (resultCard) { resultCard.style.opacity = '0'; setTimeout(() => resultCard.remove(), 300); } }
-            } catch (error) { alert('Hálózati hiba.'); if(btn) { btn.innerText = 'Jelölés'; btn.disabled = false; } }
+                if (data.status !== 'success') { alert(data.error || 'Hiba történt.'); if(btn) { btn.innerText = '+'; btn.disabled = false; } } 
+                else { showToast('Jelölés elküldve!', 'Sikeres.', 'success'); const resultCard = document.getElementById(`search-result-${targetId}`); if (resultCard) { resultCard.style.opacity = '0'; setTimeout(() => resultCard.remove(), 300); } }
+            } catch (error) { alert('Hálózati hiba.'); if(btn) { btn.innerText = '+'; btn.disabled = false; } }
         }
 
         async function handleFriendAction(action, targetId) {
