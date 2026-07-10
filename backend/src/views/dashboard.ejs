@@ -11,11 +11,10 @@
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
-        body { 
-            background-color: #010a13; 
-            color: #f0e6d2; 
+        body, html { 
+            height: 100%; width: 100%; margin: 0; padding: 0; overflow: hidden;
+            background-color: #010a13; color: #f0e6d2; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0; padding: 0; overflow: hidden;
         } 
         
         .esport-font { font-family: 'Oswald', sans-serif; text-transform: uppercase; }
@@ -28,6 +27,7 @@
             position: relative;
         }
         
+        /* Belső görgetősáv styler */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(200,170,110,0.3); border-radius: 3px; }
@@ -57,35 +57,6 @@
         @keyframes rotatePortal { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes pulsePortal { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
-        /* --- ANIMATED EXPANDING BUTTONS (Sidebar) --- */
-        .action-btn-container { display: flex; gap: 15px; justify-content: center; align-items: center; width: 100%; }
-        
-        .logout-btn {
-            display: flex; align-items: center; justify-content: flex-start;
-            width: 40px; height: 40px; border: none; border-radius: 50%; cursor: pointer; position: relative; overflow: hidden;
-            transition-duration: .3s; box-shadow: 0 0 10px rgba(255, 0, 77, 0.2); background-color: #ff004d; z-index: 10;
-        }
-        .logout-sign { width: 100%; transition-duration: .3s; display: flex; align-items: center; justify-content: center; }
-        .logout-sign svg { width: 14px; fill: white; }
-        .logout-text { position: absolute; right: 0%; width: 0%; opacity: 0; color: white; font-size: 11px; font-weight: 700; transition-duration: .3s; text-transform: uppercase; font-family: 'Orbitron', sans-serif;}
-        .logout-btn:hover { width: 110px; border-radius: 20px; transition-duration: .3s; box-shadow: 0 0 15px rgba(255, 0, 77, 0.5); }
-        .logout-btn:hover .logout-sign { width: 30%; transition-duration: .3s; padding-left: 10px; }
-        .logout-btn:hover .logout-text { opacity: 1; width: 70%; transition-duration: .3s; padding-right: 10px; }
-        .logout-btn:active { transform: translate(2px ,2px); }
-
-        .settings-btn {
-            display: flex; align-items: center; justify-content: flex-start;
-            width: 40px; height: 40px; border: 1px solid #c8aa6e; border-radius: 50%; cursor: pointer; position: relative; overflow: hidden;
-            transition-duration: .3s; box-shadow: 0 0 10px rgba(200, 170, 110, 0.1); background-color: #1e2328; z-index: 10;
-        }
-        .settings-sign { width: 100%; transition-duration: .3s; display: flex; align-items: center; justify-content: center; color: #c8aa6e; }
-        .settings-sign svg { width: 14px; }
-        .settings-text { position: absolute; right: 0%; width: 0%; opacity: 0; color: #010a13; font-size: 11px; font-weight: 700; transition-duration: .3s; text-transform: uppercase; font-family: 'Orbitron', sans-serif;}
-        .settings-btn:hover { width: 110px; border-radius: 20px; transition-duration: .3s; background-color: #c8aa6e; box-shadow: 0 0 15px rgba(200, 170, 110, 0.4); }
-        .settings-btn:hover .settings-sign { width: 30%; transition-duration: .3s; padding-left: 10px; color: #010a13; }
-        .settings-btn:hover .settings-text { opacity: 1; width: 70%; transition-duration: .3s; padding-right: 10px; }
-        .settings-btn:active { transform: translate(2px ,2px); }
-
         /* --- HÁTTÉR CSILLAGOK --- */
         .star-container { background: radial-gradient(ellipse at bottom, #091428 0%, #010a13 100%); position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
         #stars, #stars2, #stars3 { background: transparent; }
@@ -93,158 +64,141 @@
         #stars2 { width: 2px; height: 2px; box-shadow: 1925px 1320px #fff, 693px 1778px #fff, 1016px 711px #c8aa6e, 1171px 563px #fff, 661px 1919px #fff, 1610px 44px #fff, 1275px 140px #fff, 1208px 1802px #fff, 1473px 1587px #fff, 11px 1117px #fff, 853px 1757px #fff, 1149px 937px #fff, 1353px 428px #fff, 270px 279px #fff, 258px 1404px #fff, 417px 1188px #fff, 286px 561px #fff, 393px 1765px #fff, 147px 881px #fff, 666px 1097px #fff, 1425px 1278px #fff, 806px 156px #c8aa6e, 1252px 561px #fff, 218px 52px #fff, 1371px 1980px #fff, 171px 745px #fff, 1424px 89px #fff, 137px 244px #fff, 939px 1922px #fff, 137px 1080px #fff, 1757px 50px #fff, 904px 536px #fff, 1938px 1001px #fff, 1172px 440px #fff, 72px 1475px #fff, 102px 121px #fff, 804px 1671px #fff, 1314px 270px #fff, 440px 1341px #fff, 1216px 511px #fff; animation: animStar 100s linear infinite; }
         #stars3 { width: 3px; height: 3px; box-shadow: 200px 981px #fff, 1731px 521px #fff, 132px 1039px #fff, 1888px 1547px #c8aa6e, 899px 1226px #fff, 1887px 580px #fff, 1548px 1092px #fff, 1626px 689px #fff, 254px 1072px #fff, 1684px 1211px #fff, 672px 1267px #fff, 939px 668px #fff, 1969px 645px #fff, 1126px 983px #fff, 457px 568px #fff, 476px 876px #fff, 829px 1896px #fff, 1364px 1846px #fff, 1507px 1120px #fff, 936px 1948px #fff, 1833px 832px #fff, 1424px 285px #fff, 1377px 1596px #fff, 432px 153px #fff, 1348px 1410px #fff, 1529px 954px #c8aa6e, 1102px 387px #fff, 264px 297px #fff, 811px 977px #fff, 1931px 673px #fff, 1734px 978px #fff; animation: animStar 150s linear infinite; }
         @keyframes animStar { from { transform: translateY(0px); } to { transform: translateY(-2000px); } }
-
-        /* --- CHAT OVERLAY --- */
-        .chat-msg { display: flex; flex-direction: column; margin-bottom: 4px; }
-        .chat-msg .sender { color: #c8aa6e; font-weight: bold; margin-bottom: 2px; font-size: 11px; }
-        .chat-msg.self .sender { color: #f0e6d2; }
-        .chat-msg .text { color: #e0e0e0; word-break: break-word; margin-left: 5px; border-left: 2px solid rgba(200,170,110,0.3); padding-left: 8px; font-size: 12px; }
-        .chat-msg.self .text { border-left: 2px solid rgba(240,230,210,0.3); }
-        .sys-msg { color: #94a3b8; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; text-align: center; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid rgba(148, 163, 184, 0.2); }
-
     </style>
 </head>
-<body class="h-screen flex overflow-hidden bg-[#010a13]">
+<body class="flex bg-[#010a13] text-[#f0e6d2] overflow-hidden">
 
-    <!-- HÁTTÉR ANIMÁCIÓ (MAP NÉLKÜL) -->
     <div class="star-container">
-        <div id="stars"></div>
-        <div id="stars2"></div>
-        <div id="stars3"></div>
+        <div id="stars"></div><div id="stars2"></div><div id="stars3"></div>
     </div>
 
-    <!-- MAIN CONTENT (Bal oldal, rugalmasan kitölti a teret) -->
-    <div class="flex-1 flex flex-col h-full p-6 lg:p-8 gap-6 overflow-y-auto relative z-10">
+    <!-- MAIN CONTENT (Bal oldal) -->
+    <div class="flex-1 flex flex-col p-4 lg:p-6 gap-5 relative z-10 min-w-0">
         
         <!-- HEADER SÁV -->
-        <div class="flex flex-col sm:flex-row justify-between items-center border-b border-[#c8aa6e]/30 pb-4 shrink-0">
+        <div class="flex flex-col sm:flex-row justify-between items-center border-b border-[#c8aa6e]/30 pb-3 shrink-0">
             <div>
-                <h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-wider esport-font drop-shadow-[0_0_8px_rgba(200,170,110,0.3)]">LoL Worlds Mayhem</h1>
-                <p class="text-slate-400 uppercase tracking-widest text-[0.7rem] font-bold cyber-font mt-1">Központi Irányítópult</p>
+                <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-wider esport-font drop-shadow-[0_0_8px_rgba(200,170,110,0.3)]">LoL Worlds Mayhem</h1>
+                <p class="text-slate-400 uppercase tracking-widest text-[0.65rem] font-bold cyber-font mt-1">Központi Irányítópult</p>
             </div>
         </div>
 
-        <div class="max-w-[1200px] w-full mx-auto flex flex-col gap-8 flex-1">
+        <!-- LOBBY ACTIONS -->
+        <div class="hex-panel p-6 rounded-sm flex flex-col md:flex-row gap-6 items-center shrink-0">
+            <div class="flex-1 text-center md:border-r border-[#c8aa6e]/30 md:pr-6 w-full">
+                <h2 class="text-lg font-bold text-white uppercase tracking-widest mb-1.5 esport-font">Új Szimuláció</h2>
+                <p class="text-slate-400 text-[0.65rem] mb-4 cyber-font">Állítsd fel a szobát és dominálj!</p>
+                <button id="createLobbyBtn" class="cosmic-portal-btn w-full">
+                    <span class="cosmic-btn-text">Létrehozás</span>
+                    <div class="portal-effect"></div>
+                </button>
+            </div>
             
-            <!-- LOBBY ACTIONS -->
-            <div class="hex-panel p-8 rounded-sm flex flex-col md:flex-row gap-8 items-center justify-center shrink-0">
-                <div class="flex-1 text-center md:border-r border-[#c8aa6e]/30 md:pr-8 w-full">
-                    <h2 class="text-xl font-bold text-white uppercase tracking-widest mb-2 esport-font">Új Szimuláció</h2>
-                    <p class="text-slate-400 text-xs mb-5 cyber-font">Állítsd fel a szobát és dominálj!</p>
-                    <button id="createLobbyBtn" class="cosmic-portal-btn w-full">
-                        <span class="cosmic-btn-text">Létrehozás</span>
-                        <div class="portal-effect"></div>
-                    </button>
+            <div class="flex-1 text-center md:pl-6 w-full">
+                <h2 class="text-lg font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5 esport-font">Csatlakozás</h2>
+                <p class="text-slate-400 text-[0.65rem] mb-4 cyber-font">Kód alapú szinkronizáció.</p>
+                <div class="flex gap-2">
+                    <input type="text" id="inviteCodeInput" placeholder="XXXXXX" maxlength="6" class="w-full bg-[#010a13] border border-[#c8aa6e]/50 rounded-sm px-4 py-2 text-center text-lg font-mono text-[#c8aa6e] uppercase tracking-widest focus:outline-none focus:border-[#f0e6d2] transition-all">
+                    <button id="joinLobbyBtn" class="bg-[#1e2328] hover:bg-[#c8aa6e] hover:text-[#010a13] border border-[#c8aa6e]/50 text-[#c8aa6e] px-4 font-bold rounded-sm transition-colors text-sm cyber-font">→</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ALSÓ SZEKCIÓ: Archívum és Ranglista -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 flex-1 min-h-0">
+            
+            <!-- ARCHÍVUM -->
+            <div class="hex-panel rounded-sm flex flex-col h-full min-h-0">
+                <div class="p-4 border-b border-[#c8aa6e]/30 shrink-0">
+                    <h2 class="text-sm font-bold text-[#c8aa6e] uppercase tracking-widest cyber-font">Archívum (Utolsó 5)</h2>
                 </div>
                 
-                <div class="flex-1 text-center md:pl-8 w-full">
-                    <h2 class="text-xl font-bold text-[#c8aa6e] uppercase tracking-widest mb-2 esport-font">Csatlakozás</h2>
-                    <p class="text-slate-400 text-xs mb-5 cyber-font">Kód alapú szinkronizáció.</p>
-                    <div class="flex gap-2">
-                        <input type="text" id="inviteCodeInput" placeholder="XXXXXX" maxlength="6" class="w-full bg-[#010a13] border border-[#c8aa6e]/50 rounded-sm px-4 py-2 text-center text-lg font-mono text-[#c8aa6e] uppercase tracking-widest focus:outline-none focus:border-[#f0e6d2] focus:shadow-[0_0_10px_rgba(200,170,110,0.3)] transition-all">
-                        <button id="joinLobbyBtn" class="bg-[#1e2328] hover:bg-[#c8aa6e] hover:text-[#010a13] border border-[#c8aa6e]/50 text-[#c8aa6e] px-5 font-bold rounded-sm transition-colors uppercase text-sm cyber-font">→</button>
-                    </div>
+                <div class="flex-1 overflow-y-auto p-4 space-y-3">
+                    <% const validMatches = matchHistory ? matchHistory.slice(0, 5) : []; %>
+                    <% if (validMatches.length === 0) { %>
+                        <div class="text-center py-6 border border-dashed border-slate-700/50">
+                            <p class="text-slate-500 text-[0.7rem] tracking-widest uppercase font-bold cyber-font">Üres adatbázis.</p>
+                        </div>
+                    <% } else { %>
+                        <% validMatches.forEach(match => { %>
+                            <div class="bg-[#010a13] border <%= match.final_position === 1 ? 'border-yellow-500/50 shadow-[0_0_10px_rgba(234,179,8,0.1)]' : 'border-[#c8aa6e]/20' %> p-3 rounded-sm flex flex-col gap-2 hover:border-[#c8aa6e]/50 transition-colors">
+                                <div class="w-full flex justify-between items-center border-b border-[#c8aa6e]/10 pb-1">
+                                    <div class="font-bold text-slate-200 text-sm tracking-wide truncate cyber-font"><%= match.lobby_name %></div>
+                                    <div class="text-[0.6rem] text-slate-500 font-mono"><%= new Date(match.played_at).toLocaleDateString('hu-HU') %></div>
+                                </div>
+                                <div class="w-full flex justify-between items-center">
+                                    <div class="text-[0.7rem] font-bold tracking-widest uppercase <%= match.final_position === 1 ? 'text-yellow-400' : 'text-[#c8aa6e]' %>">
+                                        <%= match.final_position === 1 ? '🏆 Bajnok' : `SYS.RANK: ${match.final_position}.` %>
+                                    </div>
+                                    <div class="flex gap-1">
+                                        <img src="/images/players/<%= match.roster_summary.top.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg';" class="w-6 h-6 rounded-sm object-cover object-top border border-[#c8aa6e]/30" title="Top">
+                                        <img src="/images/players/<%= match.roster_summary.jng.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg';" class="w-6 h-6 rounded-sm object-cover object-top border border-[#c8aa6e]/30" title="Jungle">
+                                        <img src="/images/players/<%= match.roster_summary.mid.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg';" class="w-6 h-6 rounded-sm object-cover object-top border border-[#c8aa6e]/30" title="Mid">
+                                        <img src="/images/players/<%= match.roster_summary.adc.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg';" class="w-6 h-6 rounded-sm object-cover object-top border border-[#c8aa6e]/30" title="ADC">
+                                        <img src="/images/players/<%= match.roster_summary.sup.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg';" class="w-6 h-6 rounded-sm object-cover object-top border border-[#c8aa6e]/30" title="Support">
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } %>
                 </div>
             </div>
 
-            <!-- ALSÓ SZEKCIÓ: Archívum és Ranglista -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 min-h-0">
-                
-                <!-- ARCHÍVUM -->
-                <div class="hex-panel rounded-sm flex flex-col min-h-0">
-                    <div class="p-5 border-b border-[#c8aa6e]/30 shrink-0">
-                        <h2 class="text-sm font-bold text-[#c8aa6e] uppercase tracking-widest cyber-font">Archívum (Utolsó 5)</h2>
-                    </div>
-                    
-                    <div class="flex-1 overflow-y-auto p-5 space-y-3">
-                        <% const validMatches = matchHistory ? matchHistory.slice(0, 5) : []; %>
-                        <% if (validMatches.length === 0) { %>
-                            <div class="text-center py-8 border border-dashed border-slate-700/50">
-                                <p class="text-slate-500 text-[0.7rem] tracking-widest uppercase font-bold cyber-font">Üres adatbázis.</p>
-                            </div>
-                        <% } else { %>
-                            <% validMatches.forEach(match => { %>
-                                <div class="bg-[#010a13] border <%= match.final_position === 1 ? 'border-yellow-500/50 shadow-[0_0_10px_rgba(234,179,8,0.1)]' : 'border-[#c8aa6e]/20' %> p-4 rounded-sm flex flex-col gap-2 hover:border-[#c8aa6e]/50 transition-colors">
-                                    <div class="w-full flex justify-between items-center border-b border-[#c8aa6e]/10 pb-1.5">
-                                        <div class="font-bold text-slate-200 text-sm tracking-wide truncate cyber-font"><%= match.lobby_name %></div>
-                                        <div class="text-[0.65rem] text-slate-500 font-mono"><%= new Date(match.played_at).toLocaleDateString('hu-HU') %></div>
-                                    </div>
-                                    <div class="w-full flex justify-between items-center mt-1">
-                                        <div class="text-xs font-bold tracking-widest uppercase <%= match.final_position === 1 ? 'text-yellow-400' : 'text-[#c8aa6e]' %>">
-                                            <%= match.final_position === 1 ? '🏆 Bajnok' : `SYS.RANK: ${match.final_position}.` %>
-                                        </div>
-                                        <div class="flex gap-1.5">
-                                            <img src="/images/players/<%= match.roster_summary.top.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg';" class="w-7 h-7 rounded-sm object-cover object-top border border-[#c8aa6e]/30" title="Top">
-                                            <img src="/images/players/<%= match.roster_summary.jng.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg';" class="w-7 h-7 rounded-sm object-cover object-top border border-[#c8aa6e]/30" title="Jungle">
-                                            <img src="/images/players/<%= match.roster_summary.mid.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg';" class="w-7 h-7 rounded-sm object-cover object-top border border-[#c8aa6e]/30" title="Mid">
-                                            <img src="/images/players/<%= match.roster_summary.adc.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg';" class="w-7 h-7 rounded-sm object-cover object-top border border-[#c8aa6e]/30" title="ADC">
-                                            <img src="/images/players/<%= match.roster_summary.sup.replace(/[^a-zA-Z0-9]/g, '') %>.png" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg';" class="w-7 h-7 rounded-sm object-cover object-top border border-[#c8aa6e]/30" title="Support">
-                                        </div>
-                                    </div>
-                                </div>
-                            <% }) %>
-                        <% } %>
-                    </div>
+            <!-- LEADERBOARD -->
+            <div class="hex-panel rounded-sm flex flex-col h-full min-h-0">
+                <div class="p-4 border-b border-[#c8aa6e]/30 shrink-0">
+                    <h2 class="text-sm font-bold text-[#c8aa6e] uppercase tracking-widest cyber-font">Globális ranglista</h2>
                 </div>
-
-                <!-- LEADERBOARD -->
-                <div class="hex-panel rounded-sm flex flex-col min-h-0">
-                    <div class="p-5 border-b border-[#c8aa6e]/30 shrink-0">
-                        <h2 class="text-sm font-bold text-[#c8aa6e] uppercase tracking-widest cyber-font">Globális ranglista</h2>
-                    </div>
+                
+                <div class="flex-1 overflow-y-auto p-4 space-y-2">
+                    <% 
+                    const validLeaderboard = leaderboard
+                        .filter(u => u && u.username && !u.username.toLowerCase().includes('törölt') && !u.username.toLowerCase().includes('anonim') && !u.username.toLowerCase().startsWith('deleted'))
+                        .slice(0, 10);
                     
-                    <div class="flex-1 overflow-y-auto p-5 space-y-2.5">
-                        <% 
-                        const validLeaderboard = leaderboard
-                            .filter(u => u && u.username && !u.username.toLowerCase().includes('törölt') && !u.username.toLowerCase().includes('anonim') && !u.username.toLowerCase().startsWith('deleted'))
-                            .slice(0, 10);
+                    validLeaderboard.forEach((user, index) => { 
+                        let rankColor = 'text-slate-400';
+                        let bgClass = 'bg-[#010a13] border-[#c8aa6e]/20 hover:border-[#c8aa6e]/50 transition-colors';
                         
-                        validLeaderboard.forEach((user, index) => { 
-                            let rankColor = 'text-slate-400';
-                            let bgClass = 'bg-[#010a13] border-[#c8aa6e]/20 hover:border-[#c8aa6e]/50 transition-colors';
-                            
-                            if(index === 0) { rankColor = 'text-yellow-400 font-black drop-shadow-[0_0_5px_rgba(234,179,8,0.5)]'; bgClass = 'bg-[#091428] border-yellow-500/50 shadow-[0_0_10px_rgba(234,179,8,0.1)]'; }
-                            else if(index === 1) { rankColor = 'text-slate-300 font-bold'; bgClass = 'bg-[#091428] border-slate-400/50'; }
-                            else if(index === 2) { rankColor = 'text-orange-500 font-bold'; bgClass = 'bg-[#091428] border-orange-700/50'; }
-                        %>
-                            <div class="border <%= bgClass %> p-3 rounded-sm flex justify-between items-center">
-                                <div class="flex items-center gap-3">
-                                    <span class="font-mono w-6 text-center text-sm <%= rankColor %>"><%= index + 1 %>.</span>
-                                    <span class="text-sm font-bold text-slate-200 truncate max-w-[150px] cyber-font"><%= user.username %></span>
-                                </div>
-                                <span class="text-[#c8aa6e] font-bold text-sm tracking-wider">🏆 <%= user.trophies_count %></span>
+                        if(index === 0) { rankColor = 'text-yellow-400 font-black drop-shadow-[0_0_5px_rgba(234,179,8,0.5)]'; bgClass = 'bg-[#091428] border-yellow-500/50 shadow-[0_0_10px_rgba(234,179,8,0.1)]'; }
+                        else if(index === 1) { rankColor = 'text-slate-300 font-bold'; bgClass = 'bg-[#091428] border-slate-400/50'; }
+                        else if(index === 2) { rankColor = 'text-orange-500 font-bold'; bgClass = 'bg-[#091428] border-orange-700/50'; }
+                    %>
+                        <div class="border <%= bgClass %> p-2 rounded-sm flex justify-between items-center">
+                            <div class="flex items-center gap-3">
+                                <span class="font-mono w-5 text-center text-xs <%= rankColor %>"><%= index + 1 %>.</span>
+                                <span class="text-xs font-bold text-slate-200 truncate max-w-[150px] cyber-font"><%= user.username %></span>
                             </div>
-                        <% }) %>
-                    </div>
+                            <span class="text-[#c8aa6e] font-bold text-xs tracking-wider">🏆 <%= user.trophies_count %></span>
+                        </div>
+                    <% }) %>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- RIGHT SIDEBAR (Social Panel) -->
-    <div class="w-[340px] bg-[#091428] border-l border-[#c8aa6e]/40 flex flex-col h-full z-20 shadow-[-10px_0_30px_rgba(0,0,0,0.5)] shrink-0 relative">
+    <div class="w-[340px] bg-[#091428] border-l border-[#c8aa6e]/40 flex flex-col h-full z-20 shadow-[-10px_0_30px_rgba(0,0,0,0.5)] shrink-0">
         
         <!-- Profile Header -->
-        <div class="p-6 border-b border-[#c8aa6e]/30 bg-[#010a13] flex flex-col gap-5 shrink-0">
+        <div class="p-5 border-b border-[#c8aa6e]/30 bg-[#010a13] flex flex-col gap-4 shrink-0">
             <div class="flex items-center gap-4">
                 <div class="relative shrink-0">
-                    <img src="https://ui-avatars.com/api/?name=<%= username %>&background=091428&color=c8aa6e&bold=true" class="w-16 h-16 rounded-sm border-2 border-[#c8aa6e]/50 shadow-[0_0_10px_rgba(200,170,110,0.2)]">
+                    <img src="https://ui-avatars.com/api/?name=<%= username %>&background=091428&color=c8aa6e&bold=true" class="w-14 h-14 rounded-sm border-2 border-[#c8aa6e]/50">
                     <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-[#010a13]"></div>
                 </div>
                 <div class="min-w-0">
-                    <div class="font-bold text-lg text-white cyber-font truncate"><%= username %></div>
-                    <div class="text-sm text-[#c8aa6e] font-black tracking-widest mt-1">🏆 <%= trophies %> Trófea</div>
+                    <div class="font-bold text-base text-white cyber-font truncate"><%= username %></div>
+                    <div class="text-[0.8rem] text-[#c8aa6e] font-black tracking-widest mt-1">🏆 <%= trophies %> Trófea</div>
                 </div>
             </div>
             
-            <div class="action-btn-container">
-                <button onclick="window.location.href='/profile'" class="settings-btn" title="Beállítások">
-                    <div class="settings-sign"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg></div>
-                    <div class="settings-text">Beállítások</div>
+            <div class="flex flex-col gap-2 mt-1">
+                <button onclick="window.location.href='/profile'" class="w-full py-2 bg-[#1e2328] hover:bg-[#c8aa6e] text-slate-300 hover:text-[#010a13] border border-[#c8aa6e]/30 hover:border-[#c8aa6e] transition-all rounded-sm font-bold uppercase tracking-widest text-[0.65rem] cyber-font">
+                    Beállítások
                 </button>
-                <button onclick="logout()" class="logout-btn" title="Kilépés">
-                    <div class="logout-sign"><svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z" /></svg></div>
-                    <div class="logout-text">Kilépés</div>
+                <button onclick="logout()" class="w-full py-2 bg-red-950/20 hover:bg-red-600/90 text-red-400 hover:text-white border border-red-500/30 hover:border-red-500 transition-all rounded-sm font-bold uppercase tracking-widest text-[0.65rem] cyber-font">
+                    Kilépés
                 </button>
             </div>
         </div>
@@ -268,7 +222,7 @@
 
             <div id="pendingRequestsContainer" class="<%= pendingRequests.length > 0 ? '' : 'hidden' %>">
                 <% if (pendingRequests.length > 0) { %>
-                    <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 px-2 cyber-font">Jelölések (<%= pendingRequests.length %>)</div>
+                    <div class="text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest mb-2 px-2 cyber-font">Jelölések (<%= pendingRequests.length %>)</div>
                     <div class="space-y-1.5">
                         <% pendingRequests.forEach(req => { %>
                             <div class="bg-[#1e2328] border border-blue-500/30 p-2.5 rounded-sm flex justify-between items-center">
@@ -284,7 +238,7 @@
             </div>
 
             <div id="acceptedFriendsContainer">
-                <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 px-2 cyber-font">Kapcsolatok (<%= accepted.length %>)</div>
+                <div class="text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest mb-2 px-2 cyber-font">Kapcsolatok (<%= accepted.length %>)</div>
                 <div class="space-y-1">
                     <% if (accepted.length === 0) { %>
                         <p class="text-slate-600 text-xs italic px-2">Nincs aktív kapcsolat.</p>
@@ -294,7 +248,6 @@
                                 <div class="flex items-center gap-3">
                                     <div class="relative">
                                         <img src="https://ui-avatars.com/api/?name=<%= friend.friend_name %>&background=1e2328&color=c8aa6e&bold=true&size=40" class="w-8 h-8 rounded-sm border border-[#c8aa6e]/30 group-hover:border-[#c8aa6e]">
-                                        <!-- OLVASATLAN JELZŐ -->
                                         <span id="unread_<%= friend.friend_id %>" class="hidden absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#ff0092] animate-pulse shadow-[0_0_5px_#ff0092]"></span>
                                     </div>
                                     <span class="text-sm font-bold text-slate-300 group-hover:text-white truncate max-w-[130px]"><%= friend.friend_name %></span>
@@ -307,11 +260,9 @@
             </div>
         </div>
 
-        <!-- BOTTOM CHAT TRIGGER -->
         <div class="p-4 border-t border-[#c8aa6e]/30 bg-[#010a13] shrink-0">
-            <button onclick="toggleChatOverlay()" class="w-full flex items-center justify-center gap-2 bg-[#1e2328] border border-[#c8aa6e]/50 text-[#c8aa6e] py-3 rounded-sm hover:bg-[#c8aa6e] hover:text-[#010a13] transition-colors font-bold uppercase tracking-widest text-xs cyber-font">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
-                Chat Panel
+            <button onclick="toggleChatOverlay()" class="w-full bg-[#1e2328] border border-[#c8aa6e]/50 text-[#c8aa6e] py-3 rounded-sm hover:bg-[#c8aa6e] hover:text-[#010a13] transition-colors font-bold uppercase tracking-widest text-xs cyber-font">
+                Chat Panel Megnyitása
             </button>
         </div>
     </div>
@@ -332,15 +283,14 @@
                 <button onclick="toggleChatOverlay()" class="text-slate-400 hover:text-[#c8aa6e] text-lg font-bold">✕</button>
             </div>
             
-            <div id="chatMessageList" class="flex-1 overflow-y-auto p-4 flex flex-col bg-gradient-to-b from-[#010a13] to-[#091428] gap-1"></div>
+            <div id="chatMessageList" class="flex-1 overflow-y-auto p-4 flex flex-col bg-[#010a13]"></div>
             
             <div class="p-3 border-t border-[#c8aa6e]/30 bg-[#091428] shrink-0">
-                <input type="text" id="chatInputField" class="w-full bg-[#010a13] border border-[#c8aa6e]/50 rounded-sm px-3 py-2 text-[#f0e6d2] focus:outline-none focus:border-[#c8aa6e] focus:shadow-[0_0_8px_rgba(200,170,110,0.3)] text-sm font-sans transition-all" placeholder="Üzenet küldése..." onkeypress="handleChatInput(event)">
+                <input type="text" id="chatInputField" class="w-full bg-[#010a13] border border-[#c8aa6e]/50 rounded-sm px-3 py-2 text-[#f0e6d2] focus:outline-none focus:border-[#c8aa6e] text-sm font-sans transition-all" placeholder="Üzenet küldése..." onkeypress="handleChatInput(event)">
             </div>
         </div>
     </div>
 
-    <!-- TOAST CONTAINER -->
     <div id="toastContainer" class="fixed bottom-4 right-[360px] z-50 flex flex-col gap-2 pointer-events-none"></div>
 
     <script>
@@ -366,20 +316,20 @@
         socket.on('friend_update', () => { refreshFriendsUI(); });
         socket.on('lobby_invite_received', (data) => { showToast('MEGHÍVÓ', `<span class="font-bold text-[#c8aa6e]">${data.fromUser}</span> lobbiba hívott!`, 'invite', data); });
 
-        // Kliens oldali Limit (Max 10 üzenet) és Névcsoportosítás
+        // Tiszta szöveges (buborék nélküli) renderelés névcsoportosítással
         function appendChatMessage(sender, msg, isSelf, isSystem = false) {
             const list = document.getElementById('chatMessageList');
             
             if (isSystem) {
                 const msgDiv = document.createElement('div');
-                msgDiv.className = 'sys-msg';
+                msgDiv.className = 'text-slate-500 text-[10px] uppercase tracking-widest text-center my-3 pb-2 border-b border-slate-700/50 sys-msg';
                 msgDiv.textContent = `[ ${msg} ]`;
                 list.appendChild(msgDiv);
                 lastSender = null; 
                 return;
             }
 
-            const textClass = `text block w-fit max-w-[90%] rounded-sm px-2.5 py-1.5 mt-1 text-xs break-words ${isSelf ? 'bg-[#1e2328] border border-[#c8aa6e]/30 self-end text-right' : 'bg-[#c8aa6e]/10 border border-[#c8aa6e]/20 self-start text-left'}`;
+            const textClass = `block text-[13px] text-slate-200 mt-0.5 break-words`;
 
             if (sender === lastSender) {
                 const msgDiv = list.lastElementChild;
@@ -395,10 +345,10 @@
                 }
             } else {
                 const msgDiv = document.createElement('div');
-                msgDiv.className = `chat-msg flex flex-col w-full mt-2 ${isSelf ? 'items-end' : 'items-start'}`;
+                msgDiv.className = `flex flex-col w-full mt-3 items-start`;
                 
                 const senderSpan = document.createElement('span');
-                senderSpan.className = 'sender text-[0.65rem] text-[#c8aa6e] font-bold uppercase tracking-widest px-1';
+                senderSpan.className = `text-[11px] font-bold uppercase tracking-wider mb-0.5 ${isSelf ? 'text-[#c8aa6e]' : 'text-emerald-400'}`;
                 senderSpan.textContent = isSelf ? 'Te' : sender;
                 
                 const textSpan = document.createElement('span');
@@ -412,6 +362,7 @@
                 lastSender = sender;
             }
 
+            // Kliens oldali Limit (Max 10 üzenet)
             const allTexts = list.querySelectorAll('.text');
             if (allTexts.length > 10) {
                 const oldestText = allTexts[0];
@@ -471,21 +422,18 @@
             const unreadDot = document.getElementById(`unread_${friendId}`);
             if(unreadDot) unreadDot.classList.add('hidden');
 
-            if (!activeChats.find(c => c.id === friendId)) {
-                activeChats.push({ id: friendId, name: friendName });
-            }
+            if (!activeChats.find(c => c.id === friendId)) { activeChats.push({ id: friendId, name: friendName }); }
             
             currentChatFriendId = friendId;
             document.getElementById('currentChatFriendName').textContent = friendName;
             renderActiveChatsList();
 
             const list = document.getElementById('chatMessageList');
-            list.innerHTML = ''; 
-            lastSender = null;
+            list.innerHTML = ''; lastSender = null;
 
             socket.emit('fetch_private_history', { userId: USER_ID, friendId: friendId }, (res) => {
                 list.innerHTML = ''; 
-                appendChatMessage('SYSTEM', `Titkosítás: Aktív.`, false, true);
+                appendChatMessage('SYSTEM', `Titkosítás: Aktív. Csatorna nyitva.`, false, true);
                 if (res.status === 'success') {
                     res.messages.forEach(m => { appendChatMessage(m.sender_name, m.content, m.sender_id === USER_ID); });
                 }
@@ -518,7 +466,7 @@
 
                 const pendingContainer = document.getElementById('pendingRequestsContainer');
                 if (pendingRequests.length > 0) {
-                    let html = `<div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 px-2 cyber-font">Jelölések (${pendingRequests.length})</div><div class="space-y-1.5">`;
+                    let html = `<div class="text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest mb-2 px-2 cyber-font">Jelölések (${pendingRequests.length})</div><div class="space-y-1.5">`;
                     pendingRequests.forEach(req => {
                         html += `<div class="bg-[#1e2328] border border-blue-500/30 p-2.5 rounded-sm flex justify-between items-center"><span class="text-sm font-bold text-white truncate">${req.friend_name}</span><div class="flex gap-1.5 shrink-0"><button onclick="handleFriendAction('accept', '${req.friend_id}')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[0.65rem] px-2 py-1 rounded-sm">✓</button><button onclick="handleFriendAction('remove', '${req.friend_id}')" class="bg-red-600 hover:bg-red-500 text-white text-[0.65rem] px-2 py-1 rounded-sm">✕</button></div></div>`;
                     });
@@ -526,8 +474,8 @@
                 } else { pendingContainer.innerHTML = ''; pendingContainer.classList.add('hidden'); }
 
                 const acceptedContainer = document.getElementById('acceptedFriendsContainer');
-                let acceptedHtml = `<div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 px-2 cyber-font">Kapcsolatok (${accepted.length})</div><div class="space-y-1">`;
-                if (accepted.length === 0) { acceptedHtml += '<p class="text-slate-600 text-xs italic px-2">Nincs aktív kapcsolat.</p>'; } 
+                let acceptedHtml = `<div class="text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest mb-2 px-2 cyber-font">Kapcsolatok (${accepted.length})</div><div class="space-y-1">`;
+                if (accepted.length === 0) { acceptedHtml += '<p class="text-slate-600 text-[0.7rem] italic px-2 cyber-font">Nincs aktív kapcsolat.</p>'; } 
                 else {
                     accepted.forEach(friend => {
                         acceptedHtml += `
@@ -551,21 +499,11 @@
         function showToast(title, message, type, extraData = null) {
             const toast = document.createElement('div');
             toast.className = `bg-[#091428] border ${type === 'success' ? 'border-[#c8aa6e]' : 'border-red-500'} p-3 rounded-sm shadow-xl min-w-[250px] pointer-events-auto transform transition-all translate-x-full opacity-0 relative overflow-hidden`;
-            
             let actionHtml = '';
-            if (type === 'invite') {
-                actionHtml = `<div class="mt-2 flex gap-2"><button onclick="acceptInvite('${extraData.inviteCode}')" class="flex-1 bg-[#c8aa6e] text-[#010a13] px-2 py-1 text-[0.65rem] font-bold uppercase tracking-widest rounded-sm hover:bg-white transition-colors">Csatlakozás</button></div>`;
-            }
-
-            toast.innerHTML = `
-                <h4 class="text-[${type === 'success' ? '#c8aa6e' : '#fff'}] font-bold text-[0.7rem] tracking-wider uppercase cyber-font">${title}</h4>
-                <p class="text-slate-300 text-[0.65rem] mt-1">${message}</p>
-                ${actionHtml}
-            `;
-
+            if (type === 'invite') { actionHtml = `<div class="mt-2 flex gap-2"><button onclick="acceptInvite('${extraData.inviteCode}')" class="flex-1 bg-[#c8aa6e] text-[#010a13] px-2 py-1 text-[0.65rem] font-bold uppercase tracking-widest rounded-sm hover:bg-white transition-colors">Csatlakozás</button></div>`; }
+            toast.innerHTML = `<h4 class="text-[${type === 'success' ? '#c8aa6e' : '#fff'}] font-bold text-[0.7rem] tracking-wider uppercase cyber-font">${title}</h4><p class="text-slate-300 text-[0.65rem] mt-1">${message}</p>${actionHtml}`;
             document.getElementById('toastContainer').appendChild(toast);
             setTimeout(() => { toast.classList.remove('translate-x-full', 'opacity-0'); }, 50);
-
             if (type !== 'invite') { setTimeout(() => { toast.classList.add('translate-x-full', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, 5000); }
         }
 
@@ -596,7 +534,7 @@
                 const res = await fetch(`/api/friends/search?q=${encodeURIComponent(q)}`); const data = await res.json();
                 const resultsContainer = document.getElementById('searchResults'); resultsContainer.innerHTML = '';
                 if (data.length === 0) { resultsContainer.innerHTML = '<p class="text-[0.6rem] text-slate-500 italic px-2">Nincs találat.</p>'; return; }
-                data.forEach(user => { resultsContainer.innerHTML += `<div id="search-result-${user.id}" class="bg-transparent py-2 flex justify-between items-center border-b border-[#c8aa6e]/20 last:border-0"><div class="flex flex-col"><span class="text-sm font-bold text-white cyber-font">${user.username}</span><span class="text-xs text-[#c8aa6e] font-bold mt-0.5">🏆 ${user.trophies_count}</span></div><button id="addBtn_${user.id}" onclick="sendFriendRequest('${user.id}')" class="bg-[#1e2328] hover:bg-[#c8aa6e] hover:text-[#010a13] border border-[#c8aa6e]/50 text-[#c8aa6e] text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-sm transition-colors">Jelölés</button></div>`; });
+                data.forEach(user => { resultsContainer.innerHTML += `<div id="search-result-${user.id}" class="bg-transparent py-2 flex justify-between items-center border-b border-[#c8aa6e]/20 last:border-0"><div class="flex flex-col"><span class="text-sm font-bold text-white cyber-font">${user.username}</span><span class="text-[0.65rem] text-[#c8aa6e] font-bold mt-0.5">🏆 ${user.trophies_count}</span></div><button id="addBtn_${user.id}" onclick="sendFriendRequest('${user.id}')" class="bg-[#1e2328] hover:bg-[#c8aa6e] hover:text-[#010a13] border border-[#c8aa6e]/50 text-[#c8aa6e] text-[0.65rem] font-bold uppercase tracking-widest px-3 py-1.5 rounded-sm transition-colors">Jelölés</button></div>`; });
             } catch (error) { alert('Hálózat megszakadt.'); }
         }
 
