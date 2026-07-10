@@ -15,38 +15,108 @@
             background-color: #010a13; 
             color: #f0e6d2; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0; padding: 0; overflow: hidden;
+            margin: 0; padding: 0; overflow: hidden; /* Szigorúan nincs oldal-szintű görgetés */
         } 
         .esport-font { font-family: 'Oswald', sans-serif; text-transform: uppercase; }
         .cyber-font { font-family: 'Orbitron', sans-serif; }
         
         .hex-panel {
-            background: linear-gradient(135deg, rgba(9, 20, 40, 0.9) 0%, rgba(1, 10, 19, 0.95) 100%);
+            background: linear-gradient(135deg, #091428 0%, #010a13 100%);
             border: 1px solid rgba(200, 170, 110, 0.3);
             box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
             position: relative;
         }
 
-        /* Görgetősáv styler */
+        .hex-panel-danger {
+            background: linear-gradient(135deg, rgba(40, 9, 20, 0.9) 0%, rgba(19, 1, 10, 0.95) 100%);
+            border: 1px solid rgba(255, 0, 77, 0.3);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+            position: relative;
+        }
+
+        /* Egyéni görgetősáv a belső listákhoz */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(200,170,110,0.3); border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #c8aa6e; }
 
-        /* --- HÁTTÉR ANIMÁCIÓ --- */
+        /* --- COSMIC PORTAL BUTTON --- */
+        .cosmic-portal-btn {
+            --btn-bg: #010a13; --btn-color: #c8aa6e; --btn-highlight: #091428;
+            --portal-color1: #c8aa6e; --portal-color2: #f0e6d2;
+            position: relative; font-family: "Oswald", sans-serif; font-size: 1rem; font-weight: bold;
+            letter-spacing: 0.1em; text-transform: uppercase; color: var(--btn-color); background-color: var(--btn-bg);
+            border: none; padding: 0.6em 1.5em; cursor: pointer; overflow: hidden; transition: all 0.3s ease;
+            clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 90% 100%, 10% 100%, 0% 70%);
+        }
+        .cosmic-portal-btn::before {
+            content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(from 0deg at 50% 50%, var(--portal-color1) 0deg, var(--portal-color2) 120deg, var(--portal-color1) 240deg, var(--portal-color2) 360deg);
+            animation: rotatePortal 4s linear infinite; opacity: 0.4; transition: opacity 0.3s ease;
+        }
+        .cosmic-portal-btn:hover::before { opacity: 1; }
+        .cosmic-portal-btn::after { content: ""; position: absolute; inset: 2px; background-color: var(--btn-bg); clip-path: inherit; z-index: 1; }
+        .cosmic-btn-text { position: relative; z-index: 2; text-shadow: 0 0 10px rgba(200, 170, 110, 0.5); }
+        .portal-effect { position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, var(--btn-highlight), transparent 50%); opacity: 0; transition: opacity 0.3s ease; z-index: 1; }
+        .cosmic-portal-btn:hover .portal-effect { opacity: 1; animation: pulsePortal 2s ease-in-out infinite; }
+        .cosmic-portal-btn:hover { transform: translateY(-2px); filter: drop-shadow(0 5px 10px rgba(200, 170, 110, 0.4)); color: #fff; }
+        .cosmic-portal-btn:active { transform: translateY(0); }
+        @keyframes rotatePortal { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes pulsePortal { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+        /* --- GLITCH BUTTON (For Delete) --- */
+        .glitch-btn, .glitch-btn::after {
+            padding: 10px 30px; font-size: 14px; font-family: "Orbitron", sans-serif; font-weight: bold; border: none; border-radius: 2px;
+            color: #ff004d; background-color: transparent; position: relative; width: 100%; cursor: pointer;
+            border: 1px solid #ff004d; text-transform: uppercase; letter-spacing: 2px; transition: all 0.3s ease; display: block;
+        }
+        .glitch-btn::after {
+            --move1: inset(50% 50% 50% 50%); --move2: inset(31% 0 40% 0); --move3: inset(39% 0 15% 0); --move4: inset(45% 0 40% 0); --move5: inset(45% 0 6% 0); --move6: inset(14% 0 61% 0);
+            clip-path: var(--move1); content: attr(data-text); position: absolute; top: -1px; left: -1px; right: -1px; bottom: -1px; display: block; border: none;
+        }
+        .glitch-btn:hover::after {
+            animation: glitch_4011 1s; animation-timing-function: steps(2, end);
+            text-shadow: -3px -3px 0px #00e5ff, 3px 3px 0px #ff004d; background-color: transparent; border: 3px solid #00e5ff;
+        }
+        .glitch-btn:hover { text-shadow: -1px -1px 0px #00e5ff, 1px 1px 0px #ff004d; background-color: rgba(255, 0, 77, 0.1); border: 1px solid #00e5ff; box-shadow: 0px 10px 15px -10px #00e5ff; color: #fff; }
+        @keyframes glitch_4011 { 0% { clip-path: var(--move1); transform: translate(0px,-10px); } 10% { clip-path: var(--move2); transform: translate(-10px,10px); } 20% { clip-path: var(--move3); transform: translate(10px,0px); } 30% { clip-path: var(--move4); transform: translate(-10px,10px); } 40% { clip-path: var(--move5); transform: translate(10px,-10px); } 50% { clip-path: var(--move6); transform: translate(-10px,10px); } 60% { clip-path: var(--move1); transform: translate(10px,-10px); } 70% { clip-path: var(--move3); transform: translate(-10px,10px); } 80% { clip-path: var(--move2); transform: translate(10px,-10px); } 90% { clip-path: var(--move4); transform: translate(-10px,10px); } 100% { clip-path: var(--move1); transform: translate(0); } }
+
+        /* --- ANIMATED EXPANDING BUTTONS (Sidebar) --- */
+        .action-btn-container { display: flex; gap: 15px; justify-content: center; align-items: center; width: 100%; }
+        
+        .logout-btn {
+            display: flex; align-items: center; justify-content: flex-start;
+            width: 40px; height: 40px; border: none; border-radius: 50%; cursor: pointer; position: relative; overflow: hidden;
+            transition-duration: .3s; box-shadow: 0 0 10px rgba(255, 0, 77, 0.2); background-color: #ff004d; z-index: 10;
+        }
+        .logout-sign { width: 100%; transition-duration: .3s; display: flex; align-items: center; justify-content: center; }
+        .logout-sign svg { width: 14px; fill: white; }
+        .logout-text { position: absolute; right: 0%; width: 0%; opacity: 0; color: white; font-size: 11px; font-weight: 700; transition-duration: .3s; text-transform: uppercase; font-family: 'Orbitron', sans-serif;}
+        .logout-btn:hover { width: 110px; border-radius: 20px; transition-duration: .3s; box-shadow: 0 0 15px rgba(255, 0, 77, 0.5); }
+        .logout-btn:hover .logout-sign { width: 30%; transition-duration: .3s; padding-left: 10px; }
+        .logout-btn:hover .logout-text { opacity: 1; width: 70%; transition-duration: .3s; padding-right: 10px; }
+        .logout-btn:active { transform: translate(2px ,2px); }
+
+        .settings-btn {
+            display: flex; align-items: center; justify-content: flex-start;
+            width: 40px; height: 40px; border: 1px solid #c8aa6e; border-radius: 50%; cursor: pointer; position: relative; overflow: hidden;
+            transition-duration: .3s; box-shadow: 0 0 10px rgba(200, 170, 110, 0.1); background-color: #1e2328; z-index: 10;
+        }
+        .settings-sign { width: 100%; transition-duration: .3s; display: flex; align-items: center; justify-content: center; color: #c8aa6e; }
+        .settings-sign svg { width: 14px; }
+        .settings-text { position: absolute; right: 0%; width: 0%; opacity: 0; color: #010a13; font-size: 11px; font-weight: 700; transition-duration: .3s; text-transform: uppercase; font-family: 'Orbitron', sans-serif;}
+        .settings-btn:hover { width: 110px; border-radius: 20px; transition-duration: .3s; background-color: #c8aa6e; box-shadow: 0 0 15px rgba(200, 170, 110, 0.4); }
+        .settings-btn:hover .settings-sign { width: 30%; transition-duration: .3s; padding-left: 10px; color: #010a13; }
+        .settings-btn:hover .settings-text { opacity: 1; width: 70%; transition-duration: .3s; padding-right: 10px; }
+        .settings-btn:active { transform: translate(2px ,2px); }
+
+        /* --- HÁTTÉR CSILLAGOK --- */
         .star-container { background: radial-gradient(ellipse at bottom, #091428 0%, #010a13 100%); position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
         #stars, #stars2, #stars3 { background: transparent; }
         #stars { width: 1px; height: 1px; box-shadow: 501px 811px #c8aa6e, 1450px 1324px #fff, 1093px 1780px #fff, 1469px 678px #c8aa6e, 904px 741px #fff, 1160px 781px #fff, 1841px 1962px #fff, 1630px 1667px #fff, 1788px 676px #fff, 367px 1734px #fff, 1343px 156px #fff, 1283px 1142px #fff, 1062px 378px #fff, 1395px 467px #fff, 1017px 1891px #fff, 137px 1114px #fff, 1767px 1403px #fff, 1543px 11px #fff, 1078px 181px #fff, 1189px 1574px #fff, 1697px 1551px #fff, 439px 472px #fff, 1491px 677px #fff, 1364px 599px #fff, 34px 382px #fff, 1221px 1584px #c8aa6e, 1266px 1499px #fff, 169px 1907px #fff, 1219px 1125px #fff, 659px 18px #fff, 1731px 1959px #fff, 332px 1216px #fff, 1913px 788px #fff, 80px 712px #fff, 326px 1605px #fff, 574px 1502px #fff, 473px 1653px #fff, 404px 975px #fff, 322px 1797px #fff, 425px 1321px #fff, 1121px 1797px #fff, 731px 647px #fff, 891px 1584px #fff, 1523px 109px #fff, 1379px 244px #fff, 865px 1064px #fff, 493px 956px #fff, 624px 1380px #fff, 440px 619px #fff, 1630px 767px #fff; animation: animStar 50s linear infinite; }
         #stars2 { width: 2px; height: 2px; box-shadow: 1925px 1320px #fff, 693px 1778px #fff, 1016px 711px #c8aa6e, 1171px 563px #fff, 661px 1919px #fff, 1610px 44px #fff, 1275px 140px #fff, 1208px 1802px #fff, 1473px 1587px #fff, 11px 1117px #fff, 853px 1757px #fff, 1149px 937px #fff, 1353px 428px #fff, 270px 279px #fff, 258px 1404px #fff, 417px 1188px #fff, 286px 561px #fff, 393px 1765px #fff, 147px 881px #fff, 666px 1097px #fff, 1425px 1278px #fff, 806px 156px #c8aa6e, 1252px 561px #fff, 218px 52px #fff, 1371px 1980px #fff, 171px 745px #fff, 1424px 89px #fff, 137px 244px #fff, 939px 1922px #fff, 137px 1080px #fff, 1757px 50px #fff, 904px 536px #fff, 1938px 1001px #fff, 1172px 440px #fff, 72px 1475px #fff, 102px 121px #fff, 804px 1671px #fff, 1314px 270px #fff, 440px 1341px #fff, 1216px 511px #fff; animation: animStar 100s linear infinite; }
         #stars3 { width: 3px; height: 3px; box-shadow: 200px 981px #fff, 1731px 521px #fff, 132px 1039px #fff, 1888px 1547px #c8aa6e, 899px 1226px #fff, 1887px 580px #fff, 1548px 1092px #fff, 1626px 689px #fff, 254px 1072px #fff, 1684px 1211px #fff, 672px 1267px #fff, 939px 668px #fff, 1969px 645px #fff, 1126px 983px #fff, 457px 568px #fff, 476px 876px #fff, 829px 1896px #fff, 1364px 1846px #fff, 1507px 1120px #fff, 936px 1948px #fff, 1833px 832px #fff, 1424px 285px #fff, 1377px 1596px #fff, 432px 153px #fff, 1348px 1410px #fff, 1529px 954px #c8aa6e, 1102px 387px #fff, 264px 297px #fff, 811px 977px #fff, 1931px 673px #fff, 1734px 978px #fff; animation: animStar 150s linear infinite; }
         @keyframes animStar { from { transform: translateY(0px); } to { transform: translateY(-2000px); } }
-
-        /* --- CYBER NEON SVG PATH (Background effect) --- */
-        .neon-svg-container { position: absolute; top: -50px; left: 50%; transform: translateX(-50%); width: 100%; height: 200px; pointer-events: none; z-index: 0; opacity: 0.3; display: flex; justify-content: center; align-items: center; }
-        .neon-svg { position: absolute; width: 400px; fill: none; }
-        .neon-svg:nth-child(2) { filter: blur(40px); }
-        .neon-svg path { d: path("M0,25 C150,110 150, -60 300,25"); stroke: #c8aa6e; stroke-width: 25; stroke-linecap: round; transform: translate(50px,50%); animation: svgAnimate 3s ease-in-out infinite alternate; }
-        @keyframes svgAnimate { 0% { stroke: #c8aa6e; d: path("M0,25 C150,110 150, -60 300,25"); } 50% { stroke: #f0e6d2; d: path("M0,25 C160,-50 140, 110 300,25"); } 100% { stroke: #c8aa6e; d: path("M0,25 C140,100 160, -40 300,25"); } }
 
         /* --- HOLO INPUT DESIGN --- */
         .input-group-wrapper { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 2rem; width: 100%; position: relative; }
@@ -106,7 +176,7 @@
         @keyframes scan-animation { 0% { top: 0; opacity: 0; } 10%, 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
         @keyframes data-pulse { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.8); } }
 
-        .password-toggle-btn { position: absolute; right: 20px; top: 15px; z-index: 20; color: rgba(200,170,110,0.5); cursor: pointer; transition: color 0.3s; }
+        .password-toggle-btn { position: absolute; right: 25px; top: 15px; z-index: 20; color: rgba(200,170,110,0.5); cursor: pointer; transition: color 0.3s; }
         .password-toggle-btn:hover { color: #c8aa6e; }
 
         /* --- TOOLTIP DESIGN --- */
@@ -132,47 +202,6 @@
         .item-hints .hint-content::after { content: ""; position: absolute; height: 1px; background: #f0e6d2; right: -10px; bottom: 50%; transform-origin: right; transform: rotate(-45deg); width: 0; transition: width 0.4s ease; }
         .item-hints .hint:hover .hint-content::after { width: 15px; }
 
-        /* --- COSMIC PORTAL BUTTON --- */
-        .cosmic-portal-btn {
-            --btn-bg: #010a13; --btn-color: #c8aa6e; --btn-highlight: #091428;
-            --portal-color1: #c8aa6e; --portal-color2: #f0e6d2;
-            position: relative; font-family: "Oswald", sans-serif; font-size: 1em; font-weight: bold;
-            letter-spacing: 0.1em; text-transform: uppercase; color: var(--btn-color); background-color: var(--btn-bg);
-            border: none; padding: 0.8em 1.5em; cursor: pointer; overflow: hidden; transition: all 0.3s ease;
-            clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 90% 100%, 10% 100%, 0% 70%); width: 100%; display: block; text-align: center;
-        }
-        .cosmic-portal-btn::before {
-            content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: conic-gradient(from 0deg at 50% 50%, var(--portal-color1) 0deg, var(--portal-color2) 120deg, var(--portal-color1) 240deg, var(--portal-color2) 360deg);
-            animation: rotatePortal 4s linear infinite; opacity: 0.4; transition: opacity 0.3s ease;
-        }
-        .cosmic-portal-btn:hover::before { opacity: 1; }
-        .cosmic-portal-btn::after { content: ""; position: absolute; inset: 2px; background-color: var(--btn-bg); clip-path: inherit; z-index: 1; }
-        .cosmic-btn-text { position: relative; z-index: 2; text-shadow: 0 0 10px rgba(200, 170, 110, 0.5); }
-        .portal-effect { position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, var(--btn-highlight), transparent 50%); opacity: 0; transition: opacity 0.3s ease; z-index: 1; }
-        .cosmic-portal-btn:hover .portal-effect { opacity: 1; animation: pulsePortal 2s ease-in-out infinite; }
-        .cosmic-portal-btn:hover { transform: translateY(-2px); filter: drop-shadow(0 5px 10px rgba(200, 170, 110, 0.4)); color: #fff; }
-        .cosmic-portal-btn:active { transform: translateY(0); }
-        @keyframes rotatePortal { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes pulsePortal { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-
-        /* --- GLITCH BUTTON (For Delete) --- */
-        .glitch-btn, .glitch-btn::after {
-            padding: 10px 30px; font-size: 14px; font-family: "Orbitron", sans-serif; font-weight: bold; border: none; border-radius: 2px;
-            color: #ff004d; background-color: transparent; position: relative; width: 100%; cursor: pointer;
-            border: 1px solid #ff004d; text-transform: uppercase; letter-spacing: 2px; transition: all 0.3s ease; display: block;
-        }
-        .glitch-btn::after {
-            --move1: inset(50% 50% 50% 50%); --move2: inset(31% 0 40% 0); --move3: inset(39% 0 15% 0); --move4: inset(45% 0 40% 0); --move5: inset(45% 0 6% 0); --move6: inset(14% 0 61% 0);
-            clip-path: var(--move1); content: attr(data-text); position: absolute; top: -1px; left: -1px; right: -1px; bottom: -1px; display: block; border: none;
-        }
-        .glitch-btn:hover::after {
-            animation: glitch_4011 1s; animation-timing-function: steps(2, end);
-            text-shadow: -3px -3px 0px #00e5ff, 3px 3px 0px #ff004d; background-color: transparent; border: 3px solid #00e5ff;
-        }
-        .glitch-btn:hover { text-shadow: -1px -1px 0px #00e5ff, 1px 1px 0px #ff004d; background-color: rgba(255, 0, 77, 0.1); border: 1px solid #00e5ff; box-shadow: 0px 10px 15px -10px #00e5ff; color: #fff; }
-        @keyframes glitch_4011 { 0% { clip-path: var(--move1); transform: translate(0px,-10px); } 10% { clip-path: var(--move2); transform: translate(-10px,10px); } 20% { clip-path: var(--move3); transform: translate(10px,0px); } 30% { clip-path: var(--move4); transform: translate(-10px,10px); } 40% { clip-path: var(--move5); transform: translate(10px,-10px); } 50% { clip-path: var(--move6); transform: translate(-10px,10px); } 60% { clip-path: var(--move1); transform: translate(10px,-10px); } 70% { clip-path: var(--move3); transform: translate(-10px,10px); } 80% { clip-path: var(--move2); transform: translate(10px,-10px); } 90% { clip-path: var(--move4); transform: translate(-10px,10px); } 100% { clip-path: var(--move1); transform: translate(0); } }
-
         /* --- GLITCH ALERT BOX --- */
         .glitch-alert {
             position: relative; border: 1px solid #ff004d; background: rgba(20,0,0,0.85); color: #ff004d;
@@ -184,16 +213,7 @@
         .glitch-alert.success { color: #c8aa6e; border-color: #c8aa6e; background: rgba(9,20,40,0.85); box-shadow: 0 0 15px rgba(200,170,110,0.4), inset 0 0 10px rgba(200,170,110,0.2); animation: none; }
         @keyframes alert-glitch { 0% { transform: translate(0); } 20% { transform: translate(-2px, 1px); } 40% { transform: translate(-1px, -1px); } 60% { transform: translate(2px, 1px); } 80% { transform: translate(1px, -1px); } 100% { transform: translate(0); } }
 
-        /* --- SOCIAL PANEL (RIGHT) --- */
-        .social-panel { width: 340px; background: #091428; border-left: 1px solid rgba(200, 170, 110, 0.4); display: flex; flex-direction: column; height: 100%; z-index: 20; box-shadow: -10px 0 30px rgba(0,0,0,0.5); flex-shrink: 0; }
-        .social-header { padding: 1.25rem; border-bottom: 1px solid rgba(200, 170, 110, 0.3); background: #010a13; display: flex; flex-direction: column; gap: 1rem; flex-shrink: 0; }
-        
-        .settings-btn { display: flex; align-items: center; justify-content: center; gap: 6px; background: rgba(200, 170, 110, 0.1); border: 1px solid rgba(200, 170, 110, 0.5); padding: 6px 12px; border-radius: 2px; color: #c8aa6e; font-family: 'Orbitron', sans-serif; font-size: 9px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 0 10px rgba(200, 170, 110, 0.1); flex: 1; }
-        .settings-btn:hover { background: rgba(200, 170, 110, 0.2); box-shadow: 0 0 15px rgba(200, 170, 110, 0.4); color: #fff; transform: translateY(-2px); }
-        
-        .logout-btn { display: flex; align-items: center; justify-content: center; gap: 6px; background: rgba(255, 0, 77, 0.1); border: 1px solid rgba(255, 0, 77, 0.5); padding: 6px 12px; border-radius: 2px; color: #ff004d; font-family: 'Orbitron', sans-serif; font-size: 9px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 0 10px rgba(255, 0, 77, 0.1); flex: 1; }
-        .logout-btn:hover { background: rgba(255, 0, 77, 0.2); box-shadow: 0 0 15px rgba(255, 0, 77, 0.4); color: #fff; transform: translateY(-2px); }
-
+        /* --- CHAT OVERLAY --- */
         .chat-overlay { position: fixed; bottom: 0; right: 350px; width: 600px; height: 400px; background: #010a13; border-top: 1px solid rgba(200, 170, 110, 0.4); border-left: 1px solid rgba(200, 170, 110, 0.4); border-right: 1px solid rgba(200, 170, 110, 0.4); display: flex; z-index: 50; border-top-left-radius: 6px; border-top-right-radius: 6px; box-shadow: 0 0 30px rgba(0,0,0,0.8); }
         .chat-msg { display: flex; flex-direction: column; margin-bottom: 4px; }
         .chat-msg .sender { color: #c8aa6e; font-weight: bold; margin-bottom: 2px; font-size: 11px; }
@@ -206,34 +226,35 @@
 </head>
 <body class="h-screen w-full flex overflow-hidden bg-[#010a13]">
 
-    <!-- HÁTTÉR ANIMÁCIÓ -->
+    <!-- HÁTTÉR ANIMÁCIÓ (MAP NÉLKÜL) -->
     <div class="star-container">
-        <div id="stars"></div><div id="stars2"></div><div id="stars3"></div>
+        <div id="stars"></div>
+        <div id="stars2"></div>
+        <div id="stars3"></div>
     </div>
 
-    <!-- MAIN CONTENT (Bal oldal, beállítások) -->
-    <div class="flex-1 flex flex-col h-full p-4 md:p-6 lg:p-8 gap-4 overflow-y-auto relative z-10 bg-[url('/map.png')] bg-cover bg-center bg-no-repeat bg-fixed">
-        <div class="absolute inset-0 bg-[#010a13]/80 z-0 pointer-events-none"></div>
-
-        <div class="max-w-[800px] w-full mx-auto relative z-10 flex flex-col gap-6">
-            
-            <div class="text-center md:text-left border-b border-[#c8aa6e]/30 pb-4 shrink-0">
-                <h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-wider esport-font drop-shadow-[0_0_8px_rgba(200,170,110,0.3)]">Fiók Beállításai</h1>
-                <p class="text-slate-400 uppercase tracking-widest text-xs font-bold cyber-font mt-1">Rendszer adatok és biztonság</p>
+    <!-- MAIN CONTENT (Bal oldal) -->
+    <div class="flex-1 flex flex-col h-full p-6 lg:p-8 gap-6 overflow-y-auto relative z-10">
+        
+        <!-- HEADER SÁV -->
+        <div class="flex flex-col sm:flex-row justify-between items-center border-b border-[#c8aa6e]/30 pb-4 shrink-0">
+            <div>
+                <h1 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-wider esport-font drop-shadow-[0_0_8px_rgba(200,170,110,0.3)]">LoL Worlds Mayhem</h1>
+                <p class="text-slate-400 uppercase tracking-widest text-[0.7rem] font-bold cyber-font mt-1">Fiók Beállításai</p>
             </div>
+        </div>
 
+        <div class="max-w-[1200px] w-full mx-auto flex flex-col gap-8 flex-1">
             <div id="alertBox" class="glitch-alert"></div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- BAL OSZLOP: Alapadatok és Törlés -->
-                <div class="flex flex-col gap-6">
-                    <div class="hex-panel p-6 rounded-sm">
-                        <div class="neon-svg-container">
-                            <svg class="neon-svg" viewBox="0 0 400 100"><path/></svg>
-                        </div>
-                        <h2 class="text-sm font-bold text-[#c8aa6e] uppercase tracking-widest border-b border-[#c8aa6e]/30 pb-2 mb-6 cyber-font">Alapadatok</h2>
+                <div class="flex flex-col gap-8">
+                    <!-- READONLY ALAPADATOK -->
+                    <div class="hex-panel p-8 rounded-sm shrink-0">
+                        <h2 class="text-sm font-bold text-[#c8aa6e] uppercase tracking-widest border-b border-[#c8aa6e]/30 pb-2 mb-8 cyber-font">Alapadatok</h2>
                         
-                        <div class="space-y-6">
+                        <div class="space-y-8">
                             <div class="input-group-wrapper !mb-0">
                                 <div class="input-container">
                                     <div class="input-field-container">
@@ -258,18 +279,18 @@
                         </div>
                     </div>
 
-                    <!-- FIÓK MEGSZÜNTETÉSE -->
-                    <div class="hex-panel border-[#ff004d]/40 p-6 rounded-sm text-center">
-                        <h2 class="text-sm font-bold text-[#ff004d] uppercase tracking-widest mb-2 cyber-font">Fiók Megszüntetése</h2>
-                        <p class="text-slate-400 text-[0.65rem] mb-6">A fiók és minden hozzá tartozó adat végleges törlése.</p>
+                    <!-- FIÓK MEGSZÜNTETÉSE (Veszélyzóna stílusban, de normális címmel) -->
+                    <div class="hex-panel-danger p-8 rounded-sm text-center shrink-0">
+                        <h2 class="text-lg font-bold text-[#ff004d] uppercase tracking-widest mb-3 cyber-font">Fiók Megszüntetése</h2>
+                        <p class="text-slate-400 text-xs mb-8">A fiók és minden hozzá tartozó adat végleges törlése.</p>
                         <button onclick="deleteProfile()" class="glitch-btn" data-text="Fiók Törlése">Fiók Törlése</button>
                     </div>
                 </div>
 
                 <!-- JOBB OSZLOP: Jelszó módosítás -->
-                <div class="hex-panel p-6 rounded-sm h-fit">
+                <div class="hex-panel p-8 rounded-sm h-fit">
                     <form id="changePasswordForm">
-                        <h2 class="text-sm font-bold text-[#c8aa6e] uppercase tracking-widest border-b border-[#c8aa6e]/30 pb-2 mb-6 cyber-font">Jelszó Módosítása</h2>
+                        <h2 class="text-sm font-bold text-[#c8aa6e] uppercase tracking-widest border-b border-[#c8aa6e]/30 pb-2 mb-8 cyber-font text-center">Jelszó Módosítása</h2>
                         
                         <div class="input-group-wrapper">
                             <div class="input-container">
@@ -278,7 +299,7 @@
                                     <svg id="eyePass0" onclick="toggleVisibility('currentPassword', 'eyePass0')" class="w-4 h-4 password-toggle-btn" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                                     <div class="input-border"></div><div class="holo-scan-line"></div><div class="input-glow"></div><div class="input-active-indicator"></div>
                                     <div class="input-label">Jelenlegi jelszó</div>
-                                    <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div></div>
+                                    <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div><div class="data-segment" style="--index: 4;"></div></div>
                                     <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
                                     <div class="power-indicator"></div>
                                 </div>
@@ -293,7 +314,7 @@
                                     <svg id="eyePass1" onclick="toggleVisibility('newPassword', 'eyePass1')" class="w-4 h-4 password-toggle-btn" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                                     <div class="input-border"></div><div class="holo-scan-line"></div><div class="input-glow"></div><div class="input-active-indicator"></div>
                                     <div class="input-label">Új jelszó</div>
-                                    <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div></div>
+                                    <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div><div class="data-segment" style="--index: 4;"></div></div>
                                     <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
                                     <div class="power-indicator"></div>
                                 </div>
@@ -308,7 +329,7 @@
                                     <svg id="eyePass2" onclick="toggleVisibility('confirmNewPassword', 'eyePass2')" class="w-4 h-4 password-toggle-btn" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                                     <div class="input-border"></div><div class="holo-scan-line"></div><div class="input-glow"></div><div class="input-active-indicator"></div>
                                     <div class="input-label">Jelszó megerősítése</div>
-                                    <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div></div>
+                                    <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div><div class="data-segment" style="--index: 4;"></div></div>
                                     <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
                                     <div class="power-indicator"></div>
                                 </div>
@@ -328,26 +349,29 @@
     </div>
 
     <!-- RIGHT SIDEBAR (Social Panel) -->
-    <div class="social-panel">
-        <div class="social-header">
+    <div class="w-[340px] bg-[#091428] border-l border-[#c8aa6e]/40 flex flex-col h-full z-20 shadow-[-10px_0_30px_rgba(0,0,0,0.5)] shrink-0 relative">
+        
+        <!-- Profile Header -->
+        <div class="p-6 border-b border-[#c8aa6e]/30 bg-[#010a13] flex flex-col gap-5 shrink-0">
             <div class="flex items-center gap-4">
                 <div class="relative shrink-0">
-                    <img src="https://ui-avatars.com/api/?name=<%= typeof username !== 'undefined' ? username : 'User' %>&background=091428&color=c8aa6e&bold=true" class="w-14 h-14 rounded-sm border-2 border-[#c8aa6e]/50">
+                    <img src="https://ui-avatars.com/api/?name=<%= typeof username !== 'undefined' ? username : 'User' %>&background=091428&color=c8aa6e&bold=true" class="w-16 h-16 rounded-sm border-2 border-[#c8aa6e]/50 shadow-[0_0_10px_rgba(200,170,110,0.2)]">
                     <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-[#010a13]"></div>
                 </div>
                 <div class="min-w-0">
-                    <div class="font-bold text-base text-white cyber-font truncate"><%= typeof username !== 'undefined' ? username : 'User' %></div>
+                    <div class="font-bold text-lg text-white cyber-font truncate"><%= typeof username !== 'undefined' ? username : 'User' %></div>
                     <div class="text-sm text-[#c8aa6e] font-black tracking-widest mt-1">🏆 <%= typeof trophies !== 'undefined' ? trophies : 0 %> Trófea</div>
                 </div>
             </div>
-            <div class="flex gap-2">
-                <button onclick="window.location.href='/dashboard'" class="settings-btn">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                    Központ
+            
+            <div class="action-btn-container">
+                <button onclick="window.location.href='/dashboard'" class="settings-btn" title="Központ">
+                    <div class="settings-sign"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg></div>
+                    <div class="settings-text">Központ</div>
                 </button>
-                <button onclick="logout()" class="logout-btn">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                    Kilépés
+                <button onclick="logout()" class="logout-btn" title="Kilépés">
+                    <div class="logout-sign"><svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z" /></svg></div>
+                    <div class="logout-text">Kilépés</div>
                 </button>
             </div>
         </div>
@@ -419,9 +443,10 @@
     <!-- FLOATING CHAT OVERLAY -->
     <div id="chatOverlay" class="chat-overlay hidden">
         <div class="w-1/3 border-r border-[#c8aa6e]/30 bg-[#091428] flex flex-col">
-            <div class="p-3 border-b border-[#c8aa6e]/30 text-[#c8aa6e] text-xs font-bold uppercase tracking-widest bg-[#1e2328] cyber-font text-center">Nyitott Csatornák</div>
+            <div class="p-3 border-b border-[#c8aa6e]/30 text-[#c8aa6e] text-xs font-bold uppercase tracking-widest bg-[#1e2328] cyber-font text-center shrink-0">Nyitott Csatornák</div>
             <div id="activeChatSessionsList" class="flex-1 overflow-y-auto bg-[#010a13]"></div>
         </div>
+        
         <div class="w-2/3 flex flex-col relative">
             <div class="p-3 border-b border-[#c8aa6e]/30 bg-[#1e2328] flex justify-between items-center shrink-0">
                 <div class="flex items-center gap-2">
@@ -430,7 +455,9 @@
                 </div>
                 <button onclick="toggleChatOverlay()" class="text-slate-400 hover:text-[#c8aa6e] text-lg font-bold">✕</button>
             </div>
+            
             <div id="chatMessageList" class="flex-1 overflow-y-auto p-4 flex flex-col bg-gradient-to-b from-[#010a13] to-[#091428] gap-1"></div>
+            
             <div class="p-3 border-t border-[#c8aa6e]/30 bg-[#091428] shrink-0">
                 <input type="text" id="chatInputField" class="w-full bg-[#010a13] border border-[#c8aa6e]/50 rounded-sm px-3 py-2 text-[#f0e6d2] focus:outline-none focus:border-[#c8aa6e] focus:shadow-[0_0_8px_rgba(200,170,110,0.3)] text-sm font-sans transition-all" placeholder="Üzenet küldése..." onkeypress="handleChatInput(event)">
             </div>
