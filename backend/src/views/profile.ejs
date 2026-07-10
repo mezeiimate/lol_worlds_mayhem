@@ -9,7 +9,7 @@
     <script src="/socket.io/socket.io.js"></script>
     <style> 
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap');
 
         body, html { 
             height: 100%; width: 100%; margin: 0; padding: 0; overflow: hidden;
@@ -21,7 +21,7 @@
         .cyber-font { font-family: 'Orbitron', sans-serif; }
 
         .hex-panel {
-            background: linear-gradient(135deg, #091428 0%, #010a13 100%);
+            background: linear-gradient(135deg, rgba(9, 20, 40, 0.9) 0%, rgba(1, 10, 19, 0.95) 100%);
             border: 1px solid rgba(200, 170, 110, 0.3);
             box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
             position: relative;
@@ -81,35 +81,6 @@
         .glitch-btn:hover { text-shadow: -1px -1px 0px #00e5ff, 1px 1px 0px #ff004d; background-color: rgba(255, 0, 77, 0.1); border: 1px solid #00e5ff; box-shadow: 0px 10px 15px -10px #00e5ff; color: #fff; }
         @keyframes glitch_4011 { 0% { clip-path: var(--move1); transform: translate(0px,-10px); } 10% { clip-path: var(--move2); transform: translate(-10px,10px); } 20% { clip-path: var(--move3); transform: translate(10px,0px); } 30% { clip-path: var(--move4); transform: translate(-10px,10px); } 40% { clip-path: var(--move5); transform: translate(10px,-10px); } 50% { clip-path: var(--move6); transform: translate(-10px,10px); } 60% { clip-path: var(--move1); transform: translate(10px,-10px); } 70% { clip-path: var(--move3); transform: translate(-10px,10px); } 80% { clip-path: var(--move2); transform: translate(10px,-10px); } 90% { clip-path: var(--move4); transform: translate(-10px,10px); } 100% { clip-path: var(--move1); transform: translate(0); } }
 
-        /* --- ANIMATED EXPANDING BUTTONS (Sidebar) --- */
-        .action-btn-container { display: flex; gap: 15px; justify-content: center; align-items: center; width: 100%; }
-        
-        .logout-btn {
-            display: flex; align-items: center; justify-content: flex-start;
-            width: 40px; height: 40px; border: none; border-radius: 50%; cursor: pointer; position: relative; overflow: hidden;
-            transition-duration: .3s; box-shadow: 0 0 10px rgba(255, 0, 77, 0.2); background-color: #ff004d; z-index: 10;
-        }
-        .logout-sign { width: 100%; transition-duration: .3s; display: flex; align-items: center; justify-content: center; }
-        .logout-sign svg { width: 14px; fill: white; }
-        .logout-text { position: absolute; right: 0%; width: 0%; opacity: 0; color: white; font-size: 11px; font-weight: 700; transition-duration: .3s; text-transform: uppercase; font-family: 'Orbitron', sans-serif;}
-        .logout-btn:hover { width: 110px; border-radius: 20px; transition-duration: .3s; box-shadow: 0 0 15px rgba(255, 0, 77, 0.5); }
-        .logout-btn:hover .logout-sign { width: 30%; transition-duration: .3s; padding-left: 10px; }
-        .logout-btn:hover .logout-text { opacity: 1; width: 70%; transition-duration: .3s; padding-right: 10px; }
-        .logout-btn:active { transform: translate(2px ,2px); }
-
-        .settings-btn {
-            display: flex; align-items: center; justify-content: flex-start;
-            width: 40px; height: 40px; border: 1px solid #c8aa6e; border-radius: 50%; cursor: pointer; position: relative; overflow: hidden;
-            transition-duration: .3s; box-shadow: 0 0 10px rgba(200, 170, 110, 0.1); background-color: #1e2328; z-index: 10;
-        }
-        .settings-sign { width: 100%; transition-duration: .3s; display: flex; align-items: center; justify-content: center; color: #c8aa6e; }
-        .settings-sign svg { width: 14px; }
-        .settings-text { position: absolute; right: 0%; width: 0%; opacity: 0; color: #010a13; font-size: 11px; font-weight: 700; transition-duration: .3s; text-transform: uppercase; font-family: 'Orbitron', sans-serif;}
-        .settings-btn:hover { width: 110px; border-radius: 20px; transition-duration: .3s; background-color: #c8aa6e; box-shadow: 0 0 15px rgba(200, 170, 110, 0.4); }
-        .settings-btn:hover .settings-sign { width: 30%; transition-duration: .3s; padding-left: 10px; color: #010a13; }
-        .settings-btn:hover .settings-text { opacity: 1; width: 70%; transition-duration: .3s; padding-right: 10px; }
-        .settings-btn:active { transform: translate(2px ,2px); }
-
         /* --- HÁTTÉR CSILLAGOK --- */
         .star-container { background: radial-gradient(ellipse at bottom, #091428 0%, #010a13 100%); position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
         #stars, #stars2, #stars3 { background: transparent; }
@@ -118,7 +89,7 @@
         #stars3 { width: 3px; height: 3px; box-shadow: 200px 981px #fff, 1731px 521px #fff, 132px 1039px #fff, 1888px 1547px #c8aa6e, 899px 1226px #fff, 1887px 580px #fff, 1548px 1092px #fff, 1626px 689px #fff, 254px 1072px #fff, 1684px 1211px #fff, 672px 1267px #fff, 939px 668px #fff, 1969px 645px #fff, 1126px 983px #fff, 457px 568px #fff, 476px 876px #fff, 829px 1896px #fff, 1364px 1846px #fff, 1507px 1120px #fff, 936px 1948px #fff, 1833px 832px #fff, 1424px 285px #fff, 1377px 1596px #fff, 432px 153px #fff, 1348px 1410px #fff, 1529px 954px #c8aa6e, 1102px 387px #fff, 264px 297px #fff, 811px 977px #fff, 1931px 673px #fff, 1734px 978px #fff; animation: animStar 150s linear infinite; }
         @keyframes animStar { from { transform: translateY(0px); } to { transform: translateY(-2000px); } }
 
-        /* --- CYBER NEON SVG PATH (Background effect) --- */
+        /* --- CYBER NEON SVG PATH --- */
         .neon-svg-container { position: absolute; top: -30px; left: 50%; transform: translateX(-50%); width: 100%; height: 180px; pointer-events: none; z-index: 0; opacity: 0.3; display: flex; justify-content: center; align-items: center; }
         .neon-svg { position: absolute; width: 350px; fill: none; }
         .neon-svg:nth-child(2) { filter: blur(40px); }
@@ -185,6 +156,29 @@
         .password-toggle-btn { position: absolute; right: 20px; top: 13px; z-index: 20; color: rgba(200,170,110,0.5); cursor: pointer; transition: color 0.3s; }
         .password-toggle-btn:hover { color: #c8aa6e; }
 
+        /* --- TOOLTIP DESIGN --- */
+        .item-hints { display: flex; align-items: center; justify-content: center; z-index: 20; position: relative; margin-top: 15px; }
+        .item-hints .hint { position: relative; display: flex; justify-content: center; align-items: center; }
+        .item-hints .hint-dot {
+            width: 22px; height: 22px; border: 1px solid rgba(200,170,110,0.4); border-radius: 50%;
+            color: #c8aa6e; display: flex; align-items: center; justify-content: center;
+            font-weight: 900; cursor: help; font-size: 11px; transition: all 0.3s ease; font-family: 'Oswald', sans-serif;
+            box-shadow: inset 0 0 5px rgba(200,170,110,0.2); background: rgba(1,10,19,0.5);
+        }
+        .item-hints .hint:hover .hint-dot { background-color: rgba(200,170,110,0.2); border-color: #c8aa6e; box-shadow: 0 0 10px rgba(200,170,110,0.5); }
+        .item-hints .hint-content {
+            position: absolute; right: 35px; bottom: 50%; transform: translateY(50%); width: 220px;
+            background: rgba(9, 20, 40, 0.95); border: 1px solid #c8aa6e; border-left: 3px solid #f0e6d2;
+            padding: 12px; font-size: 11px; color: #f0e6d2; font-family: 'Segoe UI', sans-serif; font-weight: 500;
+            opacity: 0; visibility: hidden; transition: all 0.4s ease;
+            box-shadow: 0 0 20px rgba(200, 170, 110, 0.15); pointer-events: none; z-index: 30;
+        }
+        .item-hints .hint:hover .hint-content { opacity: 1; visibility: visible; }
+        .item-hints .hint-content::before { content: ""; position: absolute; height: 1px; background: #c8aa6e; right: -30px; bottom: 50%; width: 0; transition: width 0.4s ease; transition-delay: 0.1s; }
+        .item-hints .hint:hover .hint-content::before { width: 30px; }
+        .item-hints .hint-content::after { content: ""; position: absolute; height: 1px; background: #f0e6d2; right: -10px; bottom: 50%; transform-origin: right; transform: rotate(-45deg); width: 0; transition: width 0.4s ease; }
+        .item-hints .hint:hover .hint-content::after { width: 15px; }
+
         /* --- GLITCH ALERT BOX --- */
         .glitch-alert {
             position: relative; border: 1px solid #ff004d; background: rgba(20,0,0,0.85); color: #ff004d;
@@ -199,7 +193,6 @@
         /* --- CHAT OVERLAY --- */
         .chat-overlay { position: fixed; bottom: 0; right: 350px; width: 600px; height: 400px; background: #010a13; border-top: 1px solid rgba(200, 170, 110, 0.4); border-left: 1px solid rgba(200, 170, 110, 0.4); border-right: 1px solid rgba(200, 170, 110, 0.4); display: flex; z-index: 50; border-top-left-radius: 6px; border-top-right-radius: 6px; box-shadow: 0 0 30px rgba(0,0,0,0.8); }
         .sys-msg { color: #94a3b8; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; text-align: center; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid rgba(148, 163, 184, 0.2); }
-
     </style>
 </head>
 <body class="flex bg-[#010a13] text-[#f0e6d2] overflow-hidden">
@@ -208,7 +201,7 @@
         <div id="stars"></div><div id="stars2"></div><div id="stars3"></div>
     </div>
 
-    <!-- MAIN CONTENT (Bal oldal) -->
+    <!-- MAIN CONTENT (Bal oldal, rugalmasan kitölti a teret) -->
     <div class="flex-1 flex flex-col h-full p-4 lg:p-6 gap-5 relative z-10 min-w-0 overflow-y-auto">
         
         <!-- HEADER SÁV -->
@@ -275,11 +268,12 @@
                                     <svg id="eyePass0" onclick="toggleVisibility('currentPassword', 'eyePass0')" class="w-4 h-4 password-toggle-btn" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                                     <div class="input-border"></div><div class="holo-scan-line"></div><div class="input-glow"></div><div class="input-active-indicator"></div>
                                     <div class="input-label">Jelenlegi jelszó</div>
-                                    <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div></div>
+                                    <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div><div class="data-segment" style="--index: 4;"></div></div>
                                     <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
                                     <div class="power-indicator"></div>
                                 </div>
                             </div>
+                            <div class="item-hints shrink-0"><div class="hint"><span class="hint-dot">?</span><div class="hint-content">Biztonsági okokból szükséges.</div></div></div>
                         </div>
 
                         <div class="input-group-wrapper">
@@ -289,11 +283,12 @@
                                     <svg id="eyePass1" onclick="toggleVisibility('newPassword', 'eyePass1')" class="w-4 h-4 password-toggle-btn" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                                     <div class="input-border"></div><div class="holo-scan-line"></div><div class="input-glow"></div><div class="input-active-indicator"></div>
                                     <div class="input-label">Új jelszó</div>
-                                    <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div></div>
+                                    <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div><div class="data-segment" style="--index: 4;"></div></div>
                                     <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
                                     <div class="power-indicator"></div>
                                 </div>
                             </div>
+                            <div class="item-hints shrink-0"><div class="hint"><span class="hint-dot">?</span><div class="hint-content">Erős jelszó (Min. 6 karakter).</div></div></div>
                         </div>
 
                         <div class="input-group-wrapper">
@@ -303,11 +298,12 @@
                                     <svg id="eyePass2" onclick="toggleVisibility('confirmNewPassword', 'eyePass2')" class="w-4 h-4 password-toggle-btn" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                                     <div class="input-border"></div><div class="holo-scan-line"></div><div class="input-glow"></div><div class="input-active-indicator"></div>
                                     <div class="input-label">Jelszó megerősítése</div>
-                                    <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div></div>
+                                    <div class="input-data-visualization"><div class="data-segment" style="--index: 1;"></div><div class="data-segment" style="--index: 2;"></div><div class="data-segment" style="--index: 3;"></div><div class="data-segment" style="--index: 4;"></div></div>
                                     <div class="interface-lines"><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div><div class="interface-line"></div></div>
                                     <div class="power-indicator"></div>
                                 </div>
                             </div>
+                            <div class="item-hints shrink-0"><div class="hint"><span class="hint-dot">?</span><div class="hint-content">Pontosan egyeznie kell az előzővel.</div></div></div>
                         </div>
 
                         <button type="submit" id="btnSave" class="cosmic-portal-btn mt-6 w-full">
@@ -317,33 +313,32 @@
                     </form>
                 </div>
             </div>
+            
         </div>
     </div>
 
     <!-- RIGHT SIDEBAR (Social Panel) -->
-    <div class="w-[340px] bg-[#091428] border-l border-[#c8aa6e]/40 flex flex-col h-full z-20 shadow-[-10px_0_30px_rgba(0,0,0,0.5)] shrink-0">
+    <div class="w-[340px] bg-[#091428] border-l border-[#c8aa6e]/40 flex flex-col h-full z-20 shadow-[-10px_0_30px_rgba(0,0,0,0.5)] shrink-0 relative">
         
         <!-- Profile Header -->
-        <div class="p-5 border-b border-[#c8aa6e]/30 bg-[#010a13] flex flex-col gap-4 shrink-0">
+        <div class="p-6 border-b border-[#c8aa6e]/30 bg-[#010a13] flex flex-col gap-5 shrink-0">
             <div class="flex items-center gap-4">
                 <div class="relative shrink-0">
-                    <img src="https://ui-avatars.com/api/?name=<%= typeof username !== 'undefined' ? username : 'User' %>&background=091428&color=c8aa6e&bold=true" class="w-14 h-14 rounded-sm border-2 border-[#c8aa6e]/50">
+                    <img src="https://ui-avatars.com/api/?name=<%= typeof username !== 'undefined' ? username : 'User' %>&background=091428&color=c8aa6e&bold=true" class="w-16 h-16 rounded-sm border-2 border-[#c8aa6e]/50 shadow-[0_0_10px_rgba(200,170,110,0.2)]">
                     <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-[#010a13]"></div>
                 </div>
                 <div class="min-w-0">
-                    <div class="font-bold text-base text-white cyber-font truncate"><%= typeof username !== 'undefined' ? username : 'User' %></div>
-                    <div class="text-[0.8rem] text-[#c8aa6e] font-black tracking-widest mt-1">🏆 <%= typeof trophies !== 'undefined' ? trophies : 0 %> Trófea</div>
+                    <div class="font-bold text-lg text-white cyber-font truncate"><%= typeof username !== 'undefined' ? username : 'User' %></div>
+                    <div class="text-sm text-[#c8aa6e] font-black tracking-widest mt-1">🏆 <%= typeof trophies !== 'undefined' ? trophies : 0 %> Trófea</div>
                 </div>
             </div>
             
-            <div class="action-btn-container mt-1">
-                <button onclick="window.location.href='/dashboard'" class="settings-btn" title="Központ">
-                    <div class="settings-sign"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg></div>
-                    <div class="settings-text">Központ</div>
+            <div class="flex flex-col gap-2 mt-1 w-full">
+                <button onclick="window.location.href='/dashboard'" class="w-full py-2 bg-[#1e2328] hover:bg-[#c8aa6e] text-slate-300 hover:text-[#010a13] border border-[#c8aa6e]/30 hover:border-[#c8aa6e] transition-all rounded-sm font-bold uppercase tracking-widest text-[0.65rem] cyber-font">
+                    Központ
                 </button>
-                <button onclick="logout()" class="logout-btn" title="Kilépés">
-                    <div class="logout-sign"><svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z" /></svg></div>
-                    <div class="logout-text">Kilépés</div>
+                <button onclick="logout()" class="w-full py-2 bg-red-950/20 hover:bg-red-600/90 text-red-400 hover:text-white border border-red-500/30 hover:border-red-500 transition-all rounded-sm font-bold uppercase tracking-widest text-[0.65rem] cyber-font">
+                    Kilépés
                 </button>
             </div>
         </div>
@@ -395,7 +390,10 @@
                                         <img src="https://ui-avatars.com/api/?name=<%= friend.friend_name %>&background=1e2328&color=c8aa6e&bold=true&size=40" class="w-8 h-8 rounded-sm border border-[#c8aa6e]/30 group-hover:border-[#c8aa6e]">
                                         <span id="unread_<%= friend.friend_id %>" class="hidden absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#ff0092] animate-pulse shadow-[0_0_5px_#ff0092]"></span>
                                     </div>
-                                    <span class="text-sm font-bold text-slate-300 group-hover:text-white truncate max-w-[130px]"><%= friend.friend_name %></span>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-bold text-slate-300 group-hover:text-white truncate max-w-[130px]"><%= friend.friend_name %></span>
+                                        <span class="text-[0.65rem] text-[#c8aa6e] font-bold mt-0.5">🏆 <%= friend.trophies_count %></span>
+                                    </div>
                                 </div>
                                 <button onclick="event.stopPropagation(); handleFriendAction('remove', '<%= friend.friend_id %>')" class="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-400 text-xs transition-opacity uppercase font-bold px-2 py-1">X</button>
                             </div>
@@ -406,8 +404,9 @@
         </div>
 
         <div class="p-4 border-t border-[#c8aa6e]/30 bg-[#010a13] shrink-0">
-            <button onclick="toggleChatOverlay()" class="w-full bg-[#1e2328] border border-[#c8aa6e]/50 text-[#c8aa6e] py-3 rounded-sm hover:bg-[#c8aa6e] hover:text-[#010a13] transition-colors font-bold uppercase tracking-widest text-xs cyber-font">
-                Chat Panel Megnyitása
+            <button onclick="toggleChatOverlay()" class="w-full flex items-center justify-center gap-2 bg-[#1e2328] border border-[#c8aa6e]/50 text-[#c8aa6e] py-3 rounded-sm hover:bg-[#c8aa6e] hover:text-[#010a13] transition-colors font-bold uppercase tracking-widest text-xs cyber-font">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                Chat Panel
             </button>
         </div>
     </div>
@@ -428,10 +427,10 @@
                 <button onclick="toggleChatOverlay()" class="text-slate-400 hover:text-[#c8aa6e] text-lg font-bold">✕</button>
             </div>
             
-            <div id="chatMessageList" class="flex-1 overflow-y-auto p-4 flex flex-col bg-[#010a13]"></div>
+            <div id="chatMessageList" class="flex-1 overflow-y-auto p-4 flex flex-col bg-gradient-to-b from-[#010a13] to-[#091428] gap-1"></div>
             
             <div class="p-3 border-t border-[#c8aa6e]/30 bg-[#091428] shrink-0">
-                <input type="text" id="chatInputField" class="w-full bg-[#010a13] border border-[#c8aa6e]/50 rounded-sm px-3 py-2 text-[#f0e6d2] focus:outline-none focus:border-[#c8aa6e] text-sm font-sans transition-all" placeholder="Üzenet küldése..." onkeypress="handleChatInput(event)">
+                <input type="text" id="chatInputField" class="w-full bg-[#010a13] border border-[#c8aa6e]/50 rounded-sm px-3 py-2 text-[#f0e6d2] focus:outline-none focus:border-[#c8aa6e] focus:shadow-[0_0_8px_rgba(200,170,110,0.3)] text-sm font-sans transition-all" placeholder="Üzenet küldése..." onkeypress="handleChatInput(event)">
             </div>
         </div>
     </div>
@@ -631,7 +630,10 @@
                                         <img src="https://ui-avatars.com/api/?name=${friend.friend_name}&background=1e2328&color=c8aa6e&bold=true&size=40" class="w-8 h-8 rounded-sm border border-[#c8aa6e]/30 group-hover:border-[#c8aa6e]">
                                         <span id="unread_${friend.friend_id}" class="hidden absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#ff0092] animate-pulse shadow-[0_0_5px_#ff0092]"></span>
                                     </div>
-                                    <span class="text-sm font-bold text-slate-300 group-hover:text-white truncate max-w-[130px]">${friend.friend_name}</span>
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-bold text-slate-300 group-hover:text-white truncate max-w-[130px]">${friend.friend_name}</span>
+                                        <span class="text-[0.65rem] text-[#c8aa6e] font-bold mt-0.5">🏆 ${friend.trophies_count}</span>
+                                    </div>
                                 </div>
                                 <button onclick="event.stopPropagation(); handleFriendAction('remove', '${friend.friend_id}')" class="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-400 text-xs transition-opacity uppercase font-bold px-2 py-1">X</button>
                             </div>
@@ -678,7 +680,7 @@
                 const res = await fetch(`/api/friends/search?q=${encodeURIComponent(q)}`); const data = await res.json();
                 const resultsContainer = document.getElementById('searchResults'); resultsContainer.innerHTML = '';
                 if (data.length === 0) { resultsContainer.innerHTML = '<p class="text-[0.6rem] text-slate-500 italic px-2">Nincs találat.</p>'; return; }
-                data.forEach(user => { resultsContainer.innerHTML += `<div id="search-result-${user.id}" class="bg-transparent py-2 flex justify-between items-center border-b border-[#c8aa6e]/20 last:border-0"><div class="flex flex-col"><span class="text-sm font-bold text-white cyber-font">${user.username}</span><span class="text-xs text-[#c8aa6e] font-bold mt-0.5">🏆 ${user.trophies_count}</span></div><button id="addBtn_${user.id}" onclick="sendFriendRequest('${user.id}')" class="bg-[#1e2328] hover:bg-[#c8aa6e] hover:text-[#010a13] border border-[#c8aa6e]/50 text-[#c8aa6e] text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-sm transition-colors">Jelölés</button></div>`; });
+                data.forEach(user => { resultsContainer.innerHTML += `<div id="search-result-${user.id}" class="bg-transparent py-2 flex justify-between items-center border-b border-[#c8aa6e]/20 last:border-0"><div class="flex flex-col"><span class="text-sm font-bold text-white cyber-font">${user.username}</span><span class="text-[0.55rem] text-[#c8aa6e] font-bold mt-0.5">🏆 ${user.trophies_count}</span></div><button id="addBtn_${user.id}" onclick="sendFriendRequest('${user.id}')" class="bg-[#1e2328] hover:bg-[#c8aa6e] hover:text-[#010a13] border border-[#c8aa6e]/50 text-[#c8aa6e] text-[0.55rem] font-bold uppercase tracking-widest px-2 py-1 rounded-sm transition-colors">+</button></div>`; });
             } catch (error) { alert('Hálózat megszakadt.'); }
         }
 
@@ -688,9 +690,9 @@
             try {
                 const res = await fetch('/api/friends/request', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ targetUserId: targetId }) });
                 const data = await res.json();
-                if (data.status !== 'success') { alert(data.error || 'Hiba történt.'); if(btn) { btn.innerText = 'Jelölés'; btn.disabled = false; } } 
+                if (data.status !== 'success') { alert(data.error || 'Hiba történt.'); if(btn) { btn.innerText = '+'; btn.disabled = false; } } 
                 else { showToast('Jelölés elküldve!', 'Sikeres.', 'success'); const resultCard = document.getElementById(`search-result-${targetId}`); if (resultCard) { resultCard.style.opacity = '0'; setTimeout(() => resultCard.remove(), 300); } }
-            } catch (error) { alert('Hálózati hiba.'); if(btn) { btn.innerText = 'Jelölés'; btn.disabled = false; } }
+            } catch (error) { alert('Hálózati hiba.'); if(btn) { btn.innerText = '+'; btn.disabled = false; } }
         }
 
         async function handleFriendAction(action, targetId) {
