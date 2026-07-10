@@ -132,7 +132,8 @@ app.get('/dashboard', requireAuth, async (req: AuthRequest, res: express.Respons
     if ((userResult.rowCount ?? 0) === 0) { res.clearCookie('auth_token'); return res.redirect('/login'); }
 
     const leaderboardRes = await pool.query('SELECT username, trophies_count FROM public.users ORDER BY trophies_count DESC LIMIT 10');
-    const historyRes = await pool.query('SELECT lobby_name, final_position, roster_summary, played_at FROM public.match_history WHERE user_id = $1 ORDER BY played_at DESC LIMIT 5', [userId]);
+    // Itt LIMIT 10-re állítottuk az archívum lekérdezését
+    const historyRes = await pool.query('SELECT lobby_name, final_position, roster_summary, played_at FROM public.match_history WHERE user_id = $1 ORDER BY played_at DESC LIMIT 10', [userId]);
     const friendsRes = await pool.query(`SELECT f.id as friendship_id, f.status, f.action_user_id, u.id as friend_id, u.username as friend_name, u.trophies_count FROM public.friendships f JOIN public.users u ON (u.id = f.user_id_1 OR u.id = f.user_id_2) WHERE (f.user_id_1 = $1 OR f.user_id_2 = $1) AND u.id != $1`, [userId]);
 
     res.render('dashboard', { 
@@ -160,5 +161,3 @@ const PORT = process.env.PORT || 3333;
 httpServer.listen(PORT, () => {
   console.log(`✅ Kiszolgáló elindítva a ${PORT}-es porton.`);
 });
-
-// NA EZ A JÓ

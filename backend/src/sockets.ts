@@ -16,7 +16,6 @@ const PickSchema = z.object({
     playerId: z.string().uuid(), role: z.enum(['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT']) 
 });
 
-// Chat sémák
 const PrivateMessageSchema = z.object({
     senderId: z.string().uuid(),
     targetId: z.string().uuid(),
@@ -240,7 +239,7 @@ export const setupSockets = (io: Server) => {
         try { const data = IdentifySchema.parse(payload); socket.join(data.userId); } catch (e) { }
     });
 
-    // PRIVÁT CHAT KÜLDÉS - BEÉPÍTVE
+    // PRIVÁT CHAT KÜLDÉS - Optimalizált, 10 üzenetes limittel
     socket.on('send_private_message', async (payload: any) => {
         const client = await pool.connect();
         try {
@@ -259,10 +258,22 @@ export const setupSockets = (io: Server) => {
             const senderRes = await client.query('SELECT username FROM public.users WHERE id = $1', [data.senderId]);
             const senderName = senderRes.rows[0].username;
 
+            // 1. Beszúrás
             await client.query(`
                 INSERT INTO public.private_messages (sender_id, receiver_id, content)
                 VALUES ($1::uuid, $2::uuid, $3)
             `, [data.senderId, data.targetId, data.message]);
+
+            // 2. Takarítás (Csak a legfrissebb 10 maradjon az adott párbeszédből)
+            await client.query(`
+                DELETE FROM public.private_messages
+                WHERE id IN (
+                    SELECT id FROM public.private_messages
+                    WHERE (sender_id = $1 AND receiver_id = $2) OR (sender_id = $2 AND receiver_id = $1)
+                    ORDER BY sent_at DESC
+                    OFFSET 10
+                )
+            `, [data.senderId, data.targetId]);
 
             io.to(data.targetId).emit('receive_private_message', {
                 senderId: data.senderId,
@@ -277,7 +288,7 @@ export const setupSockets = (io: Server) => {
         }
     });
 
-    // PRIVÁT CHAT ELŐZMÉNYEK LEKÉRÉSE - BEÉPÍTVE
+    // PRIVÁT CHAT ELŐZMÉNYEK LEKÉRÉSE - Kronológiailag helyes sorrendben a legutolsó 10
     socket.on('fetch_private_history', async (payload: any, callback: any) => {
         const client = await pool.connect();
         try {
@@ -291,12 +302,15 @@ export const setupSockets = (io: Server) => {
             if ((friendCheck.rowCount ?? 0) === 0) throw new Error('Nem vagytok barátok.');
 
             const msgs = await client.query(`
-                SELECT pm.sender_id, pm.content, u.username as sender_name
-                FROM public.private_messages pm
-                JOIN public.users u ON pm.sender_id = u.id
-                WHERE (pm.sender_id = $1 AND pm.receiver_id = $2) OR (pm.sender_id = $2 AND pm.receiver_id = $1)
-                ORDER BY pm.sent_at ASC
-                LIMIT 50
+                SELECT * FROM (
+                    SELECT pm.sender_id, pm.content, u.username as sender_name, pm.sent_at
+                    FROM public.private_messages pm
+                    JOIN public.users u ON pm.sender_id = u.id
+                    WHERE (pm.sender_id = $1 AND pm.receiver_id = $2) OR (pm.sender_id = $2 AND pm.receiver_id = $1)
+                    ORDER BY pm.sent_at DESC
+                    LIMIT 10
+                ) sub
+                ORDER BY sent_at ASC
             `, [data.userId, data.friendId]);
 
             callback({ status: 'success', messages: msgs.rows });
@@ -307,7 +321,6 @@ export const setupSockets = (io: Server) => {
         }
     });
 
-    // LOBBY CHAT - BEÉPÍTVE KÉSŐBBRE
     socket.on('send_lobby_message', async (payload: any) => {
         const client = await pool.connect();
         try {
@@ -342,7 +355,6 @@ export const setupSockets = (io: Server) => {
             client.release();
         }
     });
-
 
     socket.on('send_lobby_invite', async (payload: any, callback: any) => {
         const client = await pool.connect();
