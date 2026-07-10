@@ -43,6 +43,21 @@
         #stars:after, #stars2:after, #stars3:after { content: " "; position: absolute; top: 2000px; width: inherit; height: inherit; box-shadow: inherit; }
         @keyframes animStar { from { transform: translateY(0px); } to { transform: translateY(-2000px); } }
 
+        /* --- CYBER NEON SVG PATH (Background effect) --- */
+        .neon-svg-container { position: absolute; top: -50px; left: 50%; transform: translateX(-50%); width: 100%; height: 200px; pointer-events: none; z-index: 0; opacity: 0.5; display: flex; justify-content: center; align-items: center; }
+        .neon-svg { position: absolute; width: 400px; fill: none; }
+        .neon-svg:nth-child(2) { filter: blur(40px); }
+        .neon-svg path {
+            d: path("M0,25 C150,110 150, -60 300,25");
+            stroke: #00e5ff; stroke-width: 25; stroke-linecap: round;
+            transform: translate(50px,50%); animation: svgAnimate 3s ease-in-out infinite alternate;
+        }
+        @keyframes svgAnimate {
+            0% { stroke: #00e5ff; d: path("M0,25 C150,110 150, -60 300,25"); }
+            50% { stroke: #ff0092; d: path("M0,25 C160,-50 140, 110 300,25"); }
+            100% { stroke: #8949ff; d: path("M0,25 C140,100 160, -40 300,25"); }
+        }
+
         /* --- ANIMATED LOGOUT BUTTON --- */
         .logout-btn {
             display: flex; align-items: center; justify-content: flex-start;
@@ -125,6 +140,7 @@
         .wormhole-btn:hover::before { opacity: 0.5; }
         .wormhole-btn:hover { box-shadow: 0 0 10px #00e5ff; }
         .wormhole-btn svg { position: relative; z-index: 2; }
+        @keyframes rotate { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
 
         /* --- TERMINAL CHAT --- */
         .terminal-container { width: 100%; height: 350px; background: #0a0a0a; border-radius: 5px; box-shadow: 0 0 20px rgba(0, 229, 255, 0.15); overflow: hidden; display: flex; flex-direction: column; border: 1px solid rgba(0,229,255,0.3); transition: all 0.3s ease; }
@@ -265,6 +281,8 @@
                                     <!-- Barátra kattintva megnyílik a terminal chat -->
                                     <div class="bg-[#010a13] border border-[#00e5ff]/20 p-2 rounded-sm flex justify-between items-center group cursor-pointer hover:border-[#ff0092]/50 transition-colors" onclick="openFriendChat('<%= friend.friend_id %>', '<%= friend.friend_name %>')">
                                         <div class="flex items-center gap-2">
+                                            <!-- OLVASATLAN ÜZENET JELZŐ (Alapból rejtve) -->
+                                            <span id="unread_<%= friend.friend_id %>" class="hidden w-2 h-2 rounded-full bg-[#ff0092] animate-pulse shadow-[0_0_5px_#ff0092]"></span>
                                             <div class="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_5px_#00e5ff] group-hover:bg-[#ff0092] group-hover:shadow-[0_0_5px_#ff0092] transition-colors"></div>
                                             <span class="text-xs font-bold text-slate-200"><%= friend.friend_name %></span>
                                         </div>
@@ -415,9 +433,12 @@
         // Valós idejű üzenetek fogadása
         socket.on('receive_private_message', (data) => {
             if (currentChatFriendId === data.senderId) {
+                // Ha épp nyitva van a chat, akkor beírjuk az üzenetet
                 appendChatMessage(data.senderName, data.message, false);
             } else {
-                showToast('Bejövő átvitel', `Üzenet tőle: ${data.senderName}`, 'chat');
+                // Ha nincs nyitva, megjelenítjük a barát melletti pulzáló pöttyt
+                const unreadDot = document.getElementById(`unread_${data.senderId}`);
+                if(unreadDot) unreadDot.classList.remove('hidden');
             }
         });
 
@@ -428,23 +449,31 @@
         });
 
         // Biztonságos renderelés (Zero Trust, XSS védelem textContent-tel)
-        function appendChatMessage(sender, msg, isSelf) {
+        function appendChatMessage(sender, msg, isSelf, isSystem = false) {
             const list = document.getElementById('chatMessageList');
             const msgDiv = document.createElement('div');
-            msgDiv.className = `chat-msg ${isSelf ? 'self' : ''}`;
             
-            const senderSpan = document.createElement('span');
-            senderSpan.className = 'sender';
-            senderSpan.textContent = `${sender}:`;
+            if (isSystem) {
+                // Rendszerüzenet (csak felül jelenik meg, sárga színnel)
+                msgDiv.className = 'text-yellow-400 text-[10px] uppercase tracking-widest text-center opacity-70 mb-4 pb-2 border-b border-yellow-400/20';
+                msgDiv.textContent = `[ ${msg} ]`;
+            } else {
+                // Normál chat üzenet
+                msgDiv.className = `chat-msg ${isSelf ? 'self' : ''}`;
+                
+                const senderSpan = document.createElement('span');
+                senderSpan.className = 'sender';
+                senderSpan.textContent = `${sender}:`;
+                
+                const textSpan = document.createElement('span');
+                textSpan.className = 'text';
+                textSpan.textContent = msg; 
+                
+                msgDiv.appendChild(senderSpan);
+                msgDiv.appendChild(textSpan);
+            }
             
-            const textSpan = document.createElement('span');
-            textSpan.className = 'text';
-            textSpan.textContent = msg; 
-            
-            msgDiv.appendChild(senderSpan);
-            msgDiv.appendChild(textSpan);
-            
-            list.insertBefore(msgDiv, list.lastElementChild);
+            list.appendChild(msgDiv); // Végére fűzzük, így a sorrend természetes marad
             list.scrollTop = list.scrollHeight;
         }
 
@@ -454,20 +483,22 @@
             document.getElementById('terminalChatContainer').classList.remove('hidden');
             document.getElementById('terminalHeaderName').textContent = `SEC_CHANNEL // ${friendName}`;
             
+            // Olvasatlan jelző eltüntetése
+            const unreadDot = document.getElementById(`unread_${friendId}`);
+            if(unreadDot) unreadDot.classList.add('hidden');
+
             const list = document.getElementById('chatMessageList');
-            Array.from(list.children).forEach(child => {
-                if(child.tagName === 'DIV' && child.classList.contains('chat-msg')) { child.remove(); }
-            });
+            list.innerHTML = ''; // Ürítjük a dobozt
 
-            appendChatMessage('SYSTEM', `Kapcsolat felépítve ${friendName}-val. Szinkronizálás...`, false);
-
+            // Adatok lekérése
             socket.emit('fetch_private_history', { userId: USER_ID, friendId: friendId }, (res) => {
+                list.innerHTML = ''; // Biztos ami biztos
+                
+                // 1. A Rendszerüzenet kerül felülre
+                appendChatMessage('SYSTEM', `Titkosítás: Aktív. Csatorna nyitva: ${friendName}`, false, true);
+                
+                // 2. Az üzenetek jönnek utána kronológiai sorrendben
                 if (res.status === 'success') {
-                    Array.from(list.children).forEach(child => {
-                        if(child.tagName === 'DIV' && child.classList.contains('chat-msg')) { child.remove(); }
-                    });
-                    appendChatMessage('SYSTEM', `Titkosítás: Aktív. Csatorna nyitva.`, false);
-                    
                     res.messages.forEach(m => {
                         appendChatMessage(m.sender_name, m.content, m.sender_id === USER_ID);
                     });
@@ -550,9 +581,11 @@
                     acceptedHtml += '<p class="text-slate-500 text-[0.7rem] italic cyber-font">Nincs aktív kapcsolat.</p>';
                 } else {
                     accepted.forEach(friend => {
+                        // Kiemeljük az olvasatlan jelzőt (id attribútummal)
                         acceptedHtml += `
                             <div class="bg-[#010a13] border border-[#00e5ff]/20 p-2 rounded-sm flex justify-between items-center group cursor-pointer hover:border-[#ff0092]/50 transition-colors" onclick="openFriendChat('${friend.friend_id}', '${friend.friend_name}')">
                                 <div class="flex items-center gap-2">
+                                    <span id="unread_${friend.friend_id}" class="hidden w-2 h-2 rounded-full bg-[#ff0092] animate-pulse shadow-[0_0_5px_#ff0092]"></span>
                                     <div class="w-1.5 h-1.5 rounded-full bg-[#00e5ff] shadow-[0_0_5px_#00e5ff] group-hover:bg-[#ff0092] transition-colors"></div>
                                     <span class="text-xs font-bold text-slate-200">${friend.friend_name}</span>
                                 </div>
