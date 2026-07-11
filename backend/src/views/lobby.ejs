@@ -72,10 +72,10 @@
         .chat-msg { display: flex; flex-direction: column; margin-bottom: 4px; }
         .sys-msg { color: #facc15; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; text-align: center; opacity: 0.8; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid rgba(250, 204, 21, 0.2); }
 
-        /* --- AUDIO LOADER ANIMATION (Hextech Colors) --- */
+        /* --- AUDIO LOADER ANIMATION (Hextech Colors, Kisebb méret) --- */
         .loader-wrapper {
             position: relative; display: flex; align-items: center; justify-content: center;
-            width: 100px; height: 100px; font-family: "Inter", sans-serif; font-size: 0.8rem;
+            width: 70px; height: 70px; font-family: "Inter", sans-serif; font-size: 0.55rem;
             font-weight: 700; color: #f0e6d2; border-radius: 50%; user-select: none;
         }
         .loader-spinner {
@@ -83,9 +83,9 @@
             background-color: transparent; animation: loader-rotate 3s linear infinite; z-index: 0;
         }
         @keyframes loader-rotate {
-            0% { transform: rotate(90deg); box-shadow: 0 5px 10px 0 rgba(200,170,110,0.5) inset, 0 10px 15px 0 rgba(200,170,110,0.8) inset, 0 30px 30px 0 rgba(9,20,40,0.8) inset; }
-            50% { transform: rotate(270deg); box-shadow: 0 5px 10px 0 rgba(200,170,110,0.5) inset, 0 10px 5px 0 rgba(240,230,210,0.8) inset, 0 20px 30px 0 rgba(1,10,19,0.8) inset; }
-            100% { transform: rotate(450deg); box-shadow: 0 5px 10px 0 rgba(200,170,110,0.5) inset, 0 10px 15px 0 rgba(200,170,110,0.8) inset, 0 30px 30px 0 rgba(9,20,40,0.8) inset; }
+            0% { transform: rotate(90deg); box-shadow: 0 3px 6px 0 rgba(200,170,110,0.5) inset, 0 6px 10px 0 rgba(200,170,110,0.8) inset, 0 15px 15px 0 rgba(9,20,40,0.8) inset; }
+            50% { transform: rotate(270deg); box-shadow: 0 3px 6px 0 rgba(200,170,110,0.5) inset, 0 6px 3px 0 rgba(240,230,210,0.8) inset, 0 10px 15px 0 rgba(1,10,19,0.8) inset; }
+            100% { transform: rotate(450deg); box-shadow: 0 3px 6px 0 rgba(200,170,110,0.5) inset, 0 6px 10px 0 rgba(200,170,110,0.8) inset, 0 15px 15px 0 rgba(9,20,40,0.8) inset; }
         }
         .loader-letter {
             display: inline-block; opacity: 0.4; transform: translateY(0);
@@ -99,10 +99,10 @@
 
         /* --- AUDIO VOLUME SLIDER --- */
         .slider-container { display: inline-flex; align-items: center; position: relative; cursor: pointer; }
-        .slider-container .volume { color: #f0e6d2; width: 20px; height: auto; margin-right: 12px; pointer-events: none; transition: opacity 0.3s; }
+        .slider-container .volume { color: #f0e6d2; width: 18px; height: auto; margin-right: 10px; pointer-events: auto; transition: opacity 0.3s; }
         .slider-container .level {
             -webkit-appearance: none; appearance: none;
-            width: 100px; height: 10px; background: rgba(200, 170, 110, 0.2);
+            width: 80px; height: 8px; background: rgba(200, 170, 110, 0.2);
             overflow: hidden; border-radius: 5px; cursor: inherit; transform: rotate(0deg);
         }
         .slider-container .level::-webkit-slider-thumb {
@@ -113,7 +113,6 @@
             width: 0; height: 0; border-radius: 0; border: none;
             box-shadow: -200px 0 0 200px #c8aa6e;
         }
-
     </style>
 </head>
 <body class="flex w-screen h-screen bg-[#010a13] text-[#f0e6d2] overflow-hidden relative">
@@ -136,8 +135,8 @@
     <!-- TOAST CONTAINER -->
     <div id="toastContainer" class="fixed top-6 left-1/2 transform -translate-x-1/2 z-[110] flex flex-col gap-2 pointer-events-none items-center w-full max-w-md"></div>
 
-    <!-- MAIN CONTENT (Bal oldal, rugalmasan kitölti a teret) -->
-    <div class="flex-1 flex flex-col h-full p-4 lg:p-6 gap-5 relative z-10 min-w-0">
+    <!-- MAIN CONTENT (Bal oldal) -->
+    <div class="flex-1 flex flex-col h-full p-4 lg:p-6 gap-5 relative z-10 min-w-0 overflow-y-auto">
         
         <!-- HEADER SÁV -->
         <div class="flex flex-col sm:flex-row justify-between items-center border-b border-[#c8aa6e]/30 pb-3 shrink-0">
@@ -149,12 +148,12 @@
                 </div>
             </div>
 
-            <!-- MEGHÍVÓ ÉS KÓD -->
-            <div class="flex items-center gap-6">
+            <!-- MEGHÍVÓ ÉS KÓD (Ide ugrik be majd az Audio Control) -->
+            <div class="flex items-center gap-6" id="headerRightArea">
                 <button id="inviteFriendBtn" onclick="openInviteModal()" class="bg-[#1e2328] hover:bg-[#c8aa6e] hover:text-[#010a13] border border-[#c8aa6e]/50 px-5 py-2 rounded-sm text-xs font-bold text-[#c8aa6e] transition-colors cyber-font tracking-widest uppercase">
                     Meghívás
                 </button>
-                <div class="text-right">
+                <div class="text-right" id="roomCodeContainer">
                     <p class="text-[0.6rem] text-[#c8aa6e] uppercase tracking-widest mb-0.5 cyber-font font-bold">Szoba Kód</p>
                     <div class="bg-[#010a13] border border-[#c8aa6e]/50 px-4 py-1.5 rounded-sm font-mono text-base font-bold text-white tracking-widest"><%= inviteCode %></div>
                 </div>
@@ -162,7 +161,7 @@
         </div>
 
         <!-- BELSŐ SCROLL KONTÉNER A DRAFTNAK / SZIMULÁCIÓNAK -->
-        <div class="flex-1 min-h-0 overflow-y-auto">
+        <div class="flex-1 min-h-0 overflow-y-auto pr-2">
             <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 h-full">
                 
                 <!-- BAL OSZLOP: TÉRKÉP ÉS ROSTER ÉS AUDIO -->
@@ -186,23 +185,23 @@
                             <div id="node-ADC-2" class="map-node pos-ADC-2 hidden"></div>
                             <div id="node-SUPPORT-2" class="map-node pos-SUPPORT-2 hidden"></div>
                         </div>
-                    </div>
 
-                    <!-- ÚJ AUDIO PANEL: Loader és Volume (Hextech Dizájn) -->
-                    <div class="hex-panel rounded-sm p-4 w-full flex items-center justify-between shadow-lg bg-[#091428]/80 border-[#c8aa6e]/30 shrink-0">
-                        <div class="loader-wrapper" id="loaderWrapper">
-                            <div class="loader-spinner"></div>
-                        </div>
-                        <div class="flex-1 flex justify-end">
-                            <label class="slider-container">
-                                <svg class="volume cursor-pointer" id="muteIcon" onclick="toggleMute()" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                    <g>
-                                        <path d="M18.36 19.36a1 1 0 0 1-.705-1.71C19.167 16.148 20 14.142 20 12s-.833-4.148-2.345-5.65a1 1 0 1 1 1.41-1.419C20.958 6.812 22 9.322 22 12s-1.042 5.188-2.935 7.069a.997.997 0 0 1-.705.291z" fill="currentColor" />
-                                        <path d="M15.53 16.53a.999.999 0 0 1-.703-1.711C15.572 14.082 16 13.054 16 12s-.428-2.082-1.173-2.819a1 1 0 1 1 1.406-1.422A6 6 0 0 1 18 12a6 6 0 0 1-1.767 4.241.996.996 0 0 1-.703.289zM12 22a1 1 0 0 1-.707-.293L6.586 17H4c-1.103 0-2-.897-2-2V9c0-1.103.897-2 2-2h2.586l4.707-4.707A.998.998 0 0 1 13 3v18a1 1 0 0 1-1 1z" fill="currentColor" />
-                                    </g>
-                                </svg>
-                                <input type="range" class="level" id="volumeSlider" min="0" max="100" value="10" oninput="changeVolume(this.value)" />
-                            </label>
+                        <!-- AUDIO PANEL: Loader és Volume (Alapból a térkép alatt van, keret NÉLKÜL) -->
+                        <div id="audioControlPanel" class="w-full flex items-center justify-between mt-6">
+                            <div class="loader-wrapper" id="loaderWrapper">
+                                <div class="loader-spinner"></div>
+                            </div>
+                            <div class="flex flex-end">
+                                <label class="slider-container">
+                                    <svg class="volume cursor-pointer" id="muteIcon" onclick="toggleMute()" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <g>
+                                            <path d="M18.36 19.36a1 1 0 0 1-.705-1.71C19.167 16.148 20 14.142 20 12s-.833-4.148-2.345-5.65a1 1 0 1 1 1.41-1.419C20.958 6.812 22 9.322 22 12s-1.042 5.188-2.935 7.069a.997.997 0 0 1-.705.291z" fill="currentColor" />
+                                            <path d="M15.53 16.53a.999.999 0 0 1-.703-1.711C15.572 14.082 16 13.054 16 12s-.428-2.082-1.173-2.819a1 1 0 1 1 1.406-1.422A6 6 0 0 1 18 12a6 6 0 0 1-1.767 4.241.996.996 0 0 1-.703.289zM12 22a1 1 0 0 1-.707-.293L6.586 17H4c-1.103 0-2-.897-2-2V9c0-1.103.897-2 2-2h2.586l4.707-4.707A.998.998 0 0 1 13 3v18a1 1 0 0 1-1 1z" fill="currentColor" />
+                                        </g>
+                                    </svg>
+                                    <input type="range" class="level" id="volumeSlider" min="0" max="100" value="10" oninput="changeVolume(this.value)" />
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -296,11 +295,6 @@
                             <p class="text-sm text-slate-400 font-bold uppercase tracking-widest cyber-font mt-2">Megnyerte a LoL Worlds Mayhem trófeát!</p>
                         </div>
                         
-                        <div class="w-full hex-panel rounded-sm p-6 mb-8">
-                            <h3 class="text-center text-[#c8aa6e] font-black text-lg mb-6 esport-font tracking-widest border-b border-[#c8aa6e]/30 pb-3">Végső ranglista</h3>
-                            <div id="standingsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-                        </div>
-
                         <div id="finalGroupTablesArea" class="w-full hidden flex-col gap-5 hex-panel p-6 rounded-sm">
                             <h3 class="text-center text-[#f0e6d2] text-sm uppercase tracking-widest font-bold border-b border-[#c8aa6e]/30 pb-3 cyber-font">Csoportkör végeredménye</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="finalGroupTablesContainer"></div>
@@ -309,7 +303,7 @@
 
                     <div id="bracketArea" class="w-full mt-6 hidden flex-col gap-4 hex-panel p-6 rounded-sm">
                         <h3 class="text-center text-[#f0e6d2] text-sm uppercase tracking-widest font-bold border-b border-[#c8aa6e]/30 pb-3 cyber-font">Kieséses ágrajz</h3>
-                        <div class="flex justify-between gap-3 overflow-x-auto pb-2 min-h-[300px]" id="bracketContainer"></div>
+                        <div class="flex justify-between gap-3 overflow-x-auto pb-2 min-h-[250px]" id="bracketContainer"></div>
                     </div>
 
                 </div>
@@ -320,18 +314,18 @@
     <!-- RIGHT SIDEBAR (Social & Lobby Chat Panel) -->
     <div class="w-[350px] bg-[#091428] border-l border-[#c8aa6e]/40 flex flex-col h-full z-20 shadow-[-10px_0_30px_rgba(0,0,0,0.5)] shrink-0 relative">
         
-        <!-- FELSŐ RÉSZ: Lobby Tagok vagy Csoportok -->
-        <div class="flex-1 flex flex-col min-h-0 border-b border-[#c8aa6e]/40">
+        <!-- FELSŐ RÉSZ: Lobby Tagok -->
+        <div id="sidebarTopSection" class="flex-1 flex flex-col min-h-0 border-b border-[#c8aa6e]/40">
             <div class="p-4 border-b border-[#c8aa6e]/30 bg-[#010a13] shrink-0">
                 <h2 id="sidebarTitle" class="text-sm font-bold text-[#c8aa6e] esport-font tracking-widest uppercase text-center">Felhasználók a szobában</h2>
             </div>
             <div id="sidebarContent" class="flex-1 overflow-y-auto p-3 space-y-2.5">
-                <!-- Javascript tölti fel (Tabella vagy Aktív játékosok) -->
+                <!-- Javascript tölti fel -->
             </div>
         </div>
 
         <!-- ALSÓ RÉSZ: Lobby Chat -->
-        <div class="h-[300px] flex flex-col bg-[#010a13] shrink-0 relative z-30">
+        <div id="sidebarChatSection" class="h-[350px] flex flex-col bg-[#010a13] shrink-0 relative z-30 transition-all duration-500">
             <div class="p-3 border-b border-[#c8aa6e]/30 bg-[#1e2328] flex justify-between items-center shrink-0">
                 <div class="flex items-center gap-2">
                     <div class="w-2.5 h-2.5 bg-emerald-500 rounded-full shadow-[0_0_5px_#10b981] animate-pulse"></div>
@@ -340,6 +334,7 @@
             </div>
             
             <div id="lobbyChatMessageList" class="flex-1 overflow-y-auto p-4 flex flex-col bg-gradient-to-b from-[#010a13] to-[#091428] gap-1">
+                <div class="text-slate-500 text-[10px] uppercase tracking-widest text-center my-2 pb-2 border-b border-slate-700/50 sys-msg">[ Rendszer: A chat csak a szoba tagjainak látható. ]</div>
             </div>
             
             <div class="p-3 border-t border-[#c8aa6e]/30 bg-[#091428] shrink-0">
@@ -376,7 +371,6 @@
             silver: new Audio('/audio/LoL_SilverScrapes.mp3')
         };
 
-        // Beállítások
         Object.values(audioTracks).forEach(audio => {
             audio.loop = true;
             audio.volume = isMuted ? 0 : globalVolume;
@@ -385,17 +379,38 @@
 
         let audioInitialized = false;
 
-        // Első interakcióra indul az audio (Böngésző szabály)
-        document.body.addEventListener('click', () => {
+        function initAudio() {
             if(audioInitialized) return;
-            audioInitialized = true;
-            // Ha még tart a draft fázis
-            if(!document.getElementById('startArea').classList.contains('hidden') || !document.getElementById('teamsAreaPhase1').classList.contains('hidden')) {
-                playTrack('draft', 'Draft fázis');
-            }
-        }, { once: true });
+            let playPromise;
 
-        // Volume UI beállítása induláskor
+            if(!document.getElementById('startArea').classList.contains('hidden') || !document.getElementById('teamsAreaPhase1').classList.contains('hidden')) {
+                setLoaderText('Draft fázis');
+                currentTrack = 'draft';
+                playPromise = audioTracks.draft.play();
+            }
+
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    audioInitialized = true;
+                }).catch(error => {
+                    console.log("Autoplay blokkolva. Kattints az oldalra egyet!");
+                });
+            }
+        }
+
+        // Azonnali indítás kísérlet
+        setTimeout(initAudio, 200);
+
+        // Első interakcióra indul az audio (Ha blokkolta a böngésző)
+        ['click', 'keydown', 'touchstart'].forEach(evt => 
+            document.body.addEventListener(evt, () => {
+                if(!audioInitialized) {
+                    audioInitialized = true;
+                    if(currentTrack) audioTracks[currentTrack].play().catch(e=>console.log(e));
+                }
+            }, { once: true })
+        );
+
         document.getElementById('volumeSlider').value = globalVolume * 100;
         document.getElementById('muteIcon').style.opacity = isMuted ? '0.5' : '1';
 
@@ -418,7 +433,6 @@
 
         function setLoaderText(text) {
             const wrapper = document.getElementById('loaderWrapper');
-            // Töröljük a régi betűket, csak a spinner marad
             wrapper.innerHTML = '<div class="loader-spinner"></div>';
             for(let i=0; i<text.length; i++) {
                 const char = text[i] === ' ' ? '&nbsp;' : text[i];
@@ -428,7 +442,6 @@
 
         function playTrack(trackName, loaderText) {
             if (currentTrack === trackName) return;
-            
             setLoaderText(loaderText);
 
             const fadeOutTrack = currentTrack ? audioTracks[currentTrack] : null;
@@ -502,7 +515,6 @@
                 lastLobbySender = sender;
             }
 
-            // Kliens limit
             const allTexts = list.querySelectorAll('.text-[12px]');
             if (allTexts.length > 15) {
                 const oldestText = allTexts[0];
@@ -520,12 +532,12 @@
 
         function handleLobbyChatInput(e) {
             if (e.key === 'Enter') {
-                e.preventDefault(); // Enter gomb alapértelmezett sortörés blokkolása
+                e.preventDefault();
                 const input = document.getElementById('lobbyChatInput');
                 const msg = input.value.trim();
                 
                 if (msg) {
-                    input.value = ''; // Azonnal törlünk
+                    input.value = '';
                     socket.emit('send_lobby_message', { lobbyId: LOBBY_ID, senderId: USER_ID, message: msg.substring(0, 250) });
                 }
             }
@@ -636,16 +648,16 @@
                 const btnBo5 = document.getElementById('ffBo5Btn');
 
                 nextMatchBtn.classList.remove('hidden'); nextMatchBtn.disabled = false;
-                fastForwardGroup.classList.remove('hidden'); fastForwardGroup.classList.add('flex');
-
+                
                 if (!hasPending) {
                     fastForwardGroup.classList.add('hidden'); fastForwardGroup.classList.remove('flex');
-                    if (phase === 'GROUP') { nextMatchBtn.innerText = "TOVÁBB A RÁJÁTSZÁSRA"; } 
-                    else if (phase === 'QUARTER') { nextMatchBtn.innerText = "TOVÁBB AZ ELŐDÖNTŐKRE"; } 
-                    else if (phase === 'SEMI') { nextMatchBtn.innerText = "TOVÁBB A DÖNTŐRE"; } 
+                    if (phase === 'GROUP') { nextMatchBtn.innerText = "IRÁNY A RÁJÁTSZÁS"; } 
+                    else if (phase === 'QUARTER') { nextMatchBtn.innerText = "IRÁNY AZ ELŐDÖNTŐ"; } 
+                    else if (phase === 'SEMI') { nextMatchBtn.innerText = "IRÁNY A DÖNTŐ"; } 
                     else if (phase === 'FINAL') { nextMatchBtn.innerText = "EREDMÉNYHIRDETÉS"; }
                 } else {
                     nextMatchBtn.innerText = "KÖVETKEZŐ MECCS";
+                    fastForwardGroup.classList.remove('hidden'); fastForwardGroup.classList.add('flex');
                     if (phase === 'GROUP') {
                         btnAll.classList.remove('hidden'); btnGroup.classList.remove('hidden'); btnBo5.classList.add('hidden');
                     } else if (phase === 'QUARTER' || phase === 'SEMI' || phase === 'FINAL') {
@@ -915,8 +927,8 @@
                         </div>`;
                 }
                 const t1 = m.team1_name || 'TBD'; const t2 = m.team2_name || 'TBD';
-                const s1 = m.score1 !== null && m.score1 !== undefined ? m.score1 : '-';
-                const s2 = m.score2 !== null && m.score2 !== undefined ? m.score2 : '-';
+                const s1 = m.score1 !== null && m.score1 !== undefined && m.score1 !== '-' ? m.score1 : '-';
+                const s2 = m.score2 !== null && m.score2 !== undefined && m.score2 !== '-' ? m.score2 : '-';
                 
                 const c1 = m.winner_name === t1 ? 'text-emerald-400' : (m.winner_name ? 'text-slate-500' : 'text-slate-300');
                 const c2 = m.winner_name === t2 ? 'text-emerald-400' : (m.winner_name ? 'text-slate-500' : 'text-slate-300');
@@ -1021,10 +1033,17 @@
                                 document.getElementById('winnerTextLabel').innerText = "🏆 GYŐZTES:";
                                 if (data.team1 === data.winner) { t1El.classList.add('text-emerald-400'); t2El.classList.add('text-slate-600'); } 
                                 else { t1El.classList.add('text-slate-600'); t2El.classList.add('text-emerald-400'); }
+                                
+                                if (data.isFastForward) {
+                                    document.getElementById('matchStatusText').classList.remove('hidden');
+                                    document.getElementById('matchStatusText').innerText = `✨ ${data.team1} ${data.score1} - ${data.score2} ${data.team2} ✨`;
+                                }
                             } else { document.getElementById('winnerTextLabel').innerText = "Game győztes:"; }
 
                             if (data.newState) { 
                                 updateLobbyStateUI(data.newState); 
+                                // FORCE BRACKET RENDER ON MATCH FINISH TO AVOID WAITING FOR NEXT MATCH
+                                if(data.newState.bracket) renderBracket(data.newState.bracket);
                             }
 
                             // SILVER SCRAPES TIGGER
@@ -1069,6 +1088,15 @@
             document.getElementById('championName').innerText = data.winner;
             document.getElementById('championLogo').src = getUserAvatar(data.winner, true);
 
+            // Hide the table in the sidebar and make chat full height
+            const sidebarTop = document.getElementById('sidebarTopSection');
+            if(sidebarTop) sidebarTop.classList.add('hidden');
+            const sidebarChat = document.getElementById('sidebarChatSection');
+            if(sidebarChat) {
+                sidebarChat.classList.remove('h-[300px]');
+                sidebarChat.classList.add('flex-1');
+            }
+
             const stContainer = document.getElementById('standingsContainer');
             stContainer.innerHTML = ''; 
             data.standings.forEach(st => {
@@ -1099,6 +1127,19 @@
             const titleEl = document.getElementById('lobbyTitle');
             if (titleEl) titleEl.innerText = "LOL WORLDS MAYHEM";
             
+            // UI Átrendezés a fejlécben (Audio Controller felrakása a Szoba Kód helyére)
+            const roomCodeDiv = document.getElementById('roomCodeContainer');
+            if (roomCodeDiv) {
+                roomCodeDiv.innerHTML = '';
+                const audioPanel = document.getElementById('audioControlPanel');
+                if (audioPanel) {
+                    audioPanel.classList.remove('mt-6', 'w-full');
+                    roomCodeDiv.appendChild(audioPanel);
+                }
+                const inviteBtn = document.getElementById('inviteFriendBtn');
+                if(inviteBtn) inviteBtn.remove();
+            }
+
             document.getElementById('startArea').classList.add('hidden');
             document.getElementById('teamsAreaPhase1').classList.add('hidden');
             document.getElementById('teamsAreaPhase2').classList.add('hidden');
@@ -1126,7 +1167,7 @@
             socket.emit('next_match_step', { lobbyId: LOBBY_ID, userId: USER_ID }, (res) => {
                 if (res.status === 'phase_changed') {
                     btn.classList.remove('hidden'); btn.disabled = false;
-                    document.getElementById('matchStatusText').innerText = `✨ ${res.message} ✨`; document.getElementById('matchStatusText').classList.remove('hidden');
+                    document.getElementById('matchStatusText').innerText = `✨ Szakasz lezárva ✨`; document.getElementById('matchStatusText').classList.remove('hidden');
                     document.getElementById('matchGroupBadge').classList.add('hidden'); document.getElementById('matchTeamsDisplay').classList.add('hidden'); document.getElementById('matchWinnerDisplay').classList.add('hidden'); document.getElementById('bo5ScoreDisplay').classList.add('hidden'); document.getElementById('playByPlayLog').classList.add('hidden');
                     
                     ['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT'].forEach(r => document.getElementById(`node-${r}-2`).classList.add('hidden'));
