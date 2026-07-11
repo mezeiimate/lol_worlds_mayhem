@@ -148,8 +148,8 @@
                 </div>
             </div>
 
-            <!-- AUDIO PANEL (Ide került fel a fejlécbe) -->
-            <div id="audioControlPanel" class="flex items-center gap-8">
+            <!-- AUDIO PANEL -->
+            <div id="audioControlPanel" class="flex items-center gap-6">
                 <div class="loader-wrapper" id="loaderWrapper">
                     <div class="loader-spinner"></div>
                 </div>
@@ -170,7 +170,7 @@
             <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 h-full">
                 
                 <!-- BAL OSZLOP: TÉRKÉP ÉS ROSTER -->
-                <div class="xl:col-span-1 flex flex-col gap-5 h-full">
+                <div class="xl:col-span-1 flex flex-col gap-4 h-full">
                     <div class="flex flex-col items-center justify-start relative hex-panel p-6 rounded-sm w-full" id="leftMapArea">
                         <div class="w-full flex justify-between items-center mb-6 border-b border-[#c8aa6e]/30 pb-3">
                             <h2 class="text-lg text-[#f0e6d2] font-bold esport-font tracking-widest" id="mapTitle">SAJÁT ROSTER</h2>
@@ -264,7 +264,7 @@
 
                             <div id="playByPlayLog" class="hidden text-xs mb-4 bg-[#010a13] px-6 py-4 border border-[#c8aa6e]/30 w-full flex flex-col gap-2 min-h-[120px] text-left rounded-sm font-sans"></div>
 
-                            <p class="text-sm text-slate-500 italic cyber-font" id="matchStatusText">A mérkőzések készen állnak!</p>
+                            <p class="text-sm text-slate-500 italic cyber-font" id="matchStatusText"></p>
                             
                             <div id="matchWinnerDisplay" class="hidden mt-4 bg-emerald-900/30 border border-emerald-700 px-6 py-2.5 rounded-sm text-emerald-400 font-bold text-sm uppercase tracking-wider transition-opacity duration-500 flex items-center gap-2">
                                 <span id="winnerTextLabel" class="text-emerald-500/70">Győztes:</span> <span id="winnerText" class="text-white">Winner</span>
@@ -314,7 +314,7 @@
         </div>
     </div>
 
-    <!-- RIGHT SIDEBAR (Social & Lobby Chat Panel) -->
+    <!-- RIGHT SIDEBAR (Lobby Chat Panel) -->
     <div class="w-[350px] bg-[#091428] border-l border-[#c8aa6e]/40 flex flex-col h-full z-20 shadow-[-10px_0_30px_rgba(0,0,0,0.5)] shrink-0 relative">
         
         <!-- FELSŐ RÉSZ: Lobby Tagok -->
@@ -345,6 +345,9 @@
         </div>
     </div>
 
+    <!-- TOAST CONTAINER (Top Center) -->
+    <div id="toastContainer" class="fixed top-6 left-1/2 transform -translate-x-1/2 z-[100] flex flex-col gap-2 pointer-events-none items-center w-full max-w-md"></div>
+
     <script>
         const ROLE_ICONS = {
             'TOP': `<svg class="w-4 h-4 flex-shrink-0" viewBox="0 0 114 112" fill="none"><path d="M101.055 1.13167e-06L-9.79135e-06 9.9662e-06L-9.56827e-07 101.055L22 79.0552L22 21L80.0552 21L101.055 1.13167e-06Z" fill="#C89B3C"/></svg>`,
@@ -357,7 +360,6 @@
         const socket = io();
         const LOBBY_ID = '<%= lobbyId %>';
         const USER_ID = '<%= userId %>';
-        const USERNAME = "<%= typeof username !== 'undefined' ? username : 'Guest' %>"; 
         
         socket.emit('identify', { userId: USER_ID });
 
@@ -896,6 +898,8 @@
         }
 
         // --- ÚJ, ÉLŐ ÁGRAJZ LOGIKA LOKÁLIS FELÜLÍRÁSSAL ---
+        window.bracketScores = window.bracketScores || {}; // Global cache
+
         function renderBracket(matches) {
             const area = document.getElementById('bracketArea');
             const container = document.getElementById('bracketContainer');
@@ -906,39 +910,69 @@
             const semis = matches.filter(m => m.match_type === 'SEMI'); 
             const final = matches.filter(m => m.match_type === 'FINAL');
 
-            // Lokális ágrajz-továbbjutó felülírás, hogy azonnal megjelenjen a győztes a következő körben
-            if (quarters[0] && quarters[0].winner_name && semis[0]) semis[0] = Object.assign({}, semis[0], { team1_name: quarters[0].winner_name });
-            if (quarters[1] && quarters[1].winner_name && semis[0]) semis[0] = Object.assign({}, semis[0], { team2_name: quarters[1].winner_name });
-            if (quarters[2] && quarters[2].winner_name && semis[1]) semis[1] = Object.assign({}, semis[1], { team1_name: quarters[2].winner_name });
-            if (quarters[3] && quarters[3].winner_name && semis[1]) semis[1] = Object.assign({}, semis[1], { team2_name: quarters[3].winner_name });
+            // Segédfüggvény a győztes kiderítésére (Backend + Lokális Cache kombinálva)
+            const getWinner = (m) => {
+                if (!m) return null;
+                if (m.winner_name) return m.winner_name;
+                const matchKey = m.team1_name + "_vs_" + m.team2_name;
+                if (window.bracketScores[matchKey] && window.bracketScores[matchKey].winner) {
+                    return window.bracketScores[matchKey].winner;
+                }
+                return null;
+            };
 
-            if (semis[0] && semis[0].winner_name && final[0]) final[0] = Object.assign({}, final[0], { team1_name: semis[0].winner_name });
-            if (semis[1] && semis[1].winner_name && final[0]) final[0] = Object.assign({}, final[0], { team2_name: semis[1].winner_name });
+            // Lokális ágrajz-továbbjutó felülírás, hogy azonnal megjelenjen a győztes a következő körben!
+            if (quarters[0] && getWinner(quarters[0]) && semis[0]) semis[0].team1_name = getWinner(quarters[0]);
+            if (quarters[1] && getWinner(quarters[1]) && semis[0]) semis[0].team2_name = getWinner(quarters[1]);
+            if (quarters[2] && getWinner(quarters[2]) && semis[1]) semis[1].team1_name = getWinner(quarters[2]);
+            if (quarters[3] && getWinner(quarters[3]) && semis[1]) semis[1].team2_name = getWinner(quarters[3]);
+
+            if (semis[0] && getWinner(semis[0]) && final[0]) final[0].team1_name = getWinner(semis[0]);
+            if (semis[1] && getWinner(semis[1]) && final[0]) final[0].team2_name = getWinner(semis[1]);
             
             const getMatchBox = (m, isFinal = false) => {
                 if (!m) {
                     return `
                         <div class="bg-[#010a13] border border-[#c8aa6e]/30 p-${isFinal ? '3' : '2'} rounded-sm text-center text-${isFinal ? 'xs' : '[0.6rem]'} font-bold flex flex-col justify-center shadow-md">
-                            <div class="flex justify-between px-2"><span class="text-slate-600 truncate text-left flex-1">TBD</span><span class="text-gold font-mono mx-2">-</span></div>
-                            <div class="flex justify-between px-2 mt-1 border-t border-slate-800 pt-1"><span class="text-slate-600 truncate text-left flex-1">TBD</span><span class="text-gold font-mono mx-2">-</span></div>
+                            <div class="flex justify-between px-2 items-center"><span class="text-slate-600 truncate text-left flex-1">TBD</span><span class="text-slate-600 font-mono mx-2">-</span></div>
+                            <div class="flex justify-between px-2 mt-1 border-t border-slate-800 pt-1 items-center"><span class="text-slate-600 truncate text-left flex-1">TBD</span><span class="text-slate-600 font-mono mx-2">-</span></div>
                         </div>`;
                 }
-                const t1 = m.team1_name || 'TBD'; const t2 = m.team2_name || 'TBD';
-                const s1 = m.score1 !== null && m.score1 !== undefined && m.score1 !== '-' ? m.score1 : '-';
-                const s2 = m.score2 !== null && m.score2 !== undefined && m.score2 !== '-' ? m.score2 : '-';
                 
-                const c1 = m.winner_name === t1 ? 'text-emerald-400' : (m.winner_name ? 'text-slate-500' : 'text-slate-300');
-                const c2 = m.winner_name === t2 ? 'text-emerald-400' : (m.winner_name ? 'text-slate-500' : 'text-slate-300');
+                let t1 = m.team1_name || 'TBD'; 
+                let t2 = m.team2_name || 'TBD';
+                
+                let s1 = '-';
+                let s2 = '-';
+                
+                if (m.score1 !== undefined && m.score1 !== null) s1 = m.score1;
+                else if (m.team1_wins !== undefined && m.team1_wins !== null) s1 = m.team1_wins;
+
+                if (m.score2 !== undefined && m.score2 !== null) s2 = m.score2;
+                else if (m.team2_wins !== undefined && m.team2_wins !== null) s2 = m.team2_wins;
+
+                let winner = m.winner_name;
+
+                // Erőszakos lokális felülírás
+                const matchKey = t1 + "_vs_" + t2;
+                if (window.bracketScores[matchKey]) {
+                    s1 = window.bracketScores[matchKey].s1;
+                    s2 = window.bracketScores[matchKey].s2;
+                    if (window.bracketScores[matchKey].winner) winner = window.bracketScores[matchKey].winner;
+                }
+                
+                const c1 = winner === t1 ? 'text-emerald-400' : (winner && t1 !== 'TBD' ? 'text-slate-500' : 'text-slate-300');
+                const c2 = winner === t2 ? 'text-emerald-400' : (winner && t2 !== 'TBD' ? 'text-slate-500' : 'text-slate-300');
                 
                 const borderColor = isFinal ? 'border-[#c8aa6e] shadow-[0_0_15px_rgba(200,170,110,0.2)]' : (m.match_type === 'SEMI' ? 'border-[#c8aa6e]/60' : 'border-[#c8aa6e]/30');
                 
                 return `
                     <div class="bg-[#010a13] border ${borderColor} p-${isFinal ? '3' : '2'} rounded-sm text-center text-${isFinal ? 'xs' : '[0.6rem]'} font-bold flex flex-col justify-center shadow-md transition-colors">
-                        <div class="flex justify-between px-2">
+                        <div class="flex justify-between px-2 items-center">
                             <span class="${c1} truncate text-left flex-1">${t1}</span>
                             <span class="text-[#c8aa6e] font-mono mx-2">${s1}</span>
                         </div>
-                        <div class="flex justify-between px-2 mt-1 border-t border-slate-800 pt-1">
+                        <div class="flex justify-between px-2 mt-1 border-t border-slate-800 pt-1 items-center">
                             <span class="${c2} truncate text-left flex-1">${t2}</span>
                             <span class="text-[#c8aa6e] font-mono mx-2">${s2}</span>
                         </div>
@@ -962,6 +996,17 @@
             document.getElementById('matchWinnerDisplay').classList.add('hidden');
             document.getElementById('fastForwardGroup').classList.add('hidden');
             document.getElementById('nextMatchBtn').classList.add('hidden');
+
+            // AZONNALI CACHE ÉPÍTÉS A PONTOKHOZ (BO5 esetén)
+            if (data.isBO5) {
+                window.bracketScores = window.bracketScores || {};
+                const k1 = data.team1 + "_vs_" + data.team2;
+                const k2 = data.team2 + "_vs_" + data.team1;
+                const winName = data.isSeriesFinished ? data.winner : null;
+                
+                window.bracketScores[k1] = { s1: data.score1, s2: data.score2, winner: winName };
+                window.bracketScores[k2] = { s1: data.score2, s2: data.score1, winner: winName };
+            }
             
             const badge = document.getElementById('matchGroupBadge');
             badge.classList.remove('hidden'); badge.innerText = data.isBO5 ? `${data.group} - Game ${data.gameNumber}` : data.group;
@@ -1030,13 +1075,9 @@
                                 document.getElementById('winnerTextLabel').innerText = "🏆 GYŐZTES:";
                                 if (data.team1 === data.winner) { t1El.classList.add('text-emerald-400'); t2El.classList.add('text-slate-600'); } 
                                 else { t1El.classList.add('text-slate-600'); t2El.classList.add('text-emerald-400'); }
+                                
+                                // Gyorstekerésnél kivágtuk a felesleges szöveget. Csak a Bracket frissül.
                             } else { document.getElementById('winnerTextLabel').innerText = "Game győztes:"; }
-
-                            // FAST FORWARD esetén csak kiírjuk a statust, de score-t nem a közepébe
-                            if (data.isFastForward) {
-                                document.getElementById('matchStatusText').classList.remove('hidden');
-                                document.getElementById('matchStatusText').innerText = `✨ Meccs leszimulálva ✨`;
-                            }
 
                             if (data.newState) { 
                                 updateLobbyStateUI(data.newState); 
@@ -1175,6 +1216,7 @@
                     ['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT'].forEach(r => document.getElementById(`node-${r}-2`).classList.add('hidden'));
                     document.getElementById('mapTitle').innerText = "SAJÁT ROSTER";
                     
+                    // ZENE VÁLTÁS, ha átlépünk a kieséses szakaszba
                     playTrack('knockout', 'Worlds Theme');
 
                 } else if (res.status === 'error') {
