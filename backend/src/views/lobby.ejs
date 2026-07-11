@@ -70,6 +70,7 @@
 
         /* --- CHAT STYLES --- */
         .chat-msg { display: flex; flex-direction: column; margin-bottom: 4px; }
+        .sys-msg { color: #facc15; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; text-align: center; opacity: 0.8; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid rgba(250, 204, 21, 0.2); }
 
         /* --- AUDIO LOADER ANIMATION --- */
         .loader-wrapper {
@@ -98,20 +99,50 @@
 
         /* --- AUDIO VOLUME SLIDER --- */
         .slider-container { display: inline-flex; align-items: center; position: relative; cursor: pointer; }
-        .slider-container .volume { color: #f0e6d2; width: 18px; height: auto; margin-right: 10px; pointer-events: auto; transition: opacity 0.3s; }
+        .slider-container .volume { color: #f0e6d2; width: 18px; height: auto; margin-right: 10px; pointer-events: auto; transition: opacity 0.3s; z-index: 20; }
         .slider-container .level {
             -webkit-appearance: none; appearance: none;
             width: 80px; height: 8px; background: rgba(200, 170, 110, 0.2);
             overflow: hidden; border-radius: 5px; cursor: inherit; transform: rotate(0deg);
         }
         .slider-container .level::-webkit-slider-thumb {
-            -webkit-appearance: none; width: 0; height: 0;
-            box-shadow: -200px 0 0 200px #c8aa6e;
+            -webkit-appearance: none; width: 0; height: 0; box-shadow: -200px 0 0 200px #c8aa6e;
         }
         .slider-container .level::-moz-range-thumb {
-            width: 0; height: 0; border-radius: 0; border: none;
-            box-shadow: -200px 0 0 200px #c8aa6e;
+            width: 0; height: 0; border-radius: 0; border: none; box-shadow: -200px 0 0 200px #c8aa6e;
         }
+
+        /* --- COSMIC PORTAL BUTTON --- */
+        .cosmic-portal-btn {
+            --btn-bg: #010a13; --btn-color: #c8aa6e; --btn-highlight: #091428;
+            --portal-color1: #c8aa6e; --portal-color2: #f0e6d2;
+            position: relative; font-family: "Oswald", sans-serif; font-size: 1rem; font-weight: bold;
+            letter-spacing: 0.1em; text-transform: uppercase; color: var(--btn-color); background-color: var(--btn-bg);
+            border: none; padding: 0.6em 1.5em; cursor: pointer; overflow: hidden; transition: all 0.3s ease;
+            clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 90% 100%, 10% 100%, 0% 70%);
+        }
+        .cosmic-portal-btn::before {
+            content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(from 0deg at 50% 50%, var(--portal-color1) 0deg, var(--portal-color2) 120deg, var(--portal-color1) 240deg, var(--portal-color2) 360deg);
+            animation: rotatePortal 4s linear infinite; opacity: 0.4; transition: opacity 0.3s ease;
+        }
+        .cosmic-portal-btn:hover:not(:disabled)::before { opacity: 1; }
+        .cosmic-portal-btn::after { content: ""; position: absolute; inset: 2px; background-color: var(--btn-bg); clip-path: inherit; z-index: 1; }
+        .cosmic-btn-text { position: relative; z-index: 2; text-shadow: 0 0 10px rgba(200, 170, 110, 0.5); }
+        .portal-effect { position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, var(--btn-highlight), transparent 50%); opacity: 0; transition: opacity 0.3s ease; z-index: 1; }
+        .cosmic-portal-btn:hover:not(:disabled) .portal-effect { opacity: 1; animation: pulsePortal 2s ease-in-out infinite; }
+        .cosmic-portal-btn:hover:not(:disabled) { transform: translateY(-2px); filter: drop-shadow(0 5px 10px rgba(200, 170, 110, 0.4)); color: #fff; }
+        .cosmic-portal-btn:active:not(:disabled) { transform: translateY(0); }
+        .cosmic-portal-btn:disabled { filter: grayscale(100%); cursor: not-allowed; opacity: 0.6; }
+        @keyframes rotatePortal { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes pulsePortal { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+        /* --- CUSTOM CHECKBOX --- */
+        .custom-checkbox { cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative; }
+        .custom-checkbox input { display: none; }
+        .custom-checkbox svg { overflow: visible; height: 1.5em; width: 1.5em; }
+        .custom-checkbox .path { fill: none; stroke: #ff004d; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; transition: stroke-dasharray 0.5s ease, stroke-dashoffset 0.5s ease; stroke-dasharray: 241 9999999; stroke-dashoffset: 0; }
+        .custom-checkbox input:checked ~ svg .path { stroke-dasharray: 70.5096664428711 9999999; stroke-dashoffset: -262.2723388671875; stroke: #c8aa6e; }
     </style>
 </head>
 <body class="flex w-screen h-screen bg-[#010a13] text-[#f0e6d2] overflow-hidden relative">
@@ -374,7 +405,7 @@
             audio.loop = true;
             audio.volume = isMuted ? 0 : globalVolume;
         });
-        audioTracks.silver.loop = false; 
+        audioTracks.silver.loop = false; // Silver Scrapes csak egyszer
 
         let audioInitialized = false;
 
@@ -644,7 +675,34 @@
 
                 if(nextMatchBtn) { nextMatchBtn.classList.remove('hidden'); nextMatchBtn.disabled = false; }
                 
+                // FRONTEND-SZINTŰ FÁZIS-VÉGE ÉRZÉKELÉS
+                let phaseIsDone = false;
                 if (!hasPending) {
+                    phaseIsDone = true;
+                } else if (data.bracket && data.bracket.length > 0 && ['QUARTER', 'SEMI', 'FINAL'].includes(phase)) {
+                    let matchesOfPhase = data.bracket.filter(m => m.match_type === phase);
+                    
+                    if (phase === 'QUARTER' && matchesOfPhase.length < 4) phaseIsDone = false;
+                    else if (phase === 'SEMI' && matchesOfPhase.length < 2) phaseIsDone = false;
+                    else if (phase === 'FINAL' && matchesOfPhase.length < 1) phaseIsDone = false;
+                    else {
+                        let allHaveWinner = matchesOfPhase.every(m => {
+                            if (m.winner_name && m.winner_name !== 'TBD') return true;
+                            if (m.team1_name && m.team2_name) {
+                                const k1 = m.team1_name + "_vs_" + m.team2_name;
+                                const k2 = m.team2_name + "_vs_" + m.team1_name;
+                                if (window.bracketScores && window.bracketScores[k1] && window.bracketScores[k1].winner) return true;
+                                if (window.bracketScores && window.bracketScores[k2] && window.bracketScores[k2].winner) return true;
+                            }
+                            if ((m.score1 === 3) || (m.score2 === 3)) return true;
+                            if ((m.team1_wins === 3) || (m.team2_wins === 3)) return true;
+                            return false;
+                        });
+                        if (allHaveWinner) phaseIsDone = true;
+                    }
+                }
+
+                if (phaseIsDone) {
                     if(fastForwardGroup) { fastForwardGroup.classList.add('hidden'); fastForwardGroup.classList.remove('flex'); }
                     if (phase === 'GROUP' && nextMatchBtn) { nextMatchBtn.innerText = "IRÁNY A RÁJÁTSZÁS"; } 
                     else if (phase === 'QUARTER' && nextMatchBtn) { nextMatchBtn.innerText = "IRÁNY AZ ELŐDÖNTŐ"; } 
@@ -657,7 +715,7 @@
                         if(btnAll) btnAll.classList.remove('hidden'); 
                         if(btnGroup) btnGroup.classList.remove('hidden'); 
                         if(btnBo5) btnBo5.classList.add('hidden');
-                    } else if (phase === 'QUARTER' || phase === 'SEMI' || phase === 'FINAL') {
+                    } else if (['QUARTER', 'SEMI', 'FINAL'].includes(phase)) {
                         if(btnAll) btnAll.classList.add('hidden'); 
                         if(btnGroup) btnGroup.classList.add('hidden'); 
                         if(btnBo5) btnBo5.classList.remove('hidden');
@@ -1217,7 +1275,6 @@
             const champLogo = document.getElementById('championLogo');
             if(champLogo) champLogo.src = getUserAvatar(data.winner, true);
 
-            // Töröljük a tagok táblázatát a jobb sávból, és kinyitjuk a chatet 100%-ra
             const sidebarTop = document.getElementById('sidebarTopSection');
             if(sidebarTop) sidebarTop.classList.add('hidden');
             const sidebarChat = document.getElementById('sidebarChatSection');
@@ -1262,14 +1319,14 @@
             const titleEl = document.getElementById('lobbyTitle');
             if (titleEl) titleEl.innerText = "LOL WORLDS MAYHEM";
             
-            // Szoba Kód elrejtése
             const roomCodeDiv = document.getElementById('roomCodeContainer');
             if (roomCodeDiv) { roomCodeDiv.classList.add('hidden'); }
             
-            // Audio Panel a Header Jobb oldalára kerül
             const headerRight = document.getElementById('headerRightArea');
             const audioPanel = document.getElementById('audioControlPanel');
             if (headerRight && audioPanel) {
+                audioPanel.classList.remove('mt-6', 'w-full', 'bg-[#091428]/80', 'border-[#c8aa6e]/30', 'p-4', 'shadow-lg');
+                audioPanel.classList.add('gap-6');
                 headerRight.innerHTML = '';
                 headerRight.appendChild(audioPanel);
             }
@@ -1303,9 +1360,6 @@
             socket.emit('next_match_step', { lobbyId: LOBBY_ID, userId: USER_ID }, (res) => {
                 if (res.status === 'phase_changed') {
                     if(btn) { btn.classList.remove('hidden'); btn.disabled = false; }
-                    
-                    const mText = document.getElementById('matchStatusText');
-                    if(mText) { mText.innerText = `✨ Szakasz lezárva ✨`; mText.classList.remove('hidden'); }
                     
                     document.getElementById('matchGroupBadge')?.classList.add('hidden'); 
                     document.getElementById('matchTeamsDisplay')?.classList.add('hidden'); 
