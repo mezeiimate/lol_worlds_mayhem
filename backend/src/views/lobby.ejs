@@ -70,7 +70,6 @@
 
         /* --- CHAT STYLES --- */
         .chat-msg { display: flex; flex-direction: column; margin-bottom: 4px; }
-        .sys-msg { color: #facc15; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; text-align: center; opacity: 0.8; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid rgba(250, 204, 21, 0.2); }
 
         /* --- AUDIO LOADER ANIMATION --- */
         .loader-wrapper {
@@ -99,17 +98,19 @@
 
         /* --- AUDIO VOLUME SLIDER --- */
         .slider-container { display: inline-flex; align-items: center; position: relative; cursor: pointer; }
-        .slider-container .volume { color: #f0e6d2; width: 18px; height: auto; margin-right: 10px; transition: opacity 0.3s; z-index: 20; }
+        .slider-container .volume { color: #f0e6d2; width: 18px; height: auto; margin-right: 10px; pointer-events: auto; transition: opacity 0.3s; }
         .slider-container .level {
             -webkit-appearance: none; appearance: none;
             width: 80px; height: 8px; background: rgba(200, 170, 110, 0.2);
             overflow: hidden; border-radius: 5px; cursor: inherit; transform: rotate(0deg);
         }
         .slider-container .level::-webkit-slider-thumb {
-            -webkit-appearance: none; width: 0; height: 0; box-shadow: -200px 0 0 200px #c8aa6e;
+            -webkit-appearance: none; width: 0; height: 0;
+            box-shadow: -200px 0 0 200px #c8aa6e;
         }
         .slider-container .level::-moz-range-thumb {
-            width: 0; height: 0; border-radius: 0; border: none; box-shadow: -200px 0 0 200px #c8aa6e;
+            width: 0; height: 0; border-radius: 0; border: none;
+            box-shadow: -200px 0 0 200px #c8aa6e;
         }
     </style>
 </head>
@@ -380,7 +381,7 @@
         function initAudio() {
             if(audioInitialized) return;
             let playPromise;
-            if(!document.getElementById('startArea').classList.contains('hidden') || !document.getElementById('teamsAreaPhase1').classList.contains('hidden')) {
+            if(!document.getElementById('startArea')?.classList.contains('hidden') || !document.getElementById('teamsAreaPhase1')?.classList.contains('hidden')) {
                 setLoaderText('Draft fázis');
                 currentTrack = 'draft';
                 playPromise = audioTracks.draft.play();
@@ -400,8 +401,10 @@
             }, { once: true })
         );
 
-        document.getElementById('volumeSlider').value = globalVolume * 100;
-        document.getElementById('muteIcon').style.opacity = isMuted ? '0.5' : '1';
+        const vSlider = document.getElementById('volumeSlider');
+        if(vSlider) vSlider.value = globalVolume * 100;
+        const mIcon = document.getElementById('muteIcon');
+        if(mIcon) mIcon.style.opacity = isMuted ? '0.5' : '1';
 
         function changeVolume(val) {
             globalVolume = val / 100;
@@ -413,11 +416,13 @@
             isMuted = !isMuted;
             localStorage.setItem('lol_muted', isMuted);
             if(currentTrack) audioTracks[currentTrack].volume = isMuted ? 0 : globalVolume;
-            document.getElementById('muteIcon').style.opacity = isMuted ? '0.5' : '1';
+            const mIcon = document.getElementById('muteIcon');
+            if(mIcon) mIcon.style.opacity = isMuted ? '0.5' : '1';
         }
 
         function setLoaderText(text) {
             const wrapper = document.getElementById('loaderWrapper');
+            if(!wrapper) return;
             wrapper.innerHTML = '<div class="loader-spinner"></div>';
             for(let i=0; i<text.length; i++) {
                 const char = text[i] === ' ' ? '&nbsp;' : text[i];
@@ -464,14 +469,21 @@
 
         function appendLobbyChatMessage(sender, msg, isSelf) {
             const list = document.getElementById('lobbyChatMessageList');
+            if(!list) return;
             const textClass = `block text-[12px] text-slate-200 mt-0.5 break-words`;
 
             if (sender === lastLobbySender) {
                 const msgDiv = list.lastElementChild;
-                const textSpan = document.createElement('span');
-                textSpan.className = textClass;
-                textSpan.textContent = msg;
-                msgDiv.appendChild(textSpan);
+                if (msgDiv && !msgDiv.classList.contains('sys-msg')) {
+                    const textSpan = document.createElement('span');
+                    textSpan.className = textClass;
+                    textSpan.textContent = msg;
+                    msgDiv.appendChild(textSpan);
+                } else {
+                    lastLobbySender = null;
+                    appendLobbyChatMessage(sender, msg, isSelf);
+                    return;
+                }
             } else {
                 const msgDiv = document.createElement('div');
                 msgDiv.className = `flex flex-col w-full mt-2 items-start`;
@@ -509,6 +521,7 @@
             if (e.key === 'Enter') {
                 e.preventDefault(); 
                 const input = document.getElementById('lobbyChatInput');
+                if(!input) return;
                 const msg = input.value.trim();
                 
                 if (msg) {
@@ -520,12 +533,14 @@
         // --- VÉGE: LOBBY CHAT LOGIC ---
 
         function showToast(title, message, type, extraData = null) {
+            const toastContainer = document.getElementById('toastContainer');
+            if(!toastContainer) return;
             const toast = document.createElement('div');
             toast.className = `bg-[#091428] border ${type === 'success' ? 'border-[#c8aa6e]' : 'border-red-500'} p-3 rounded-sm shadow-xl w-full pointer-events-auto transform transition-all -translate-y-full opacity-0 relative overflow-hidden`;
             let actionHtml = '';
             if (type === 'invite') { actionHtml = `<div class="mt-2 flex gap-2"><button onclick="acceptInvite('${extraData.inviteCode}')" class="flex-1 bg-[#c8aa6e] text-[#010a13] px-2 py-1 text-[0.65rem] font-bold uppercase tracking-widest rounded-sm hover:bg-white transition-colors">Csatlakozás</button></div>`; }
             toast.innerHTML = `<h4 class="text-[${type === 'success' ? '#c8aa6e' : '#fff'}] font-bold text-[0.7rem] tracking-wider uppercase cyber-font">${title}</h4><p class="text-slate-300 text-[0.65rem] mt-1">${message}</p>${actionHtml}`;
-            document.getElementById('toastContainer').appendChild(toast);
+            toastContainer.appendChild(toast);
             
             toast.offsetHeight; 
             setTimeout(() => { toast.classList.remove('-translate-y-full', 'opacity-0'); }, 10);
@@ -533,9 +548,13 @@
         }
 
         async function openInviteModal() {
-            document.getElementById('inviteModal').classList.remove('hidden');
-            document.getElementById('inviteModal').classList.add('flex');
+            const modal = document.getElementById('inviteModal');
+            if(modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
             const container = document.getElementById('friendsListContainer');
+            if(!container) return;
             container.innerHTML = '<p class="text-slate-400 text-sm">Betöltés...</p>';
             try {
                 const res = await fetch('/api/friends/list');
@@ -557,8 +576,11 @@
         }
 
         function closeInviteModal() { 
-            document.getElementById('inviteModal').classList.add('hidden'); 
-            document.getElementById('inviteModal').classList.remove('flex');
+            const modal = document.getElementById('inviteModal');
+            if(modal) {
+                modal.classList.add('hidden'); 
+                modal.classList.remove('flex');
+            }
         }
         
         function sendInvite(targetId, btn) {
@@ -611,8 +633,8 @@
             }
             
             if (USER_ID === data.hostId && !isTournamentEnded && data.status === 'SIMULATING') {
-                document.getElementById('hostControls').classList.remove('hidden');
-                document.getElementById('hostControls').classList.add('flex');
+                document.getElementById('hostControls')?.classList.remove('hidden');
+                document.getElementById('hostControls')?.classList.add('flex');
                 
                 const nextMatchBtn = document.getElementById('nextMatchBtn');
                 const fastForwardGroup = document.getElementById('fastForwardGroup');
@@ -620,21 +642,25 @@
                 const btnGroup = document.getElementById('ffGroupBtn');
                 const btnBo5 = document.getElementById('ffBo5Btn');
 
-                nextMatchBtn.classList.remove('hidden'); nextMatchBtn.disabled = false;
+                if(nextMatchBtn) { nextMatchBtn.classList.remove('hidden'); nextMatchBtn.disabled = false; }
                 
                 if (!hasPending) {
-                    fastForwardGroup.classList.add('hidden'); fastForwardGroup.classList.remove('flex');
-                    if (phase === 'GROUP') { nextMatchBtn.innerText = "IRÁNY A RÁJÁTSZÁS"; } 
-                    else if (phase === 'QUARTER') { nextMatchBtn.innerText = "IRÁNY AZ ELŐDÖNTŐ"; } 
-                    else if (phase === 'SEMI') { nextMatchBtn.innerText = "IRÁNY A DÖNTŐ"; } 
-                    else if (phase === 'FINAL') { nextMatchBtn.innerText = "EREDMÉNYHIRDETÉS"; }
+                    if(fastForwardGroup) { fastForwardGroup.classList.add('hidden'); fastForwardGroup.classList.remove('flex'); }
+                    if (phase === 'GROUP' && nextMatchBtn) { nextMatchBtn.innerText = "IRÁNY A RÁJÁTSZÁS"; } 
+                    else if (phase === 'QUARTER' && nextMatchBtn) { nextMatchBtn.innerText = "IRÁNY AZ ELŐDÖNTŐ"; } 
+                    else if (phase === 'SEMI' && nextMatchBtn) { nextMatchBtn.innerText = "IRÁNY A DÖNTŐ"; } 
+                    else if (phase === 'FINAL' && nextMatchBtn) { nextMatchBtn.innerText = "EREDMÉNYHIRDETÉS"; }
                 } else {
-                    nextMatchBtn.innerText = "KÖVETKEZŐ MECCS";
-                    fastForwardGroup.classList.remove('hidden'); fastForwardGroup.classList.add('flex');
+                    if(nextMatchBtn) nextMatchBtn.innerText = "KÖVETKEZŐ MECCS";
+                    if(fastForwardGroup) { fastForwardGroup.classList.remove('hidden'); fastForwardGroup.classList.add('flex'); }
                     if (phase === 'GROUP') {
-                        btnAll.classList.remove('hidden'); btnGroup.classList.remove('hidden'); btnBo5.classList.add('hidden');
+                        if(btnAll) btnAll.classList.remove('hidden'); 
+                        if(btnGroup) btnGroup.classList.remove('hidden'); 
+                        if(btnBo5) btnBo5.classList.add('hidden');
                     } else if (phase === 'QUARTER' || phase === 'SEMI' || phase === 'FINAL') {
-                        btnAll.classList.add('hidden'); btnGroup.classList.add('hidden'); btnBo5.classList.remove('hidden');
+                        if(btnAll) btnAll.classList.add('hidden'); 
+                        if(btnGroup) btnGroup.classList.add('hidden'); 
+                        if(btnBo5) btnBo5.classList.remove('hidden');
                     }
                 }
             }
@@ -643,8 +669,8 @@
             if (data.bracket && data.bracket.length > 0 && ['QUARTER', 'SEMI', 'FINAL'].includes(data.currentPhase)) { 
                 renderBracket(data.bracket); 
             } else {
-                document.getElementById('bracketArea').classList.add('hidden');
-                document.getElementById('bracketArea').classList.remove('flex');
+                document.getElementById('bracketArea')?.classList.add('hidden');
+                document.getElementById('bracketArea')?.classList.remove('flex');
             }
         }
 
@@ -661,8 +687,12 @@
         }
 
         function renderPhase1() {
-            document.getElementById('teamsAreaPhase2').classList.add('hidden'); document.getElementById('teamsAreaPhase1').classList.remove('hidden'); document.getElementById('teamsAreaPhase1').classList.add('flex');
-            const list = document.getElementById('teamsListPhase1'); list.innerHTML = '';
+            document.getElementById('teamsAreaPhase2')?.classList.add('hidden'); 
+            document.getElementById('teamsAreaPhase1')?.classList.remove('flex'); 
+            document.getElementById('teamsAreaPhase1')?.classList.remove('hidden'); 
+            document.getElementById('teamsAreaPhase1')?.classList.add('flex');
+            const list = document.getElementById('teamsListPhase1'); 
+            if(list) list.innerHTML = '';
             
             currentOffer.forEach((teamObj, index) => {
                 let playersHtml = `<div class="grid grid-cols-2 gap-x-4 gap-y-1 mt-3">`;
@@ -674,55 +704,66 @@
                 });
                 playersHtml += `</div>`;
 
-                list.innerHTML += `
-                    <div class="hex-bg corner-borders cursor-pointer hex-bg-hover p-4 mb-3" onclick="selectTeam(${index})">
-                        <div class="flex items-center gap-4">
-                            <img src="${getEsportImage(teamObj.team, true, teamObj.season)}" onerror="this.onerror=null; this.src='/League_of_Legends_icon.svg';" class="w-12 h-12 object-contain" alt="logo">
-                            <div>
-                                <div class="flex items-center">
-                                    ${getRegionBadge(teamObj.country)}
-                                    <h3 class="esport-font text-lg text-white tracking-widest leading-none ml-2">${teamObj.team}</h3>
+                if(list) {
+                    list.innerHTML += `
+                        <div class="hex-bg corner-borders cursor-pointer hex-bg-hover p-4 mb-3" onclick="selectTeam(${index})">
+                            <div class="flex items-center gap-4">
+                                <img src="${getEsportImage(teamObj.team, true, teamObj.season)}" onerror="this.onerror=null; this.src='/League_of_Legends_icon.svg';" class="w-12 h-12 object-contain" alt="logo">
+                                <div>
+                                    <div class="flex items-center">
+                                        ${getRegionBadge(teamObj.country)}
+                                        <h3 class="esport-font text-lg text-white tracking-widest leading-none ml-2">${teamObj.team}</h3>
+                                    </div>
+                                    <span class="font-mono text-slate-500 font-bold tracking-widest text-[0.65rem] mt-1 block">Season ${teamObj.season}</span>
                                 </div>
-                                <span class="font-mono text-slate-500 font-bold tracking-widest text-[0.65rem] mt-1 block">Season ${teamObj.season}</span>
                             </div>
+                            ${playersHtml}
                         </div>
-                        ${playersHtml}
-                    </div>
-                `;
+                    `;
+                }
             });
         }
 
         function renderPhase2() {
-            document.getElementById('teamsAreaPhase1').classList.add('hidden'); document.getElementById('teamsAreaPhase1').classList.remove('flex'); document.getElementById('teamsAreaPhase2').classList.remove('hidden'); document.getElementById('teamsAreaPhase2').classList.add('flex');
+            document.getElementById('teamsAreaPhase1')?.classList.add('hidden'); 
+            document.getElementById('teamsAreaPhase1')?.classList.remove('flex'); 
+            document.getElementById('teamsAreaPhase2')?.classList.remove('hidden'); 
+            document.getElementById('teamsAreaPhase2')?.classList.add('flex');
 
             const teamObj = currentOffer[selectedTeamIndex];
-            document.getElementById('phase2Header').innerHTML = `
-                <img src="${getEsportImage(teamObj.team, true, teamObj.season)}" onerror="this.onerror=null; this.src='/League_of_Legends_icon.svg';" class="w-10 h-10 object-contain">
-                <div>
-                    <div class="flex items-center">
-                        ${getRegionBadge(teamObj.country)}
-                        <h2 class="esport-font text-xl text-white tracking-widest leading-none mx-2">${teamObj.team}</h2>
+            const header = document.getElementById('phase2Header');
+            if(header) {
+                header.innerHTML = `
+                    <img src="${getEsportImage(teamObj.team, true, teamObj.season)}" onerror="this.onerror=null; this.src='/League_of_Legends_icon.svg';" class="w-10 h-10 object-contain">
+                    <div>
+                        <div class="flex items-center">
+                            ${getRegionBadge(teamObj.country)}
+                            <h2 class="esport-font text-xl text-white tracking-widest leading-none mx-2">${teamObj.team}</h2>
+                        </div>
+                        <span class="font-mono text-slate-500 font-bold tracking-widest text-[0.65rem] mt-1 block">Season ${teamObj.season}</span>
                     </div>
-                    <span class="font-mono text-slate-500 font-bold tracking-widest text-[0.65rem] mt-1 block">Season ${teamObj.season}</span>
-                </div>
-            `;
+                `;
+            }
             
-            const list = document.getElementById('teamsListPhase2'); list.innerHTML = '';
+            const list = document.getElementById('teamsListPhase2'); 
+            if(list) list.innerHTML = '';
             teamObj.players.forEach(p => {
                 const isFilled = filledRoles.has(p.ingame_role);
                 const disabledClass = isFilled ? "opacity-30 cursor-not-allowed grayscale" : "cursor-pointer hex-bg-hover";
                 const onClick = isFilled ? "" : `onclick="pickPlayer('${p.id}', '${p.ingame_role}', '${p.name}', '${teamObj.team}', '${teamObj.season}')"`;
                 const icon = ROLE_ICONS[p.ingame_role] || '';
 
-                list.innerHTML += `
-                    <div class="hex-bg corner-borders p-2.5 flex items-center justify-between ${disabledClass}" ${onClick}>
-                        <div class="flex items-center gap-4">
-                            <img src="${getEsportImage(p.name, false, teamObj.season)}" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg'; this.classList.remove('border', 'border-[#c8aa6e]');" class="w-10 h-10 rounded-sm border border-[#c8aa6e] object-cover object-top" alt="player">
-                            <h3 class="esport-font text-sm text-[#f0e6d2] tracking-wider">${p.name}</h3>
+                if(list) {
+                    list.innerHTML += `
+                        <div class="hex-bg corner-borders p-2.5 flex items-center justify-between ${disabledClass}" ${onClick}>
+                            <div class="flex items-center gap-4">
+                                <img src="${getEsportImage(p.name, false, teamObj.season)}" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg'; this.classList.remove('border', 'border-[#c8aa6e]');" class="w-10 h-10 rounded-sm border border-[#c8aa6e] object-cover object-top" alt="player">
+                                <h3 class="esport-font text-sm text-[#f0e6d2] tracking-wider">${p.name}</h3>
+                            </div>
+                            <div class="mr-3 text-[#c8aa6e]">${icon}</div>
                         </div>
-                        <div class="mr-3 text-[#c8aa6e]">${icon}</div>
-                    </div>
-                `;
+                    `;
+                }
             });
         }
 
@@ -732,9 +773,11 @@
             socket.emit('roll_teams', { lobbyId: LOBBY_ID, userId: USER_ID }, (res) => { 
                 if (res.status === 'success') { 
                     currentOffer = res.data.offer; selectedTeamIndex = null; 
-                    document.getElementById('rerollsTextP1').innerText = `${res.data.rerollsLeft} LEFT`; 
-                    document.getElementById('initialRerollText').innerText = `${res.data.rerollsLeft} REROLLS LEFT`; 
-                    document.getElementById('startArea').classList.add('hidden'); 
+                    const rt1 = document.getElementById('rerollsTextP1');
+                    if(rt1) rt1.innerText = `${res.data.rerollsLeft} LEFT`; 
+                    const ir1 = document.getElementById('initialRerollText');
+                    if(ir1) ir1.innerText = `${res.data.rerollsLeft} REROLLS LEFT`; 
+                    document.getElementById('startArea')?.classList.add('hidden'); 
                     renderShop(); 
                 } else { showToast('Hiba', res.message, 'error'); } 
             });
@@ -745,19 +788,24 @@
                 if (res.status === 'success') { 
                     filledRoles.add(role); 
                     const node = document.getElementById(`node-${role}-1`);
-                    node.innerHTML = `
-                        <div class="map-node-filled flex flex-col items-center">
-                            <img src="${getEsportImage(playerName, false, season)}" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg';" class="object-cover object-top" alt="${playerName}">
-                            <div class="badge"><span class="text-white block">${playerName}</span><span class="text-slate-400 text-[0.5rem] font-mono leading-none">${season}</span></div>
-                        </div>
-                    `;
-                    document.getElementById('teamsAreaPhase2').classList.add('hidden'); document.getElementById('teamsAreaPhase2').classList.remove('flex');
+                    if(node) {
+                        node.innerHTML = `
+                            <div class="map-node-filled flex flex-col items-center">
+                                <img src="${getEsportImage(playerName, false, season)}" onerror="this.onerror=null; this.src='/profile-circle-svgrepo-com.svg';" class="object-cover object-top" alt="${playerName}">
+                                <div class="badge"><span class="text-white block">${playerName}</span><span class="text-slate-400 text-[0.5rem] font-mono leading-none">${season}</span></div>
+                            </div>
+                        `;
+                    }
+                    document.getElementById('teamsAreaPhase2')?.classList.add('hidden'); 
+                    document.getElementById('teamsAreaPhase2')?.classList.remove('flex');
                     currentOffer = []; selectedTeamIndex = null;
                     
                     if (filledRoles.size >= 5) { 
-                        document.getElementById('readyBtnTop').classList.remove('hidden');
-                        document.getElementById('startArea').classList.add('hidden');
-                    } else { document.getElementById('startArea').classList.remove('hidden'); } 
+                        document.getElementById('readyBtnTop')?.classList.remove('hidden');
+                        document.getElementById('startArea')?.classList.add('hidden');
+                    } else { 
+                        document.getElementById('startArea')?.classList.remove('hidden'); 
+                    } 
                 } else { showToast('Hiba', res.message, 'error'); } 
             });
         }
@@ -765,12 +813,12 @@
         function setReady() { 
             socket.emit('toggle_ready', { lobbyId: LOBBY_ID, userId: USER_ID }, (res) => { 
                 if (res.status === 'success') { 
-                    document.getElementById('readyBtnTop').classList.add('hidden'); 
-                    document.getElementById('startArea').classList.add('hidden');
-                    document.getElementById('teamsAreaPhase1').classList.add('hidden');
-                    document.getElementById('teamsAreaPhase2').classList.add('hidden');
-                    document.getElementById('waitingArea').classList.remove('hidden');
-                    document.getElementById('waitingArea').classList.add('flex'); 
+                    document.getElementById('readyBtnTop')?.classList.add('hidden'); 
+                    document.getElementById('startArea')?.classList.add('hidden');
+                    document.getElementById('teamsAreaPhase1')?.classList.add('hidden');
+                    document.getElementById('teamsAreaPhase2')?.classList.add('hidden');
+                    document.getElementById('waitingArea')?.classList.remove('hidden');
+                    document.getElementById('waitingArea')?.classList.add('flex'); 
                 } 
             }); 
         }
@@ -782,6 +830,7 @@
 
         function renderGroupTables(players, targetId = 'sidebarContent', prefix = 'sidebar') {
             const container = document.getElementById(targetId);
+            if(!container) return;
             container.innerHTML = '';
             const groups = ['A', 'B', 'C', 'D'];
             groups.forEach(g => {
@@ -850,6 +899,7 @@
 
         function renderManagerSidebar(players) {
             const container = document.getElementById('sidebarContent');
+            if(!container) return;
             container.innerHTML = '';
             const humans = players.filter(p => !p.bot_name);
             humans.forEach(p => {
@@ -889,6 +939,7 @@
         function renderBracket(matches) {
             const area = document.getElementById('bracketArea');
             const container = document.getElementById('bracketContainer');
+            if(!area || !container) return;
             
             area.classList.remove('hidden'); area.classList.add('flex');
             
@@ -996,10 +1047,10 @@
 
         socket.on('match_simulated_event', (data) => {
             if (isTournamentEnded) return;
-            document.getElementById('matchStatusText').classList.add('hidden');
-            document.getElementById('matchWinnerDisplay').classList.add('hidden');
-            document.getElementById('fastForwardGroup').classList.add('hidden');
-            document.getElementById('nextMatchBtn').classList.add('hidden');
+            document.getElementById('matchStatusText')?.classList.add('hidden');
+            document.getElementById('matchWinnerDisplay')?.classList.add('hidden');
+            document.getElementById('fastForwardGroup')?.classList.add('hidden');
+            document.getElementById('nextMatchBtn')?.classList.add('hidden');
 
             // AZONNALI CACHE ÉPÍTÉS A PONTOKHOZ (BO5 esetén)
             if (data.isBO5) {
@@ -1011,38 +1062,57 @@
             }
             
             const badge = document.getElementById('matchGroupBadge');
-            badge.classList.remove('hidden'); badge.innerText = data.isBO5 ? `${data.group} - Game ${data.gameNumber}` : data.group;
+            if(badge) {
+                badge.classList.remove('hidden'); 
+                badge.innerText = data.isBO5 ? `${data.group} - Game ${data.gameNumber}` : data.group;
+            }
             
             const teamsDisplay = document.getElementById('matchTeamsDisplay');
-            teamsDisplay.classList.remove('hidden'); teamsDisplay.classList.add('flex');
+            if(teamsDisplay) {
+                teamsDisplay.classList.remove('hidden'); 
+                teamsDisplay.classList.add('flex');
+            }
             
-            document.getElementById('matchTeam1Img').src = getUserAvatar(data.team1, true);
-            document.getElementById('matchTeam2Img').src = getUserAvatar(data.team2, true);
+            const img1 = document.getElementById('matchTeam1Img');
+            if(img1) img1.src = getUserAvatar(data.team1, true);
+            const img2 = document.getElementById('matchTeam2Img');
+            if(img2) img2.src = getUserAvatar(data.team2, true);
 
             const t1El = document.getElementById('matchTeam1'); const t2El = document.getElementById('matchTeam2');
-            t1El.innerText = data.team1; t2El.innerText = data.team2;
-            t1El.className = "text-xl esport-font font-bold tracking-wider truncate w-full text-right text-slate-300 transition-colors duration-500";
-            t2El.className = "text-xl esport-font font-bold tracking-wider truncate w-full text-left text-slate-300 transition-colors duration-500";
+            if(t1El) {
+                t1El.innerText = data.team1;
+                t1El.className = "text-xl esport-font font-bold tracking-wider truncate w-full text-right text-slate-300 transition-colors duration-500";
+            }
+            if(t2El) {
+                t2El.innerText = data.team2;
+                t2El.className = "text-xl esport-font font-bold tracking-wider truncate w-full text-left text-slate-300 transition-colors duration-500";
+            }
             
             if (data.isBO5) {
-                document.getElementById('bo5ScoreDisplay').classList.remove('hidden');
-                document.getElementById('scoreT1').innerText = (data.winner === data.team1) ? data.score1 - 1 : data.score1;
-                document.getElementById('scoreT2').innerText = (data.winner === data.team2) ? data.score2 - 1 : data.score2;
-            } else { document.getElementById('bo5ScoreDisplay').classList.add('hidden'); }
+                document.getElementById('bo5ScoreDisplay')?.classList.remove('hidden');
+                const st1 = document.getElementById('scoreT1');
+                const st2 = document.getElementById('scoreT2');
+                if(st1) st1.innerText = (data.winner === data.team1) ? data.score1 - 1 : data.score1;
+                if(st2) st2.innerText = (data.winner === data.team2) ? data.score2 - 1 : data.score2;
+            } else { document.getElementById('bo5ScoreDisplay')?.classList.add('hidden'); }
 
             const logEl = document.getElementById('playByPlayLog');
-            logEl.innerHTML = ''; logEl.classList.remove('hidden');
+            if(logEl) {
+                logEl.innerHTML = ''; 
+                logEl.classList.remove('hidden');
+            }
 
             const isMyTeamInvolved = (USER_ID === data.t1_user_id || USER_ID === data.t2_user_id);
             const myTeamId = (USER_ID === data.t1_user_id) ? data.team1_id : data.team2_id;
             
+            const mapTitle = document.getElementById('mapTitle');
             if (isMyTeamInvolved) {
-                document.getElementById('mapTitle').innerText = "AKTUÁLIS MÉRKŐZÉS";
+                if(mapTitle) mapTitle.innerText = "AKTUÁLIS MÉRKŐZÉS";
                 if (USER_ID === data.t1_user_id) { drawTeamOnMap(data.t1_players, 1); drawTeamOnMap(data.t2_players, 2); } 
                 else { drawTeamOnMap(data.t2_players, 1); drawTeamOnMap(data.t1_players, 2); }
             } else {
-                document.getElementById('mapTitle').innerText = "SAJÁT ROSTER";
-                ['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT'].forEach(r => document.getElementById(`node-${r}-2`).classList.add('hidden'));
+                if(mapTitle) mapTitle.innerText = "SAJÁT ROSTER";
+                ['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT'].forEach(r => document.getElementById(`node-${r}-2`)?.classList.add('hidden'));
             }
 
             let delay = 0; let stepDelay = data.isFastForward ? 0 : 1500;
@@ -1060,7 +1130,7 @@
 
                     p.classList.add(colorClass); 
                     p.innerHTML = `<span class="mt-1 flex-shrink-0"><svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 12l10 10 10-10L12 2zm0 3.8l6.2 6.2-6.2 6.2-6.2-6.2L12 5.8z"/></svg></span> <span>${logObj.text}</span>`;
-                    logEl.appendChild(p); 
+                    if(logEl) logEl.appendChild(p); 
                     
                     if (!data.isFastForward) setTimeout(() => p.classList.remove('opacity-0'), 50);
 
@@ -1068,44 +1138,58 @@
                     if (index === data.actionLogs.length - 1) {
                         setTimeout(() => {
                             if (isTournamentEnded) return;
-                            const winnerDisplay = document.getElementById('matchWinnerDisplay'); winnerDisplay.classList.remove('hidden');
-                            document.getElementById('winnerText').innerText = data.winner;
+                            
+                            document.getElementById('matchWinnerDisplay')?.classList.remove('hidden');
+                            const wText = document.getElementById('winnerText');
+                            if(wText) wText.innerText = data.winner;
 
-                            if (data.isBO5) { document.getElementById('scoreT1').innerText = data.score1; document.getElementById('scoreT2').innerText = data.score2; }
+                            if (data.isBO5) { 
+                                const st1 = document.getElementById('scoreT1');
+                                const st2 = document.getElementById('scoreT2');
+                                if(st1) st1.innerText = data.score1; 
+                                if(st2) st2.innerText = data.score2; 
+                            }
 
+                            const wLabel = document.getElementById('winnerTextLabel');
                             if (data.isSeriesFinished) {
-                                document.getElementById('winnerTextLabel').innerText = "🏆 GYŐZTES:";
-                                if (data.team1 === data.winner) { t1El.classList.add('text-emerald-400'); t2El.classList.add('text-slate-600'); } 
-                                else { t1El.classList.add('text-slate-600'); t2El.classList.add('text-emerald-400'); }
-                            } else { document.getElementById('winnerTextLabel').innerText = "Game győztes:"; }
+                                if(wLabel) wLabel.innerText = "🏆 GYŐZTES:";
+                                if (data.team1 === data.winner) { t1El?.classList.add('text-emerald-400'); t2El?.classList.add('text-slate-600'); } 
+                                else { t1El?.classList.add('text-slate-600'); t2El?.classList.add('text-emerald-400'); }
+                            } else { 
+                                if(wLabel) wLabel.innerText = "Game győztes:"; 
+                            }
 
                             if (data.newState) { 
                                 updateLobbyStateUI(data.newState); 
-                                // AZONNALI KIKÉNYSZERÍTETT RENDER a továbbjutó nevek miatt
+                                // FORCE BRACKET RENDER ON MATCH FINISH TO AVOID WAITING FOR NEXT MATCH
                                 if(data.newState.bracket && ['QUARTER', 'SEMI', 'FINAL'].includes(data.newState.currentPhase)) {
                                     renderBracket(data.newState.bracket);
                                 }
                             }
 
-                            // SILVER SCRAPES TIGGER
+                            // SILVER SCRAPES TRIGGER
                             if (data.isBO5 && data.score1 === 2 && data.score2 === 2 && !data.isSeriesFinished && !data.isFastForward) {
                                 const btn = document.getElementById('nextMatchBtn');
                                 const fwdGroup = document.getElementById('fastForwardGroup');
-                                btn.classList.remove('hidden');
-                                btn.disabled = true;
-                                btn.innerText = "GAME 5 KÖVETKEZIK...";
-                                fwdGroup.classList.add('hidden'); fwdGroup.classList.remove('flex');
+                                if(btn) {
+                                    btn.classList.remove('hidden');
+                                    btn.disabled = true;
+                                    btn.innerText = "GAME 5 KÖVETKEZIK...";
+                                }
+                                if(fwdGroup) {
+                                    fwdGroup.classList.add('hidden'); fwdGroup.classList.remove('flex');
+                                }
                                 
                                 playTrack('silver', 'Silver Scrapes');
 
                                 setTimeout(() => {
-                                    if(!isTournamentEnded) {
+                                    if(!isTournamentEnded && btn && fwdGroup) {
                                         btn.disabled = false;
                                         btn.innerText = "KÖVETKEZŐ MECCS";
                                         fwdGroup.classList.remove('hidden'); fwdGroup.classList.add('flex');
                                         playTrack('knockout', 'Worlds Theme');
                                     }
-                                }, 14000); // 14 mp várakozás a gomb aktiválásáig
+                                }, 14000); 
                             }
 
                         }, data.isFastForward ? 0 : 1000);
@@ -1117,17 +1201,21 @@
 
         socket.on('tournament_winner', (data) => {
             isTournamentEnded = true;
-            document.getElementById('hostControls').classList.add('hidden');
-            document.getElementById('nextMatchBtn').classList.add('hidden');
-            document.getElementById('studioMatchBox').classList.add('hidden');
+            document.getElementById('hostControls')?.classList.add('hidden');
+            document.getElementById('nextMatchBtn')?.classList.add('hidden');
+            document.getElementById('studioMatchBox')?.classList.add('hidden');
             
-            document.getElementById('leftMapArea').classList.add('hidden');
-            document.getElementById('centerArea').classList.replace('xl:col-span-2', 'xl:col-span-3'); 
+            document.getElementById('leftMapArea')?.classList.add('hidden');
+            document.getElementById('centerArea')?.classList.replace('xl:col-span-2', 'xl:col-span-3'); 
             
-            document.getElementById('championArea').classList.remove('hidden');
-            document.getElementById('championArea').classList.add('flex');
-            document.getElementById('championName').innerText = data.winner;
-            document.getElementById('championLogo').src = getUserAvatar(data.winner, true);
+            document.getElementById('championArea')?.classList.remove('hidden');
+            document.getElementById('championArea')?.classList.add('flex');
+            
+            const champName = document.getElementById('championName');
+            if(champName) champName.innerText = data.winner;
+            
+            const champLogo = document.getElementById('championLogo');
+            if(champLogo) champLogo.src = getUserAvatar(data.winner, true);
 
             // Töröljük a tagok táblázatát a jobb sávból, és kinyitjuk a chatet 100%-ra
             const sidebarTop = document.getElementById('sidebarTopSection');
@@ -1139,28 +1227,30 @@
             }
 
             const stContainer = document.getElementById('standingsContainer');
-            stContainer.innerHTML = ''; 
-            if (data.standings) {
-                data.standings.forEach(st => {
-                    let cssClass = "bg-[#1e2328] border-[#c8aa6e]/30";
-                    let rColor = "text-slate-400";
-                    let nColor = "text-slate-300";
-                    if (st.rank == 1 || st.rank === '1.') { cssClass = "bg-gradient-to-r from-amber-900/40 to-transparent border-amber-500"; rColor = "text-amber-400"; nColor = "text-white font-bold"; }
-                    else if (st.rank == 2 || st.rank === '2.') { cssClass = "bg-gradient-to-r from-slate-600/40 to-transparent border-slate-400"; rColor = "text-slate-300"; nColor = "text-white"; }
-                    else if (st.rank === 'Top 4' || st.rank == 3 || st.rank == 4) { cssClass = "bg-gradient-to-r from-orange-900/40 to-transparent border-orange-700"; rColor = "text-orange-400"; nColor = "text-white"; }
+            if(stContainer) {
+                stContainer.innerHTML = ''; 
+                if (data.standings) {
+                    data.standings.forEach(st => {
+                        let cssClass = "bg-[#1e2328] border-[#c8aa6e]/30";
+                        let rColor = "text-slate-400";
+                        let nColor = "text-slate-300";
+                        if (st.rank == 1 || st.rank === '1.') { cssClass = "bg-gradient-to-r from-amber-900/40 to-transparent border-amber-500"; rColor = "text-amber-400"; nColor = "text-white font-bold"; }
+                        else if (st.rank == 2 || st.rank === '2.') { cssClass = "bg-gradient-to-r from-slate-600/40 to-transparent border-slate-400"; rColor = "text-slate-300"; nColor = "text-white"; }
+                        else if (st.rank === 'Top 4' || st.rank == 3 || st.rank == 4) { cssClass = "bg-gradient-to-r from-orange-900/40 to-transparent border-orange-700"; rColor = "text-orange-400"; nColor = "text-white"; }
 
-                    stContainer.innerHTML += `
-                        <div class="flex items-center p-2 rounded-sm mb-1.5 shadow border ${cssClass}">
-                            <span class="font-mono w-8 text-center ${rColor} font-bold text-xs">${st.rank}</span>
-                            <img src="${getUserAvatar(st.name, true)}" class="w-6 h-6 border border-[#c8aa6e]/50 mx-2">
-                            <span class="flex-1 ${nColor} truncate tracking-wide text-xs">${st.name}</span>
-                        </div>
-                    `;
-                });
+                        stContainer.innerHTML += `
+                            <div class="flex items-center p-2 rounded-sm mb-1.5 shadow border ${cssClass}">
+                                <span class="font-mono w-8 text-center ${rColor} font-bold text-xs">${st.rank}</span>
+                                <img src="${getUserAvatar(st.name, true)}" class="w-6 h-6 border border-[#c8aa6e]/50 mx-2">
+                                <span class="flex-1 ${nColor} truncate tracking-wide text-xs">${st.name}</span>
+                            </div>
+                        `;
+                    });
+                }
             }
 
-            document.getElementById('finalGroupTablesArea').classList.remove('hidden');
-            document.getElementById('finalGroupTablesArea').classList.add('flex');
+            document.getElementById('finalGroupTablesArea')?.classList.remove('hidden');
+            document.getElementById('finalGroupTablesArea')?.classList.add('flex');
             renderGroupTables(data.newState.players, 'finalGroupTablesContainer', 'final');
             
             if (data.newState && data.newState.bracket) {
@@ -1184,21 +1274,21 @@
                 headerRight.appendChild(audioPanel);
             }
 
-            document.getElementById('startArea').classList.add('hidden');
-            document.getElementById('teamsAreaPhase1').classList.add('hidden');
-            document.getElementById('teamsAreaPhase2').classList.add('hidden');
-            document.getElementById('waitingArea').classList.add('hidden');
+            document.getElementById('startArea')?.classList.add('hidden');
+            document.getElementById('teamsAreaPhase1')?.classList.add('hidden');
+            document.getElementById('teamsAreaPhase2')?.classList.add('hidden');
+            document.getElementById('waitingArea')?.classList.add('hidden');
             
-            document.getElementById('simulationStudio').classList.remove('hidden'); 
-            document.getElementById('simulationStudio').classList.add('flex');
+            document.getElementById('simulationStudio')?.classList.remove('hidden'); 
+            document.getElementById('simulationStudio')?.classList.add('flex');
             
             const sidebarTitle = document.getElementById('sidebarTitle');
             if (sidebarTitle) sidebarTitle.innerText = "TABELLA";
 
             if (USER_ID === CURRENT_HOST_ID) {
-                document.getElementById('hostControls').classList.remove('hidden');
-                document.getElementById('hostControls').classList.add('flex');
-                document.getElementById('nextMatchBtn').classList.remove('hidden');
+                document.getElementById('hostControls')?.classList.remove('hidden');
+                document.getElementById('hostControls')?.classList.add('flex');
+                document.getElementById('nextMatchBtn')?.classList.remove('hidden');
             }
 
             playTrack('groups', 'Worlds Theme');
@@ -1206,27 +1296,40 @@
 
         function triggerNextMatch() {
             const btn = document.getElementById('nextMatchBtn');
-            btn.disabled = true; btn.classList.add('hidden'); document.getElementById('fastForwardGroup').classList.add('hidden');
+            const fwg = document.getElementById('fastForwardGroup');
+            if(btn) { btn.disabled = true; btn.classList.add('hidden'); }
+            if(fwg) { fwg.classList.add('hidden'); }
+
             socket.emit('next_match_step', { lobbyId: LOBBY_ID, userId: USER_ID }, (res) => {
                 if (res.status === 'phase_changed') {
-                    btn.classList.remove('hidden'); btn.disabled = false;
-                    document.getElementById('matchGroupBadge').classList.add('hidden'); document.getElementById('matchTeamsDisplay').classList.add('hidden'); document.getElementById('matchWinnerDisplay').classList.add('hidden'); document.getElementById('bo5ScoreDisplay').classList.add('hidden'); document.getElementById('playByPlayLog').classList.add('hidden');
+                    if(btn) { btn.classList.remove('hidden'); btn.disabled = false; }
                     
-                    ['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT'].forEach(r => document.getElementById(`node-${r}-2`).classList.add('hidden'));
-                    document.getElementById('mapTitle').innerText = "SAJÁT ROSTER";
+                    const mText = document.getElementById('matchStatusText');
+                    if(mText) { mText.innerText = `✨ Szakasz lezárva ✨`; mText.classList.remove('hidden'); }
+                    
+                    document.getElementById('matchGroupBadge')?.classList.add('hidden'); 
+                    document.getElementById('matchTeamsDisplay')?.classList.add('hidden'); 
+                    document.getElementById('matchWinnerDisplay')?.classList.add('hidden'); 
+                    document.getElementById('bo5ScoreDisplay')?.classList.add('hidden'); 
+                    document.getElementById('playByPlayLog')?.classList.add('hidden');
+                    
+                    ['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT'].forEach(r => document.getElementById(`node-${r}-2`)?.classList.add('hidden'));
+                    
+                    const mapTitle = document.getElementById('mapTitle');
+                    if(mapTitle) mapTitle.innerText = "SAJÁT ROSTER";
                     
                     playTrack('knockout', 'Worlds Theme');
 
                 } else if (res.status === 'error') {
                     showToast('Hálózati Hiba', res.message, 'error');
-                    btn.classList.remove('hidden'); btn.disabled = false;
+                    if(btn) { btn.classList.remove('hidden'); btn.disabled = false; }
                 }
             });
         }
 
         function fastForward(mode) {
-            document.getElementById('fastForwardGroup').classList.add('hidden');
-            document.getElementById('nextMatchBtn').classList.add('hidden');
+            document.getElementById('fastForwardGroup')?.classList.add('hidden');
+            document.getElementById('nextMatchBtn')?.classList.add('hidden');
             socket.emit('fast_forward_matches', { lobbyId: LOBBY_ID, userId: USER_ID, mode: mode }, (res) => {});
         }
     </script>
