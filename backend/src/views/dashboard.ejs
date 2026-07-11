@@ -120,12 +120,12 @@
 
     <!-- LAJCSI EASTER EGG TROLL MODAL -->
     <% 
-    const isLajcsi = (typeof userId !== 'undefined' && userId === '8842f38c-1354-4026-b6b8-da1827219985') || 
-                     (typeof username !== 'undefined' && username === 'mezeiimate') || 
-                     (typeof email !== 'undefined' && email === 'mezeiimate@gmail.com');
+    const isLajcsi = (typeof userId !== 'undefined' && userId === '466788e9-7639-4ad8-8644-1b958f4a62d7') || 
+                     (typeof username !== 'undefined' && username === 'lajcsi') || 
+                     (typeof email !== 'undefined' && email === 'lopottajfon@gmail.com');
     if (isLajcsi) { 
     %>
-    <div id="lajcsiModal" class="fixed inset-0 z-[200] flex items-center justify-center bg-[#010a13]/95 backdrop-blur-md">
+    <div id="lajcsiModal" class="fixed inset-0 z-[200] items-center justify-center bg-[#010a13]/95 backdrop-blur-md" style="display: none;">
         <div class="bg-[#091428] border-2 border-[#c8aa6e] p-8 rounded-sm text-center relative max-w-2xl w-full mx-4 shadow-[0_0_50px_rgba(200,170,110,0.3)] flex flex-col items-center">
             <h2 class="text-3xl font-black text-[#c8aa6e] tracking-widest uppercase esport-font mb-6 drop-shadow-[0_0_10px_rgba(200,170,110,0.5)]">FONTOS KÖZLEMÉNY!</h2>
             
@@ -136,15 +136,25 @@
                 <svg viewBox="0 0 64 64" height="2em" width="2em" class="overflow-visible flex-shrink-0">
                     <path d="M 0 16 V 56 A 8 8 90 0 0 8 64 H 56 A 8 8 90 0 0 64 56 V 8 A 8 8 90 0 0 56 0 H 8 A 8 8 90 0 0 0 8 V 16 L 32 48 L 64 16 V 8 A 8 8 90 0 0 56 0 H 8 A 8 8 90 0 0 0 8 V 56 A 8 8 90 0 0 8 64 H 56 A 8 8 90 0 0 64 56 V 16" class="path" />
                 </svg>
-                <span class="text-base text-slate-200 font-bold uppercase tracking-widest cyber-font">Kijelentem, hogy a G2 (jobb csapat) nyert és Európa erősebb!</span>
+                <span class="text-base text-slate-200 font-bold uppercase tracking-widest cyber-font">Kijelentem, hogy a G2 (jobb csapat) nyert!</span>
             </label>
             
-            <button id="lajcsiCloseBtn" disabled onclick="document.getElementById('lajcsiModal').remove()" class="cosmic-portal-btn w-full opacity-50 cursor-not-allowed transition-all duration-300">
+            <!-- Itt mentjük el a localStorage-ba a kattintás tényét -->
+            <button id="lajcsiCloseBtn" disabled onclick="localStorage.setItem('lajcsi_g2_accepted', 'true'); document.getElementById('lajcsiModal').remove();" class="cosmic-portal-btn w-full opacity-50 cursor-not-allowed transition-all duration-300">
                 <span class="cosmic-btn-text">Elfogadom és Bezárás</span>
                 <div class="portal-effect"></div>
             </button>
         </div>
     </div>
+    
+    <!-- Ez a script azonnal lefut, és ellenőrzi a memóriát -->
+    <script>
+        if (localStorage.getItem('lajcsi_g2_accepted') !== 'true') {
+            document.getElementById('lajcsiModal').style.display = 'flex';
+        } else {
+            document.getElementById('lajcsiModal').remove();
+        }
+    </script>
     <% } %>
 
     <!-- MAIN CONTENT (Bal oldal, 100vh kitöltés BELSŐ scrollal) -->
@@ -512,13 +522,14 @@
 
         function handleChatInput(e) {
             if (e.key === 'Enter') {
+                e.preventDefault(); // Megakadályozzuk az alapértelmezett sortörést
                 const input = document.getElementById('chatInputField');
                 const msg = input.value.trim();
                 
                 if (msg && currentChatFriendId) {
+                    input.value = ''; // Azonnali törlés a DOM blokkolás elkerülésére
                     appendChatMessage(USERNAME, msg, true);
                     socket.emit('send_private_message', { senderId: USER_ID, targetId: currentChatFriendId, message: msg.substring(0, 250) });
-                    input.value = '';
                 }
             }
         }
@@ -607,7 +618,7 @@
                 const res = await fetch(`/api/friends/search?q=${encodeURIComponent(q)}`); const data = await res.json();
                 const resultsContainer = document.getElementById('searchResults'); resultsContainer.innerHTML = '';
                 if (data.length === 0) { resultsContainer.innerHTML = '<p class="text-[0.6rem] text-slate-500 italic px-2">Nincs találat.</p>'; return; }
-                data.forEach(user => { resultsContainer.innerHTML += `<div id="search-result-${user.id}" class="bg-transparent py-2 flex justify-between items-center border-b border-[#c8aa6e]/20 last:border-0"><div class="flex flex-col"><span class="text-sm font-bold text-white cyber-font">${user.username}</span><span class="text-[0.55rem] text-[#c8aa6e] font-bold mt-0.5">🏆 ${user.trophies_count}</span></div><button id="addBtn_${user.id}" onclick="sendFriendRequest('${user.id}')" class="bg-[#1e2328] hover:bg-[#c8aa6e] hover:text-[#010a13] border border-[#c8aa6e]/50 text-[#c8aa6e] text-[0.55rem] font-bold uppercase tracking-widest px-3 py-1.5 rounded-sm transition-colors">Jelölés</button></div>`; });
+                data.forEach(user => { resultsContainer.innerHTML += `<div id="search-result-${user.id}" class="bg-transparent py-2 flex justify-between items-center border-b border-[#c8aa6e]/20 last:border-0"><div class="flex flex-col"><span class="text-sm font-bold text-white cyber-font">${user.username}</span><span class="text-[0.55rem] text-[#c8aa6e] font-bold mt-0.5">🏆 ${user.trophies_count}</span></div><button id="addBtn_${user.id}" onclick="sendFriendRequest('${user.id}')" class="bg-[#1e2328] hover:bg-[#c8aa6e] hover:text-[#010a13] border border-[#c8aa6e]/50 text-[#c8aa6e] text-[0.55rem] font-bold uppercase tracking-widest px-3 py-1.5 rounded-sm transition-colors">+</button></div>`; });
             } catch (error) { alert('Hálózat megszakadt.'); }
         }
 
@@ -617,9 +628,9 @@
             try {
                 const res = await fetch('/api/friends/request', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ targetUserId: targetId }) });
                 const data = await res.json();
-                if (data.status !== 'success') { alert(data.error || 'Hiba történt.'); if(btn) { btn.innerText = 'Jelölés'; btn.disabled = false; } } 
+                if (data.status !== 'success') { alert(data.error || 'Hiba történt.'); if(btn) { btn.innerText = '+'; btn.disabled = false; } } 
                 else { showToast('Jelölés elküldve!', 'Sikeres.', 'success'); const resultCard = document.getElementById(`search-result-${targetId}`); if (resultCard) { resultCard.style.opacity = '0'; setTimeout(() => resultCard.remove(), 300); } }
-            } catch (error) { alert('Hálózati hiba.'); if(btn) { btn.innerText = 'Jelölés'; btn.disabled = false; } }
+            } catch (error) { alert('Hálózati hiba.'); if(btn) { btn.innerText = '+'; btn.disabled = false; } }
         }
 
         async function handleFriendAction(action, targetId) {
