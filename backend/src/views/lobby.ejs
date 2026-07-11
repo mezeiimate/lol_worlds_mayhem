@@ -344,30 +344,6 @@
     </div>
 
     <!-- RIGHT SIDEBAR (Social Panel) -->
-    <div class="w-[340px] bg-[#091428] border-l border-[#c8aa6e]/40 flex flex-col h-full z-20 shadow-[-10px_0_30px_rgba(0,0,0,0.5)] shrink-0">
-        
-        <!-- Profile Header -->
-        <div class="p-5 border-b border-[#c8aa6e]/30 bg-[#010a13] flex flex-col gap-4 shrink-0">
-            <div class="flex items-center gap-4">
-                <div class="relative shrink-0">
-                    <img src="https://ui-avatars.com/api/?name=<%= username %>&background=091428&color=c8aa6e&bold=true" class="w-14 h-14 rounded-sm border-2 border-[#c8aa6e]/50 shadow-[0_0_10px_rgba(200,170,110,0.2)]">
-                    <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-[#010a13]"></div>
-                </div>
-                <div class="min-w-0">
-                    <div class="font-bold text-base text-white cyber-font truncate"><%= username %></div>
-                    <div class="text-[0.8rem] text-[#c8aa6e] font-black tracking-widest mt-1">🏆 <%= trophies %> Trófea</div>
-                </div>
-            </div>
-            
-            <div class="flex flex-col gap-2 mt-1 w-full">
-                <button onclick="window.location.href='/profile'" class="w-full py-2 bg-[#1e2328] hover:bg-[#c8aa6e] text-slate-300 hover:text-[#010a13] border border-[#c8aa6e]/30 hover:border-[#c8aa6e] transition-all rounded-sm font-bold uppercase tracking-widest text-[0.65rem] cyber-font">
-                    Beállítások
-                </button>
-                <button onclick="logout()" class="w-full py-2 bg-red-950/20 hover:bg-red-600/90 text-red-400 hover:text-white border border-red-500/30 hover:border-red-500 transition-all rounded-sm font-bold uppercase tracking-widest text-[0.65rem] cyber-font">
-                    Kilépés
-                </button>
-            </div>
-        </div>
 
         <!-- FELSŐ RÉSZ: Lobby Tagok vagy Csoportok -->
         <div class="flex-1 flex flex-col min-h-0 border-b border-[#c8aa6e]/40">
