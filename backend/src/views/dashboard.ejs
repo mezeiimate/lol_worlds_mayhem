@@ -92,7 +92,7 @@
         <!-- LOBBY ACTIONS (Fix magasság) -->
         <div class="hex-panel p-6 rounded-sm flex flex-col md:flex-row gap-6 items-center shrink-0">
             <div class="flex-1 text-center md:border-r border-[#c8aa6e]/30 md:pr-6 w-full">
-                <h2 class="text-lg font-bold text-white uppercase tracking-widest mb-1.5 esport-font">Új Szimuláció</h2>
+                <h2 class="text-lg font-bold text-white uppercase tracking-widest mb-1.5 esport-font">LoL Worlds Mayhem</h2>
                 <p class="text-slate-400 text-[0.65rem] mb-4 cyber-font">Állítsd fel a szobát és dominálj!</p>
                 <button id="createLobbyBtn" class="cosmic-portal-btn w-full">
                     <span class="cosmic-btn-text">Létrehozás</span>
@@ -102,7 +102,7 @@
             
             <div class="flex-1 text-center md:pl-6 w-full">
                 <h2 class="text-lg font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5 esport-font">Csatlakozás</h2>
-                <p class="text-slate-400 text-[0.65rem] mb-4 cyber-font">Kód alapú szinkronizáció.</p>
+                <p class="text-slate-400 text-[0.65rem] mb-4 cyber-font">Csatlakozz a barátod szobájához.</p>
                 <div class="flex gap-2">
                     <input type="text" id="inviteCodeInput" placeholder="XXXXXX" maxlength="6" class="w-full bg-[#010a13] border border-[#c8aa6e]/50 rounded-sm px-4 py-2 text-center text-lg font-mono text-[#c8aa6e] uppercase tracking-widest focus:outline-none focus:border-[#f0e6d2] focus:shadow-[0_0_10px_rgba(200,170,110,0.3)] transition-all">
                     <button id="joinLobbyBtn" class="bg-[#1e2328] hover:bg-[#c8aa6e] hover:text-[#010a13] border border-[#c8aa6e]/50 text-[#c8aa6e] px-4 font-bold rounded-sm transition-colors text-sm cyber-font">→</button>
@@ -271,7 +271,7 @@
         <div class="p-4 border-t border-[#c8aa6e]/30 bg-[#010a13] shrink-0">
             <button onclick="toggleChatOverlay()" class="w-full flex items-center justify-center gap-2 bg-[#1e2328] border border-[#c8aa6e]/50 text-[#c8aa6e] py-3 rounded-sm hover:bg-[#c8aa6e] hover:text-[#010a13] transition-colors font-bold uppercase tracking-widest text-xs cyber-font">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
-                Chat Panel
+                Chat
             </button>
         </div>
     </div>
@@ -279,7 +279,7 @@
     <!-- FLOATING CHAT OVERLAY -->
     <div id="chatOverlay" class="chat-overlay fixed bottom-0 right-[350px] w-[600px] h-[400px] bg-[#010a13] border-t border-l border-r border-[#c8aa6e]/40 flex z-50 hidden rounded-t-md shadow-[0_0_30px_rgba(0,0,0,0.8)]">
         <div class="w-1/3 border-r border-[#c8aa6e]/30 bg-[#091428] flex flex-col">
-            <div class="p-3 border-b border-[#c8aa6e]/30 text-[#c8aa6e] text-xs font-bold uppercase tracking-widest bg-[#1e2328] cyber-font text-center shrink-0">Nyitott Csatornák</div>
+            <div class="p-3 border-b border-[#c8aa6e]/30 text-[#c8aa6e] text-xs font-bold uppercase tracking-widest bg-[#1e2328] cyber-font text-center shrink-0">Aktív beszélgetések</div>
             <div id="activeChatSessionsList" class="flex-1 overflow-y-auto bg-[#010a13]"></div>
         </div>
         
@@ -287,7 +287,7 @@
             <div class="p-3 border-b border-[#c8aa6e]/30 bg-[#1e2328] flex justify-between items-center shrink-0">
                 <div class="flex items-center gap-2">
                     <div class="w-2.5 h-2.5 bg-emerald-500 rounded-full shadow-[0_0_5px_#10b981]"></div>
-                    <span id="currentChatFriendName" class="text-white text-sm font-bold cyber-font">Válassz partnert</span>
+                    <span id="currentChatFriendName" class="text-white text-sm font-bold cyber-font">Válassz barátot</span>
                 </div>
                 <button onclick="toggleChatOverlay()" class="text-slate-400 hover:text-[#c8aa6e] text-lg font-bold">✕</button>
             </div>
@@ -387,7 +387,7 @@
             const container = document.getElementById('activeChatSessionsList');
             container.innerHTML = '';
             if (activeChats.length === 0) {
-                container.innerHTML = '<p class="text-slate-600 text-xs italic text-center mt-4">Nincs nyitott csatorna.</p>';
+                container.innerHTML = '<p class="text-slate-600 text-xs italic text-center mt-4">Nincs aktív beszélgetés.</p>';
                 return;
             }
             activeChats.forEach(chat => {
@@ -573,3 +573,5 @@
     </script>
 </body>
 </html>
+
+//EZ A JÓ 2
