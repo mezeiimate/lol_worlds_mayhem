@@ -72,7 +72,7 @@
         .chat-msg { display: flex; flex-direction: column; margin-bottom: 4px; }
         .sys-msg { color: #facc15; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; text-align: center; opacity: 0.8; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid rgba(250, 204, 21, 0.2); }
 
-        /* --- AUDIO LOADER ANIMATION (Hextech Colors, Kisebb méret) --- */
+        /* --- AUDIO LOADER ANIMATION --- */
         .loader-wrapper {
             position: relative; display: flex; align-items: center; justify-content: center;
             width: 70px; height: 70px; font-family: "Inter", sans-serif; font-size: 0.55rem;
@@ -99,19 +99,17 @@
 
         /* --- AUDIO VOLUME SLIDER --- */
         .slider-container { display: inline-flex; align-items: center; position: relative; cursor: pointer; }
-        .slider-container .volume { color: #f0e6d2; width: 18px; height: auto; margin-right: 10px; pointer-events: auto; transition: opacity 0.3s; }
+        .slider-container .volume { color: #f0e6d2; width: 18px; height: auto; margin-right: 10px; transition: opacity 0.3s; z-index: 20; }
         .slider-container .level {
             -webkit-appearance: none; appearance: none;
             width: 80px; height: 8px; background: rgba(200, 170, 110, 0.2);
             overflow: hidden; border-radius: 5px; cursor: inherit; transform: rotate(0deg);
         }
         .slider-container .level::-webkit-slider-thumb {
-            -webkit-appearance: none; width: 0; height: 0;
-            box-shadow: -200px 0 0 200px #c8aa6e;
+            -webkit-appearance: none; width: 0; height: 0; box-shadow: -200px 0 0 200px #c8aa6e;
         }
         .slider-container .level::-moz-range-thumb {
-            width: 0; height: 0; border-radius: 0; border: none;
-            box-shadow: -200px 0 0 200px #c8aa6e;
+            width: 0; height: 0; border-radius: 0; border: none; box-shadow: -200px 0 0 200px #c8aa6e;
         }
     </style>
 </head>
@@ -121,7 +119,7 @@
         <div id="stars"></div><div id="stars2"></div><div id="stars3"></div>
     </div>
 
-    <!-- INVITE MODAL (Top Center Popup) -->
+    <!-- INVITE MODAL -->
     <div id="inviteModal" class="fixed top-6 left-1/2 transform -translate-x-1/2 z-[100] hidden flex-col gap-2 w-full max-w-md backdrop-blur-md">
         <div class="bg-[#091428]/95 border border-[#c8aa6e] p-6 rounded-sm shadow-[0_0_40px_rgba(200,170,110,0.3)]">
             <div class="flex justify-between items-center mb-4 border-b border-[#c8aa6e]/30 pb-3">
@@ -135,7 +133,7 @@
     <!-- TOAST CONTAINER -->
     <div id="toastContainer" class="fixed top-6 left-1/2 transform -translate-x-1/2 z-[110] flex flex-col gap-2 pointer-events-none items-center w-full max-w-md"></div>
 
-    <!-- MAIN CONTENT (Bal oldal) -->
+    <!-- MAIN CONTENT -->
     <div class="flex-1 flex flex-col h-full p-4 lg:p-6 gap-5 relative z-10 min-w-0 overflow-y-auto">
         
         <!-- HEADER SÁV -->
@@ -148,12 +146,12 @@
                 </div>
             </div>
 
-            <!-- AUDIO PANEL -->
-            <div id="audioControlPanel" class="flex items-center gap-6">
+            <!-- AUDIO PANEL (Jobb oldal) -->
+            <div id="audioControlPanel" class="flex items-center gap-6 z-20">
                 <div class="loader-wrapper" id="loaderWrapper">
                     <div class="loader-spinner"></div>
                 </div>
-                <label class="slider-container">
+                <div class="slider-container flex items-center">
                     <svg class="volume cursor-pointer" id="muteIcon" onclick="toggleMute()" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <g>
                             <path d="M18.36 19.36a1 1 0 0 1-.705-1.71C19.167 16.148 20 14.142 20 12s-.833-4.148-2.345-5.65a1 1 0 1 1 1.41-1.419C20.958 6.812 22 9.322 22 12s-1.042 5.188-2.935 7.069a.997.997 0 0 1-.705.291z" fill="currentColor" />
@@ -161,15 +159,15 @@
                         </g>
                     </svg>
                     <input type="range" class="level" id="volumeSlider" min="0" max="100" value="10" oninput="changeVolume(this.value)" />
-                </label>
+                </div>
             </div>
         </div>
 
-        <!-- BELSŐ SCROLL KONTÉNER A DRAFTNAK / SZIMULÁCIÓNAK -->
+        <!-- BELSŐ SCROLL KONTÉNER -->
         <div class="flex-1 min-h-0 overflow-y-auto pr-2">
             <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 h-full">
                 
-                <!-- BAL OSZLOP: TÉRKÉP ÉS ROSTER -->
+                <!-- BAL OSZLOP: TÉRKÉP ÉS KÓD -->
                 <div class="xl:col-span-1 flex flex-col gap-4 h-full">
                     <div class="flex flex-col items-center justify-start relative hex-panel p-6 rounded-sm w-full" id="leftMapArea">
                         <div class="w-full flex justify-between items-center mb-6 border-b border-[#c8aa6e]/30 pb-3">
@@ -263,8 +261,6 @@
                             </div>
 
                             <div id="playByPlayLog" class="hidden text-xs mb-4 bg-[#010a13] px-6 py-4 border border-[#c8aa6e]/30 w-full flex flex-col gap-2 min-h-[120px] text-left rounded-sm font-sans"></div>
-
-                            <p class="text-sm text-slate-500 italic cyber-font" id="matchStatusText"></p>
                             
                             <div id="matchWinnerDisplay" class="hidden mt-4 bg-emerald-900/30 border border-emerald-700 px-6 py-2.5 rounded-sm text-emerald-400 font-bold text-sm uppercase tracking-wider transition-opacity duration-500 flex items-center gap-2">
                                 <span id="winnerTextLabel" class="text-emerald-500/70">Győztes:</span> <span id="winnerText" class="text-white">Winner</span>
@@ -345,9 +341,6 @@
         </div>
     </div>
 
-    <!-- TOAST CONTAINER (Top Center) -->
-    <div id="toastContainer" class="fixed top-6 left-1/2 transform -translate-x-1/2 z-[100] flex flex-col gap-2 pointer-events-none items-center w-full max-w-md"></div>
-
     <script>
         const ROLE_ICONS = {
             'TOP': `<svg class="w-4 h-4 flex-shrink-0" viewBox="0 0 114 112" fill="none"><path d="M101.055 1.13167e-06L-9.79135e-06 9.9662e-06L-9.56827e-07 101.055L22 79.0552L22 21L80.0552 21L101.055 1.13167e-06Z" fill="#C89B3C"/></svg>`,
@@ -360,6 +353,7 @@
         const socket = io();
         const LOBBY_ID = '<%= lobbyId %>';
         const USER_ID = '<%= userId %>';
+        const USERNAME = "<%= typeof username !== 'undefined' ? username : 'Guest' %>"; 
         
         socket.emit('identify', { userId: USER_ID });
 
@@ -379,7 +373,7 @@
             audio.loop = true;
             audio.volume = isMuted ? 0 : globalVolume;
         });
-        audioTracks.silver.loop = false; // Silver Scrapes csak egyszer
+        audioTracks.silver.loop = false; 
 
         let audioInitialized = false;
 
@@ -474,16 +468,10 @@
 
             if (sender === lastLobbySender) {
                 const msgDiv = list.lastElementChild;
-                if (msgDiv && !msgDiv.classList.contains('sys-msg')) {
-                    const textSpan = document.createElement('span');
-                    textSpan.className = textClass;
-                    textSpan.textContent = msg;
-                    msgDiv.appendChild(textSpan);
-                } else {
-                    lastLobbySender = null;
-                    appendLobbyChatMessage(sender, msg, isSelf);
-                    return;
-                }
+                const textSpan = document.createElement('span');
+                textSpan.className = textClass;
+                textSpan.textContent = msg;
+                msgDiv.appendChild(textSpan);
             } else {
                 const msgDiv = document.createElement('div');
                 msgDiv.className = `flex flex-col w-full mt-2 items-start`;
@@ -612,15 +600,13 @@
         socket.emit('join_lobby', { userId: USER_ID, inviteCode: '<%= inviteCode %>' }, () => {});
 
         function updateLobbyStateUI(data) {
-            const cOrder = data.currentMatchOrder;
             const phase = data.currentPhase;
             const hasPending = data.hasPendingMatches;
             
             if (data.status === 'SIMULATING' || data.status === 'FINISHED') {
-                const inviteBtn = document.getElementById('inviteFriendBtn');
-                if (inviteBtn && !inviteBtn.classList.contains('hidden')) {
-                    inviteBtn.classList.add('opacity-0', 'pointer-events-none');
-                    setTimeout(() => inviteBtn.classList.add('hidden'), 300);
+                const roomCodeContainer = document.getElementById('roomCodeContainer');
+                if (roomCodeContainer && !roomCodeContainer.classList.contains('hidden')) {
+                    roomCodeContainer.classList.add('hidden');
                 }
             }
             
@@ -898,7 +884,7 @@
         }
 
         // --- ÚJ, ÉLŐ ÁGRAJZ LOGIKA LOKÁLIS FELÜLÍRÁSSAL ---
-        window.bracketScores = window.bracketScores || {}; // Global cache
+        window.bracketScores = window.bracketScores || {}; 
 
         function renderBracket(matches) {
             const area = document.getElementById('bracketArea');
@@ -906,32 +892,47 @@
             
             area.classList.remove('hidden'); area.classList.add('flex');
             
-            const quarters = matches.filter(m => m.match_type === 'QUARTER');
-            const semis = matches.filter(m => m.match_type === 'SEMI'); 
-            const final = matches.filter(m => m.match_type === 'FINAL');
+            // Kényszerítsük ki, hogy mindig legyen 4 negyed, 2 elő, 1 döntő doboz
+            let quarters = matches.filter(m => m.match_type === 'QUARTER');
+            while(quarters.length < 4) quarters.push({ match_type: 'QUARTER' });
+
+            let semis = matches.filter(m => m.match_type === 'SEMI'); 
+            while(semis.length < 2) semis.push({ match_type: 'SEMI' });
+
+            let final = matches.filter(m => m.match_type === 'FINAL');
+            while(final.length < 1) final.push({ match_type: 'FINAL' });
 
             // Segédfüggvény a győztes kiderítésére (Backend + Lokális Cache kombinálva)
             const getWinner = (m) => {
                 if (!m) return null;
-                if (m.winner_name) return m.winner_name;
-                const matchKey = m.team1_name + "_vs_" + m.team2_name;
-                if (window.bracketScores[matchKey] && window.bracketScores[matchKey].winner) {
-                    return window.bracketScores[matchKey].winner;
+                if (m.winner_name && m.winner_name !== 'TBD') return m.winner_name;
+                
+                if (m.team1_name && m.team2_name) {
+                    const matchKey = m.team1_name + "_vs_" + m.team2_name;
+                    const matchKeyRev = m.team2_name + "_vs_" + m.team1_name;
+                    if (window.bracketScores[matchKey] && window.bracketScores[matchKey].winner) return window.bracketScores[matchKey].winner;
+                    if (window.bracketScores[matchKeyRev] && window.bracketScores[matchKeyRev].winner) return window.bracketScores[matchKeyRev].winner;
                 }
+                
+                let s1 = m.score1 !== undefined ? m.score1 : m.team1_wins;
+                let s2 = m.score2 !== undefined ? m.score2 : m.team2_wins;
+                if (s1 == 3) return m.team1_name;
+                if (s2 == 3) return m.team2_name;
+
                 return null;
             };
 
-            // Lokális ágrajz-továbbjutó felülírás, hogy azonnal megjelenjen a győztes a következő körben!
-            if (quarters[0] && getWinner(quarters[0]) && semis[0]) semis[0].team1_name = getWinner(quarters[0]);
-            if (quarters[1] && getWinner(quarters[1]) && semis[0]) semis[0].team2_name = getWinner(quarters[1]);
-            if (quarters[2] && getWinner(quarters[2]) && semis[1]) semis[1].team1_name = getWinner(quarters[2]);
-            if (quarters[3] && getWinner(quarters[3]) && semis[1]) semis[1].team2_name = getWinner(quarters[3]);
+            // Lokális ágrajz-továbbjutó felülírás, hogy azonnal megjelenjen a győztes a következő körben
+            if (getWinner(quarters[0])) semis[0].team1_name = getWinner(quarters[0]);
+            if (getWinner(quarters[1])) semis[0].team2_name = getWinner(quarters[1]);
+            if (getWinner(quarters[2])) semis[1].team1_name = getWinner(quarters[2]);
+            if (getWinner(quarters[3])) semis[1].team2_name = getWinner(quarters[3]);
 
-            if (semis[0] && getWinner(semis[0]) && final[0]) final[0].team1_name = getWinner(semis[0]);
-            if (semis[1] && getWinner(semis[1]) && final[0]) final[0].team2_name = getWinner(semis[1]);
+            if (getWinner(semis[0])) final[0].team1_name = getWinner(semis[0]);
+            if (getWinner(semis[1])) final[0].team2_name = getWinner(semis[1]);
             
             const getMatchBox = (m, isFinal = false) => {
-                if (!m) {
+                if (!m || (!m.team1_name && !m.team2_name)) {
                     return `
                         <div class="bg-[#010a13] border border-[#c8aa6e]/30 p-${isFinal ? '3' : '2'} rounded-sm text-center text-${isFinal ? 'xs' : '[0.6rem]'} font-bold flex flex-col justify-center shadow-md">
                             <div class="flex justify-between px-2 items-center"><span class="text-slate-600 truncate text-left flex-1">TBD</span><span class="text-slate-600 font-mono mx-2">-</span></div>
@@ -942,8 +943,7 @@
                 let t1 = m.team1_name || 'TBD'; 
                 let t2 = m.team2_name || 'TBD';
                 
-                let s1 = '-';
-                let s2 = '-';
+                let s1 = '-'; let s2 = '-';
                 
                 if (m.score1 !== undefined && m.score1 !== null) s1 = m.score1;
                 else if (m.team1_wins !== undefined && m.team1_wins !== null) s1 = m.team1_wins;
@@ -951,14 +951,18 @@
                 if (m.score2 !== undefined && m.score2 !== null) s2 = m.score2;
                 else if (m.team2_wins !== undefined && m.team2_wins !== null) s2 = m.team2_wins;
 
-                let winner = m.winner_name;
+                let winner = getWinner(m);
 
-                // Erőszakos lokális felülírás
+                // Erőszakos lokális felülírás a megjelenítésnél
                 const matchKey = t1 + "_vs_" + t2;
+                const matchKeyRev = t2 + "_vs_" + t1;
+                
                 if (window.bracketScores[matchKey]) {
                     s1 = window.bracketScores[matchKey].s1;
                     s2 = window.bracketScores[matchKey].s2;
-                    if (window.bracketScores[matchKey].winner) winner = window.bracketScores[matchKey].winner;
+                } else if (window.bracketScores[matchKeyRev]) {
+                    s1 = window.bracketScores[matchKeyRev].s2;
+                    s2 = window.bracketScores[matchKeyRev].s1;
                 }
                 
                 const c1 = winner === t1 ? 'text-emerald-400' : (winner && t1 !== 'TBD' ? 'text-slate-500' : 'text-slate-300');
@@ -1001,11 +1005,9 @@
             if (data.isBO5) {
                 window.bracketScores = window.bracketScores || {};
                 const k1 = data.team1 + "_vs_" + data.team2;
-                const k2 = data.team2 + "_vs_" + data.team1;
                 const winName = data.isSeriesFinished ? data.winner : null;
                 
                 window.bracketScores[k1] = { s1: data.score1, s2: data.score2, winner: winName };
-                window.bracketScores[k2] = { s1: data.score2, s2: data.score1, winner: winName };
             }
             
             const badge = document.getElementById('matchGroupBadge');
@@ -1075,13 +1077,11 @@
                                 document.getElementById('winnerTextLabel').innerText = "🏆 GYŐZTES:";
                                 if (data.team1 === data.winner) { t1El.classList.add('text-emerald-400'); t2El.classList.add('text-slate-600'); } 
                                 else { t1El.classList.add('text-slate-600'); t2El.classList.add('text-emerald-400'); }
-                                
-                                // Gyorstekerésnél kivágtuk a felesleges szöveget. Csak a Bracket frissül.
                             } else { document.getElementById('winnerTextLabel').innerText = "Game győztes:"; }
 
                             if (data.newState) { 
                                 updateLobbyStateUI(data.newState); 
-                                // FORCE BRACKET RENDER ON MATCH FINISH TO AVOID WAITING FOR NEXT MATCH
+                                // AZONNALI KIKÉNYSZERÍTETT RENDER a továbbjutó nevek miatt
                                 if(data.newState.bracket && ['QUARTER', 'SEMI', 'FINAL'].includes(data.newState.currentPhase)) {
                                     renderBracket(data.newState.bracket);
                                 }
@@ -1172,14 +1172,14 @@
             const titleEl = document.getElementById('lobbyTitle');
             if (titleEl) titleEl.innerText = "LOL WORLDS MAYHEM";
             
-            // UI Átrendezés a fejlécben (Audio Controller felrakása a Szoba Kód helyére)
+            // Szoba Kód elrejtése
             const roomCodeDiv = document.getElementById('roomCodeContainer');
             if (roomCodeDiv) { roomCodeDiv.classList.add('hidden'); }
+            
+            // Audio Panel a Header Jobb oldalára kerül
             const headerRight = document.getElementById('headerRightArea');
             const audioPanel = document.getElementById('audioControlPanel');
             if (headerRight && audioPanel) {
-                audioPanel.classList.remove('mt-6', 'w-full', 'bg-[#091428]/80', 'border-[#c8aa6e]/30', 'p-4', 'shadow-lg');
-                audioPanel.classList.add('gap-6');
                 headerRight.innerHTML = '';
                 headerRight.appendChild(audioPanel);
             }
@@ -1210,13 +1210,11 @@
             socket.emit('next_match_step', { lobbyId: LOBBY_ID, userId: USER_ID }, (res) => {
                 if (res.status === 'phase_changed') {
                     btn.classList.remove('hidden'); btn.disabled = false;
-                    document.getElementById('matchStatusText').innerText = `✨ Szakasz lezárva ✨`; document.getElementById('matchStatusText').classList.remove('hidden');
                     document.getElementById('matchGroupBadge').classList.add('hidden'); document.getElementById('matchTeamsDisplay').classList.add('hidden'); document.getElementById('matchWinnerDisplay').classList.add('hidden'); document.getElementById('bo5ScoreDisplay').classList.add('hidden'); document.getElementById('playByPlayLog').classList.add('hidden');
                     
                     ['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT'].forEach(r => document.getElementById(`node-${r}-2`).classList.add('hidden'));
                     document.getElementById('mapTitle').innerText = "SAJÁT ROSTER";
                     
-                    // ZENE VÁLTÁS, ha átlépünk a kieséses szakaszba
                     playTrack('knockout', 'Worlds Theme');
 
                 } else if (res.status === 'error') {
