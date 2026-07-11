@@ -48,17 +48,57 @@
             background: conic-gradient(from 0deg at 50% 50%, var(--portal-color1) 0deg, var(--portal-color2) 120deg, var(--portal-color1) 240deg, var(--portal-color2) 360deg);
             animation: rotatePortal 4s linear infinite; opacity: 0.4; transition: opacity 0.3s ease;
         }
-        .cosmic-portal-btn:hover::before { opacity: 1; }
+        .cosmic-portal-btn:hover:not(:disabled)::before { opacity: 1; }
         .cosmic-portal-btn::after { content: ""; position: absolute; inset: 2px; background-color: var(--btn-bg); clip-path: inherit; z-index: 1; }
         .cosmic-btn-text { position: relative; z-index: 2; text-shadow: 0 0 10px rgba(200, 170, 110, 0.5); }
         .portal-effect { position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, var(--btn-highlight), transparent 50%); opacity: 0; transition: opacity 0.3s ease; z-index: 1; }
-        .cosmic-portal-btn:hover .portal-effect { opacity: 1; animation: pulsePortal 2s ease-in-out infinite; }
-        .cosmic-portal-btn:hover { transform: translateY(-2px); filter: drop-shadow(0 5px 10px rgba(200, 170, 110, 0.4)); color: #fff; }
-        .cosmic-portal-btn:active { transform: translateY(0); }
+        .cosmic-portal-btn:hover:not(:disabled) .portal-effect { opacity: 1; animation: pulsePortal 2s ease-in-out infinite; }
+        .cosmic-portal-btn:hover:not(:disabled) { transform: translateY(-2px); filter: drop-shadow(0 5px 10px rgba(200, 170, 110, 0.4)); color: #fff; }
+        .cosmic-portal-btn:active:not(:disabled) { transform: translateY(0); }
         @keyframes rotatePortal { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes pulsePortal { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
-        /* --- HÁTTÉR CSILLAGOK (JAVÍTVA) --- */
+        /* --- CUSTOM CHECKBOX (EASTER EGG) --- */
+        .custom-checkbox { cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative; }
+        .custom-checkbox input { display: none; }
+        .custom-checkbox svg { overflow: visible; height: 1.5em; width: 1.5em; }
+        .custom-checkbox .path {
+            fill: none; stroke: #ff004d; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round;
+            transition: stroke-dasharray 0.5s ease, stroke-dashoffset 0.5s ease;
+            stroke-dasharray: 241 9999999; stroke-dashoffset: 0;
+        }
+        .custom-checkbox input:checked ~ svg .path { stroke-dasharray: 70.5096664428711 9999999; stroke-dashoffset: -262.2723388671875; stroke: #c8aa6e; }
+
+        /* --- ANIMATED EXPANDING BUTTONS (Sidebar) --- */
+        .action-btn-container { display: flex; gap: 15px; justify-content: center; align-items: center; width: 100%; }
+        
+        .logout-btn {
+            display: flex; align-items: center; justify-content: flex-start;
+            width: 40px; height: 40px; border: none; border-radius: 50%; cursor: pointer; position: relative; overflow: hidden;
+            transition-duration: .3s; box-shadow: 0 0 10px rgba(255, 0, 77, 0.2); background-color: #ff004d; z-index: 10;
+        }
+        .logout-sign { width: 100%; transition-duration: .3s; display: flex; align-items: center; justify-content: center; }
+        .logout-sign svg { width: 14px; fill: white; }
+        .logout-text { position: absolute; right: 0%; width: 0%; opacity: 0; color: white; font-size: 11px; font-weight: 700; transition-duration: .3s; text-transform: uppercase; font-family: 'Orbitron', sans-serif;}
+        .logout-btn:hover { width: 110px; border-radius: 20px; transition-duration: .3s; box-shadow: 0 0 15px rgba(255, 0, 77, 0.5); }
+        .logout-btn:hover .logout-sign { width: 30%; transition-duration: .3s; padding-left: 10px; }
+        .logout-btn:hover .logout-text { opacity: 1; width: 70%; transition-duration: .3s; padding-right: 10px; }
+        .logout-btn:active { transform: translate(2px ,2px); }
+
+        .settings-btn {
+            display: flex; align-items: center; justify-content: flex-start;
+            width: 40px; height: 40px; border: 1px solid #c8aa6e; border-radius: 50%; cursor: pointer; position: relative; overflow: hidden;
+            transition-duration: .3s; box-shadow: 0 0 10px rgba(200, 170, 110, 0.1); background-color: #1e2328; z-index: 10;
+        }
+        .settings-sign { width: 100%; transition-duration: .3s; display: flex; align-items: center; justify-content: center; color: #c8aa6e; }
+        .settings-sign svg { width: 14px; }
+        .settings-text { position: absolute; right: 0%; width: 0%; opacity: 0; color: #010a13; font-size: 11px; font-weight: 700; transition-duration: .3s; text-transform: uppercase; font-family: 'Orbitron', sans-serif;}
+        .settings-btn:hover { width: 110px; border-radius: 20px; transition-duration: .3s; background-color: #c8aa6e; box-shadow: 0 0 15px rgba(200, 170, 110, 0.4); }
+        .settings-btn:hover .settings-sign { width: 30%; transition-duration: .3s; padding-left: 10px; color: #010a13; }
+        .settings-btn:hover .settings-text { opacity: 1; width: 70%; transition-duration: .3s; padding-right: 10px; }
+        .settings-btn:active { transform: translate(2px ,2px); }
+
+        /* --- HÁTTÉR CSILLAGOK --- */
         .star-container { background: radial-gradient(ellipse at bottom, #091428 0%, #010a13 100%); position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
         #stars, #stars2, #stars3 { background: transparent; }
         #stars { width: 1px; height: 1px; box-shadow: 501px 811px #c8aa6e, 1450px 1324px #fff, 1093px 1780px #fff, 1469px 678px #c8aa6e, 904px 741px #fff, 1160px 781px #fff, 1841px 1962px #fff, 1630px 1667px #fff, 1788px 676px #fff, 367px 1734px #fff, 1343px 156px #fff, 1283px 1142px #fff, 1062px 378px #fff, 1395px 467px #fff, 1017px 1891px #fff, 137px 1114px #fff, 1767px 1403px #fff, 1543px 11px #fff, 1078px 181px #fff, 1189px 1574px #fff, 1697px 1551px #fff, 439px 472px #fff, 1491px 677px #fff, 1364px 599px #fff, 34px 382px #fff, 1221px 1584px #c8aa6e, 1266px 1499px #fff, 169px 1907px #fff, 1219px 1125px #fff, 659px 18px #fff, 1731px 1959px #fff, 332px 1216px #fff, 1913px 788px #fff, 80px 712px #fff, 326px 1605px #fff, 574px 1502px #fff, 473px 1653px #fff, 404px 975px #fff, 322px 1797px #fff, 425px 1321px #fff, 1121px 1797px #fff, 731px 647px #fff, 891px 1584px #fff, 1523px 109px #fff, 1379px 244px #fff, 865px 1064px #fff, 493px 956px #fff, 624px 1380px #fff, 440px 619px #fff, 1630px 767px #fff; animation: animStar 50s linear infinite; }
@@ -72,13 +112,42 @@
 
     </style>
 </head>
-<body class="h-screen w-screen flex overflow-hidden text-[#f0e6d2] bg-transparent relative">
+<body class="flex bg-[#010a13] text-[#f0e6d2] overflow-hidden relative">
 
     <div class="star-container">
         <div id="stars"></div><div id="stars2"></div><div id="stars3"></div>
     </div>
 
-    <!-- MAIN CONTENT (Bal oldal, szigorú 100vh kitöltés) -->
+    <!-- LAJCSI EASTER EGG TROLL MODAL -->
+    <% 
+    const isLajcsi = (typeof userId !== 'undefined' && userId === '466788e9-7639-4ad8-8644-1b958f4a62d7') || 
+                     (typeof username !== 'undefined' && username === 'lajcsi') || 
+                     (typeof email !== 'undefined' && email === 'lopottajfon@gmail.com');
+    if (isLajcsi) { 
+    %>
+    <div id="lajcsiModal" class="fixed inset-0 z-[200] flex items-center justify-center bg-[#010a13]/95 backdrop-blur-md">
+        <div class="bg-[#091428] border-2 border-[#c8aa6e] p-8 rounded-sm text-center relative max-w-2xl w-full mx-4 shadow-[0_0_50px_rgba(200,170,110,0.3)] flex flex-col items-center">
+            <h2 class="text-3xl font-black text-[#c8aa6e] tracking-widest uppercase esport-font mb-6 drop-shadow-[0_0_10px_rgba(200,170,110,0.5)]">FONTOS KÖZLEMÉNY!</h2>
+            
+            <img src="/g2%20vs%20t1.png" alt="G2 vs T1" class="w-full max-w-lg h-auto mb-8 border border-[#c8aa6e]/50 rounded-sm shadow-xl">
+            
+            <label class="custom-checkbox flex items-center gap-4 w-full justify-center mb-8 cursor-pointer select-none">
+                <input type="checkbox" id="g2Check" onchange="document.getElementById('lajcsiCloseBtn').disabled = !this.checked; if(this.checked) document.getElementById('lajcsiCloseBtn').classList.remove('opacity-50', 'cursor-not-allowed'); else document.getElementById('lajcsiCloseBtn').classList.add('opacity-50', 'cursor-not-allowed');" />
+                <svg viewBox="0 0 64 64" height="2em" width="2em" class="overflow-visible flex-shrink-0">
+                    <path d="M 0 16 V 56 A 8 8 90 0 0 8 64 H 56 A 8 8 90 0 0 64 56 V 8 A 8 8 90 0 0 56 0 H 8 A 8 8 90 0 0 0 8 V 16 L 32 48 L 64 16 V 8 A 8 8 90 0 0 56 0 H 8 A 8 8 90 0 0 0 8 V 56 A 8 8 90 0 0 8 64 H 56 A 8 8 90 0 0 64 56 V 16" class="path" />
+                </svg>
+                <span class="text-base text-slate-200 font-bold uppercase tracking-widest cyber-font">Kijelentem, hogy a G2 (jobb csapat) nyert!</span>
+            </label>
+            
+            <button id="lajcsiCloseBtn" disabled onclick="document.getElementById('lajcsiModal').remove()" class="cosmic-portal-btn w-full opacity-50 cursor-not-allowed transition-all duration-300">
+                <span class="cosmic-btn-text">Elfogadom és Bezárás</span>
+                <div class="portal-effect"></div>
+            </button>
+        </div>
+    </div>
+    <% } %>
+
+    <!-- MAIN CONTENT (Bal oldal, 100vh kitöltés BELSŐ scrollal) -->
     <div class="flex-1 flex flex-col h-full p-4 lg:p-6 gap-5 relative z-10 min-w-0">
         
         <!-- HEADER SÁV -->
@@ -92,7 +161,7 @@
         <!-- LOBBY ACTIONS (Fix magasság) -->
         <div class="hex-panel p-6 rounded-sm flex flex-col md:flex-row gap-6 items-center shrink-0">
             <div class="flex-1 text-center md:border-r border-[#c8aa6e]/30 md:pr-6 w-full">
-                <h2 class="text-lg font-bold text-white uppercase tracking-widest mb-1.5 esport-font">LoL Worlds Mayhem</h2>
+                <h2 class="text-lg font-bold text-white uppercase tracking-widest mb-1.5 esport-font">Új Szimuláció</h2>
                 <p class="text-slate-400 text-[0.65rem] mb-4 cyber-font">Állítsd fel a szobát és dominálj!</p>
                 <button id="createLobbyBtn" class="cosmic-portal-btn w-full">
                     <span class="cosmic-btn-text">Létrehozás</span>
@@ -102,7 +171,7 @@
             
             <div class="flex-1 text-center md:pl-6 w-full">
                 <h2 class="text-lg font-bold text-[#c8aa6e] uppercase tracking-widest mb-1.5 esport-font">Csatlakozás</h2>
-                <p class="text-slate-400 text-[0.65rem] mb-4 cyber-font">Csatlakozz a barátod szobájához.</p>
+                <p class="text-slate-400 text-[0.65rem] mb-4 cyber-font">Kód alapú szinkronizáció.</p>
                 <div class="flex gap-2">
                     <input type="text" id="inviteCodeInput" placeholder="XXXXXX" maxlength="6" class="w-full bg-[#010a13] border border-[#c8aa6e]/50 rounded-sm px-4 py-2 text-center text-lg font-mono text-[#c8aa6e] uppercase tracking-widest focus:outline-none focus:border-[#f0e6d2] focus:shadow-[0_0_10px_rgba(200,170,110,0.3)] transition-all">
                     <button id="joinLobbyBtn" class="bg-[#1e2328] hover:bg-[#c8aa6e] hover:text-[#010a13] border border-[#c8aa6e]/50 text-[#c8aa6e] px-4 font-bold rounded-sm transition-colors text-sm cyber-font">→</button>
@@ -184,7 +253,7 @@
     </div>
 
     <!-- RIGHT SIDEBAR (Social Panel) -->
-    <div class="w-[340px] bg-[#091428] border-l border-[#c8aa6e]/40 flex flex-col h-full z-20 shadow-[-10px_0_30px_rgba(0,0,0,0.5)] shrink-0 relative">
+    <div class="w-[340px] bg-[#091428] border-l border-[#c8aa6e]/40 flex flex-col h-full z-20 shadow-[-10px_0_30px_rgba(0,0,0,0.5)] shrink-0">
         
         <!-- Profile Header -->
         <div class="p-5 border-b border-[#c8aa6e]/30 bg-[#010a13] flex flex-col gap-4 shrink-0">
@@ -246,7 +315,7 @@
                 <div class="text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest mb-2 px-2 cyber-font">Kapcsolatok (<%= accepted.length %>)</div>
                 <div class="space-y-1">
                     <% if (accepted.length === 0) { %>
-                        <p class="text-slate-600 text-[0.7rem] italic px-2 cyber-font">Nincs aktív kapcsolat.</p>
+                        <p class="text-slate-600 text-xs italic px-2">Nincs aktív kapcsolat.</p>
                     <% } else { %>
                         <% accepted.forEach(friend => { %>
                             <div class="group flex justify-between items-center p-2.5 rounded-sm cursor-pointer hover:bg-[#1e2328] transition-colors" onclick="openFriendChat('<%= friend.friend_id %>', '<%= friend.friend_name %>')">
@@ -312,7 +381,7 @@
         let currentChatFriendId = null;
         let lastSender = null;
 
-        socket.emit('identify', { userId: USER_ID });
+        if (USER_ID) { socket.emit('identify', { userId: USER_ID }); }
 
         socket.on('receive_private_message', (data) => {
             if (currentChatFriendId === data.senderId && !document.getElementById('chatOverlay').classList.contains('hidden')) {
@@ -329,14 +398,7 @@
         function appendChatMessage(sender, msg, isSelf, isSystem = false) {
             const list = document.getElementById('chatMessageList');
             
-            if (isSystem) {
-                const msgDiv = document.createElement('div');
-                msgDiv.className = 'text-yellow-400 text-[10px] uppercase tracking-widest text-center opacity-70 mb-4 pb-2 border-b border-yellow-400/20 sys-msg';
-                msgDiv.textContent = `[ ${msg} ]`;
-                list.appendChild(msgDiv);
-                lastSender = null; 
-                return;
-            }
+            if (isSystem) return; // Rendszerüzenetet soha nem renderelünk
 
             const textClass = `block text-[13px] text-slate-200 mt-0.5 break-words`;
 
@@ -371,15 +433,13 @@
                 lastSender = sender;
             }
 
-            // Kliens oldali Limit (Max 10 üzenet)
-            const allTexts = list.querySelectorAll('.text');
+            const allTexts = list.querySelectorAll('.text-[13px]');
             if (allTexts.length > 10) {
                 const oldestText = allTexts[0];
                 const parent = oldestText.parentElement;
                 oldestText.remove();
-                if (parent.querySelectorAll('.text').length === 0) { parent.remove(); }
+                if (parent.querySelectorAll('.text-[13px]').length === 0) { parent.remove(); }
             }
-
             list.scrollTop = list.scrollHeight;
         }
 
@@ -418,7 +478,7 @@
             activeChats = activeChats.filter(c => c.id !== id);
             if (currentChatFriendId === id) {
                 currentChatFriendId = null;
-                document.getElementById('currentChatFriendName').textContent = 'Válassz partnert';
+                document.getElementById('currentChatFriendName').textContent = 'Válassz barátot';
                 document.getElementById('chatMessageList').innerHTML = '';
                 lastSender = null;
             }
@@ -442,7 +502,6 @@
 
             socket.emit('fetch_private_history', { userId: USER_ID, friendId: friendId }, (res) => {
                 list.innerHTML = ''; 
-                appendChatMessage('SYSTEM', `Titkosítás: Aktív. Csatorna nyitva.`, false, true);
                 if (res.status === 'success') {
                     res.messages.forEach(m => { appendChatMessage(m.sender_name, m.content, m.sender_id === USER_ID); });
                 }
@@ -548,7 +607,7 @@
                 const res = await fetch(`/api/friends/search?q=${encodeURIComponent(q)}`); const data = await res.json();
                 const resultsContainer = document.getElementById('searchResults'); resultsContainer.innerHTML = '';
                 if (data.length === 0) { resultsContainer.innerHTML = '<p class="text-[0.6rem] text-slate-500 italic px-2">Nincs találat.</p>'; return; }
-                data.forEach(user => { resultsContainer.innerHTML += `<div id="search-result-${user.id}" class="bg-transparent py-2 flex justify-between items-center border-b border-[#c8aa6e]/20 last:border-0"><div class="flex flex-col"><span class="text-sm font-bold text-white cyber-font">${user.username}</span><span class="text-[0.65rem] text-[#c8aa6e] font-bold mt-0.5">🏆 ${user.trophies_count}</span></div><button id="addBtn_${user.id}" onclick="sendFriendRequest('${user.id}')" class="bg-[#1e2328] hover:bg-[#c8aa6e] hover:text-[#010a13] border border-[#c8aa6e]/50 text-[#c8aa6e] text-[0.65rem] font-bold uppercase tracking-widest px-3 py-1.5 rounded-sm transition-colors">Jelölés</button></div>`; });
+                data.forEach(user => { resultsContainer.innerHTML += `<div id="search-result-${user.id}" class="bg-transparent py-2 flex justify-between items-center border-b border-[#c8aa6e]/20 last:border-0"><div class="flex flex-col"><span class="text-sm font-bold text-white cyber-font">${user.username}</span><span class="text-[0.55rem] text-[#c8aa6e] font-bold mt-0.5">🏆 ${user.trophies_count}</span></div><button id="addBtn_${user.id}" onclick="sendFriendRequest('${user.id}')" class="bg-[#1e2328] hover:bg-[#c8aa6e] hover:text-[#010a13] border border-[#c8aa6e]/50 text-[#c8aa6e] text-[0.55rem] font-bold uppercase tracking-widest px-3 py-1.5 rounded-sm transition-colors">Jelölés</button></div>`; });
             } catch (error) { alert('Hálózat megszakadt.'); }
         }
 
