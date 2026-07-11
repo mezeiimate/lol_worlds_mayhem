@@ -72,45 +72,20 @@
         .chat-msg { display: flex; flex-direction: column; margin-bottom: 4px; }
         .sys-msg { color: #facc15; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; text-align: center; opacity: 0.8; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid rgba(250, 204, 21, 0.2); }
 
-        /* --- COSMIC PORTAL BUTTON --- */
-        .cosmic-portal-btn {
-            --btn-bg: #010a13; --btn-color: #c8aa6e; --btn-highlight: #091428;
-            --portal-color1: #c8aa6e; --portal-color2: #f0e6d2;
-            position: relative; font-family: "Oswald", sans-serif; font-size: 1rem; font-weight: bold;
-            letter-spacing: 0.1em; text-transform: uppercase; color: var(--btn-color); background-color: var(--btn-bg);
-            border: none; padding: 0.6em 1.5em; cursor: pointer; overflow: hidden; transition: all 0.3s ease;
-            clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 90% 100%, 10% 100%, 0% 70%);
-        }
-        .cosmic-portal-btn::before {
-            content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: conic-gradient(from 0deg at 50% 50%, var(--portal-color1) 0deg, var(--portal-color2) 120deg, var(--portal-color1) 240deg, var(--portal-color2) 360deg);
-            animation: rotatePortal 4s linear infinite; opacity: 0.4; transition: opacity 0.3s ease;
-        }
-        .cosmic-portal-btn:hover:not(:disabled)::before { opacity: 1; }
-        .cosmic-portal-btn::after { content: ""; position: absolute; inset: 2px; background-color: var(--btn-bg); clip-path: inherit; z-index: 1; }
-        .cosmic-btn-text { position: relative; z-index: 2; text-shadow: 0 0 10px rgba(200, 170, 110, 0.5); }
-        .portal-effect { position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, var(--btn-highlight), transparent 50%); opacity: 0; transition: opacity 0.3s ease; z-index: 1; }
-        .cosmic-portal-btn:hover:not(:disabled) .portal-effect { opacity: 1; animation: pulsePortal 2s ease-in-out infinite; }
-        .cosmic-portal-btn:hover:not(:disabled) { transform: translateY(-2px); filter: drop-shadow(0 5px 10px rgba(200, 170, 110, 0.4)); color: #fff; }
-        .cosmic-portal-btn:active:not(:disabled) { transform: translateY(0); }
-        .cosmic-portal-btn:disabled { filter: grayscale(100%); cursor: not-allowed; opacity: 0.6; }
-        @keyframes rotatePortal { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes pulsePortal { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-
-        /* --- AUDIO LOADER ANIMATION (React -> CSS) --- */
+        /* --- AUDIO LOADER ANIMATION (Hextech Colors) --- */
         .loader-wrapper {
             position: relative; display: flex; align-items: center; justify-content: center;
             width: 100px; height: 100px; font-family: "Inter", sans-serif; font-size: 0.8rem;
-            font-weight: 700; color: white; border-radius: 50%; user-select: none;
+            font-weight: 700; color: #f0e6d2; border-radius: 50%; user-select: none;
         }
         .loader-spinner {
             position: absolute; top: 0; left: 0; width: 100%; aspect-ratio: 1/1; border-radius: 50%;
             background-color: transparent; animation: loader-rotate 3s linear infinite; z-index: 0;
         }
         @keyframes loader-rotate {
-            0% { transform: rotate(90deg); box-shadow: 0 5px 10px 0 rgba(255,255,255,0.5) inset, 0 10px 15px 0 #ad5fff inset, 0 30px 30px 0 #471eec inset; }
-            50% { transform: rotate(270deg); box-shadow: 0 5px 10px 0 rgba(255,255,255,0.5) inset, 0 10px 5px 0 #d60a47 inset, 0 20px 30px 0 #311e80 inset; }
-            100% { transform: rotate(450deg); box-shadow: 0 5px 10px 0 rgba(255,255,255,0.5) inset, 0 10px 15px 0 #ad5fff inset, 0 30px 30px 0 #471eec inset; }
+            0% { transform: rotate(90deg); box-shadow: 0 5px 10px 0 rgba(200,170,110,0.5) inset, 0 10px 15px 0 rgba(200,170,110,0.8) inset, 0 30px 30px 0 rgba(9,20,40,0.8) inset; }
+            50% { transform: rotate(270deg); box-shadow: 0 5px 10px 0 rgba(200,170,110,0.5) inset, 0 10px 5px 0 rgba(240,230,210,0.8) inset, 0 20px 30px 0 rgba(1,10,19,0.8) inset; }
+            100% { transform: rotate(450deg); box-shadow: 0 5px 10px 0 rgba(200,170,110,0.5) inset, 0 10px 15px 0 rgba(200,170,110,0.8) inset, 0 30px 30px 0 rgba(9,20,40,0.8) inset; }
         }
         .loader-letter {
             display: inline-block; opacity: 0.4; transform: translateY(0);
@@ -118,17 +93,17 @@
         }
         @keyframes loader-letter-anim {
             0%, 100% { opacity: 0.4; transform: translateY(0); }
-            20% { opacity: 1; transform: scale(1.15); text-shadow: 0 0 8px rgba(255,255,255,0.8); }
+            20% { opacity: 1; transform: scale(1.15); text-shadow: 0 0 8px rgba(200,170,110,0.8); color: #c8aa6e; }
             40% { opacity: 0.7; transform: translateY(0); }
         }
 
-        /* --- AUDIO VOLUME SLIDER (React -> CSS) --- */
+        /* --- AUDIO VOLUME SLIDER --- */
         .slider-container { display: inline-flex; align-items: center; position: relative; cursor: pointer; }
         .slider-container .volume { color: #f0e6d2; width: 20px; height: auto; margin-right: 12px; pointer-events: none; transition: opacity 0.3s; }
         .slider-container .level {
             -webkit-appearance: none; appearance: none;
             width: 100px; height: 10px; background: rgba(200, 170, 110, 0.2);
-            overflow: hidden; border-radius: 5px; cursor: inherit; transform: rotate(0deg); /* Vízszintesre rakva! */
+            overflow: hidden; border-radius: 5px; cursor: inherit; transform: rotate(0deg);
         }
         .slider-container .level::-webkit-slider-thumb {
             -webkit-appearance: none; width: 0; height: 0;
@@ -141,7 +116,7 @@
 
     </style>
 </head>
-<body class="flex bg-[#010a13] text-[#f0e6d2] overflow-hidden relative">
+<body class="flex w-screen h-screen bg-[#010a13] text-[#f0e6d2] overflow-hidden relative">
 
     <div class="star-container">
         <div id="stars"></div><div id="stars2"></div><div id="stars3"></div>
@@ -162,7 +137,7 @@
     <div id="toastContainer" class="fixed top-6 left-1/2 transform -translate-x-1/2 z-[110] flex flex-col gap-2 pointer-events-none items-center w-full max-w-md"></div>
 
     <!-- MAIN CONTENT (Bal oldal, rugalmasan kitölti a teret) -->
-    <div class="flex-1 flex flex-col h-full p-4 lg:p-6 gap-5 relative z-10 min-w-0 overflow-y-auto">
+    <div class="flex-1 flex flex-col h-full p-4 lg:p-6 gap-5 relative z-10 min-w-0">
         
         <!-- HEADER SÁV -->
         <div class="flex flex-col sm:flex-row justify-between items-center border-b border-[#c8aa6e]/30 pb-3 shrink-0">
@@ -187,12 +162,12 @@
         </div>
 
         <!-- BELSŐ SCROLL KONTÉNER A DRAFTNAK / SZIMULÁCIÓNAK -->
-        <div class="flex-1 min-h-0">
+        <div class="flex-1 min-h-0 overflow-y-auto">
             <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 h-full">
                 
                 <!-- BAL OSZLOP: TÉRKÉP ÉS ROSTER ÉS AUDIO -->
-                <div class="xl:col-span-1 flex flex-col gap-4">
-                    <div class="flex flex-col items-center justify-start relative hex-panel p-6 rounded-sm h-fit w-full" id="leftMapArea">
+                <div class="xl:col-span-1 flex flex-col gap-4 h-full">
+                    <div class="flex flex-col items-center justify-start relative hex-panel p-6 rounded-sm w-full" id="leftMapArea">
                         <div class="w-full flex justify-between items-center mb-6 border-b border-[#c8aa6e]/30 pb-3">
                             <h2 class="text-lg text-[#f0e6d2] font-bold esport-font tracking-widest" id="mapTitle">SAJÁT ROSTER</h2>
                             <button id="readyBtnTop" onclick="setReady()" class="hidden cyber-font text-[0.65rem] bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-sm tracking-widest transition-colors font-bold uppercase">Kész</button>
@@ -213,10 +188,9 @@
                         </div>
                     </div>
 
-                    <!-- ÚJ AUDIO PANEL: Loader és Volume -->
-                    <div class="hex-panel rounded-sm p-4 w-full flex items-center justify-between shadow-lg h-fit bg-[#091428]/80 border-[#c8aa6e]/30">
+                    <!-- ÚJ AUDIO PANEL: Loader és Volume (Hextech Dizájn) -->
+                    <div class="hex-panel rounded-sm p-4 w-full flex items-center justify-between shadow-lg bg-[#091428]/80 border-[#c8aa6e]/30 shrink-0">
                         <div class="loader-wrapper" id="loaderWrapper">
-                            <!-- JS fogja feltölteni a betűket -->
                             <div class="loader-spinner"></div>
                         </div>
                         <div class="flex-1 flex justify-end">
@@ -343,8 +317,9 @@
         </div>
     </div>
 
-    <!-- RIGHT SIDEBAR (Social Panel) -->
-
+    <!-- RIGHT SIDEBAR (Social & Lobby Chat Panel) -->
+    <div class="w-[350px] bg-[#091428] border-l border-[#c8aa6e]/40 flex flex-col h-full z-20 shadow-[-10px_0_30px_rgba(0,0,0,0.5)] shrink-0 relative">
+        
         <!-- FELSŐ RÉSZ: Lobby Tagok vagy Csoportok -->
         <div class="flex-1 flex flex-col min-h-0 border-b border-[#c8aa6e]/40">
             <div class="p-4 border-b border-[#c8aa6e]/30 bg-[#010a13] shrink-0">
@@ -372,9 +347,6 @@
             </div>
         </div>
     </div>
-
-    <!-- TOAST CONTAINER (Top Center) -->
-    <div id="toastContainer" class="fixed top-6 left-1/2 transform -translate-x-1/2 z-[100] flex flex-col gap-2 pointer-events-none items-center w-full max-w-md"></div>
 
     <script>
         const ROLE_ICONS = {
@@ -530,6 +502,7 @@
                 lastLobbySender = sender;
             }
 
+            // Kliens limit
             const allTexts = list.querySelectorAll('.text-[12px]');
             if (allTexts.length > 15) {
                 const oldestText = allTexts[0];
@@ -1143,9 +1116,7 @@
                 document.getElementById('nextMatchBtn').classList.remove('hidden');
             }
 
-            // Audio Váltás: Ha a szimuláció elindul, szóljon a Csoportkör téma
-            // Ha már beolvasta a rendszer az állapotot frissítéskor (és pl egyenes kiesésben van), 
-            // a triggerNextMatch/updateLobbyState majd átváltja a zenét. De defaultból bedobjuk a csoportot:
+            // Audio Váltás: Csoportkör indul
             playTrack('groups', 'Worlds Theme');
         }
 
