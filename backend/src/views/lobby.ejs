@@ -43,7 +43,7 @@
         ::-webkit-scrollbar-thumb { background: rgba(200,170,110,0.3); border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #c8aa6e; }
 
-        /* --- HÁTTÉR CSILLAGOK --- */
+        /* --- HÁTTÉR CSILLAGOK (Nem map) --- */
         .star-container { background: radial-gradient(ellipse at bottom, #091428 0%, #010a13 100%); position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
         #stars, #stars2, #stars3 { background: transparent; }
         #stars { width: 1px; height: 1px; box-shadow: 501px 811px #c8aa6e, 1450px 1324px #fff, 1093px 1780px #fff, 1469px 678px #c8aa6e, 904px 741px #fff, 1160px 781px #fff, 1841px 1962px #fff, 1630px 1667px #fff, 1788px 676px #fff, 367px 1734px #fff, 1343px 156px #fff, 1283px 1142px #fff, 1062px 378px #fff, 1395px 467px #fff, 1017px 1891px #fff, 137px 1114px #fff, 1767px 1403px #fff, 1543px 11px #fff, 1078px 181px #fff, 1189px 1574px #fff, 1697px 1551px #fff, 439px 472px #fff, 1491px 677px #fff, 1364px 599px #fff, 34px 382px #fff, 1221px 1584px #c8aa6e, 1266px 1499px #fff, 169px 1907px #fff, 1219px 1125px #fff, 659px 18px #fff, 1731px 1959px #fff, 332px 1216px #fff, 1913px 788px #fff, 80px 712px #fff, 326px 1605px #fff, 574px 1502px #fff, 473px 1653px #fff, 404px 975px #fff, 322px 1797px #fff, 425px 1321px #fff, 1121px 1797px #fff, 731px 647px #fff, 891px 1584px #fff, 1523px 109px #fff, 1379px 244px #fff, 865px 1064px #fff, 493px 956px #fff, 624px 1380px #fff, 440px 619px #fff, 1630px 767px #fff; animation: animStar 50s linear infinite; }
@@ -51,10 +51,11 @@
         #stars3 { width: 3px; height: 3px; box-shadow: 200px 981px #fff, 1731px 521px #fff, 132px 1039px #fff, 1888px 1547px #c8aa6e, 899px 1226px #fff, 1887px 580px #fff, 1548px 1092px #fff, 1626px 689px #fff, 254px 1072px #fff, 1684px 1211px #fff, 672px 1267px #fff, 939px 668px #fff, 1969px 645px #fff, 1126px 983px #fff, 457px 568px #fff, 476px 876px #fff, 829px 1896px #fff, 1364px 1846px #fff, 1507px 1120px #fff, 936px 1948px #fff, 1833px 832px #fff, 1424px 285px #fff, 1377px 1596px #fff, 432px 153px #fff, 1348px 1410px #fff, 1529px 954px #c8aa6e, 1102px 387px #fff, 264px 297px #fff, 811px 977px #fff, 1931px 673px #fff, 1734px 978px #fff; animation: animStar 150s linear infinite; }
         @keyframes animStar { from { transform: translateY(0px); } to { transform: translateY(-2000px); } }
 
-        /* --- MAP STYLES --- */
+        /* --- MAP STYLES (A TÉRKÉP KÉPE VISSZATÉRT!) --- */
         .sr-map {
-            background-color: #091428; /* Fallback map color */
-            background-image: radial-gradient(circle at center, #091428 0%, #010a13 100%);
+            background-image: url('/map.png');
+            background-size: cover;
+            background-position: center;
             border: 2px solid #c8aa6e; box-shadow: 0 0 20px rgba(200, 170, 110, 0.15);
         }
         
@@ -94,17 +95,18 @@
     <!-- MAIN CONTENT (Bal oldal, rugalmasan kitölti a teret) -->
     <div class="flex-1 flex flex-col h-full p-4 lg:p-6 gap-5 relative z-10 min-w-0 overflow-y-auto">
         
-        <!-- HEADER SÁV (Egységes Dizájn) -->
+        <!-- HEADER SÁV -->
         <div class="flex flex-col sm:flex-row justify-between items-center border-b border-[#c8aa6e]/30 pb-3 shrink-0">
             <div class="flex items-center gap-6">
                 <a href="/dashboard" class="bg-[#1e2328] hover:bg-[#c8aa6e] hover:text-[#010a13] border border-[#c8aa6e]/50 px-4 py-2 rounded-sm text-xs font-bold transition-all cyber-font tracking-widest uppercase">← Vissza</a>
                 <div>
-                    <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-wider esport-font drop-shadow-[0_0_8px_rgba(200,170,110,0.3)]">LoL Worlds Mayhem</h1>
+                    <!-- ITT A VISSZARAKOTT ID: "lobbyTitle" -->
+                    <h1 id="lobbyTitle" class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#c8aa6e] to-[#f0e6d2] tracking-wider esport-font drop-shadow-[0_0_8px_rgba(200,170,110,0.3)]">LoL Worlds Mayhem</h1>
                     <p class="text-slate-400 uppercase tracking-widest text-[0.65rem] font-bold cyber-font mt-1">Draft Aréna</p>
                 </div>
             </div>
 
-            <!-- MEGHÍVÓ ÉS KÓD (Ide átemelve a régi kódból) -->
+            <!-- MEGHÍVÓ ÉS KÓD -->
             <div class="flex items-center gap-6">
                 <button id="inviteFriendBtn" onclick="openInviteModal()" class="bg-[#1e2328] hover:bg-[#c8aa6e] hover:text-[#010a13] border border-[#c8aa6e]/50 px-5 py-2 rounded-sm text-xs font-bold text-[#c8aa6e] transition-colors cyber-font tracking-widest uppercase">
                     Meghívás
@@ -252,15 +254,14 @@
         </div>
     </div>
 
-    <!-- RIGHT SIDEBAR (Social & Lobby Chat Panel, Fix és Kiemelt) -->
+    <!-- RIGHT SIDEBAR (Social & Lobby Chat Panel) -->
     <div class="w-[350px] bg-[#091428] border-l border-[#c8aa6e]/40 flex flex-col h-full z-20 shadow-[-10px_0_30px_rgba(0,0,0,0.5)] shrink-0 relative">
         
-        <!-- FELSŐ RÉSZ: Lobby Tagok -->
+        <!-- FELSŐ RÉSZ: Lobby Tagok vagy Csoportok -->
         <div class="flex-1 flex flex-col min-h-0">
             <div class="p-5 border-b border-[#c8aa6e]/30 bg-[#010a13] shrink-0">
                 <h2 id="sidebarTitle" class="text-base font-bold text-[#c8aa6e] esport-font tracking-widest uppercase">Felhasználók a szobában</h2>
             </div>
-            <!-- Lista -->
             <div id="sidebarContent" class="flex-1 overflow-y-auto p-3 space-y-2.5">
                 <!-- Javascript tölti fel (Tabella vagy Aktív játékosok) -->
             </div>
@@ -297,7 +298,6 @@
         const socket = io();
         const LOBBY_ID = '<%= lobbyId %>';
         const USER_ID = '<%= userId %>';
-        // Mock USERNAME extraction if passed, otherwise default
         const USERNAME = "<%= typeof username !== 'undefined' ? username : 'Guest' %>"; 
         
         socket.emit('identify', { userId: USER_ID });
@@ -347,7 +347,7 @@
                 lastLobbySender = sender;
             }
 
-            // Kliens limit (Max 15 üzenet a lobbiban)
+            // Kliens limit
             const allTexts = list.querySelectorAll('.text-[12px]');
             if (allTexts.length > 15) {
                 const oldestText = allTexts[0];
@@ -384,13 +384,14 @@
             toast.innerHTML = `<h4 class="text-[${type === 'success' ? '#c8aa6e' : '#fff'}] font-bold text-[0.7rem] tracking-wider uppercase cyber-font">${title}</h4><p class="text-slate-300 text-[0.65rem] mt-1">${message}</p>${actionHtml}`;
             document.getElementById('toastContainer').appendChild(toast);
             
-            toast.offsetHeight; // Reflow
+            toast.offsetHeight; 
             setTimeout(() => { toast.classList.remove('-translate-y-full', 'opacity-0'); }, 10);
             if (type !== 'invite') { setTimeout(() => { toast.classList.add('-translate-y-full', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, 5000); }
         }
 
         async function openInviteModal() {
             document.getElementById('inviteModal').classList.remove('hidden');
+            document.getElementById('inviteModal').classList.add('flex');
             const container = document.getElementById('friendsListContainer');
             container.innerHTML = '<p class="text-slate-400 text-sm">Betöltés...</p>';
             try {
@@ -409,13 +410,12 @@
                         </div>
                     `;
                 });
-            } catch (e) {
-                container.innerHTML = '<p class="text-red-400 text-sm">Hiba a betöltéskor.</p>';
-            }
+            } catch (e) { container.innerHTML = '<p class="text-red-400 text-sm">Hiba a betöltéskor.</p>'; }
         }
 
         function closeInviteModal() { 
             document.getElementById('inviteModal').classList.add('hidden'); 
+            document.getElementById('inviteModal').classList.remove('flex');
         }
         
         function sendInvite(targetId, btn) {
@@ -867,7 +867,7 @@
             document.getElementById('studioMatchBox').classList.add('hidden');
             
             document.getElementById('leftMapArea').classList.add('hidden');
-            document.getElementById('centerArea').classList.replace('xl:col-span-2', 'xl:col-span-3'); // Fill the space since Map is gone
+            document.getElementById('centerArea').classList.replace('xl:col-span-2', 'xl:col-span-3'); 
             
             document.getElementById('championArea').classList.remove('hidden');
             document.getElementById('championArea').classList.add('flex');
@@ -901,7 +901,10 @@
         });
 
         function transitionToSimulation() {
-            document.getElementById('lobbyTitle').innerText = "LOL WORLDS MAYHEM";
+            // JAVÍTVA: A fenti címsor id-je be lett állítva, így ez nem fagyasztja le a programot
+            const titleEl = document.getElementById('lobbyTitle');
+            if (titleEl) titleEl.innerText = "LOL WORLDS MAYHEM";
+            
             document.getElementById('startArea').classList.add('hidden');
             document.getElementById('teamsAreaPhase1').classList.add('hidden');
             document.getElementById('teamsAreaPhase2').classList.add('hidden');
@@ -909,7 +912,9 @@
             
             document.getElementById('simulationStudio').classList.remove('hidden'); 
             document.getElementById('simulationStudio').classList.add('flex');
-            document.getElementById('sidebarTitle').innerText = "TABELLA";
+            
+            const sidebarTitle = document.getElementById('sidebarTitle');
+            if (sidebarTitle) sidebarTitle.innerText = "TABELLA";
 
             if (USER_ID === CURRENT_HOST_ID) {
                 document.getElementById('hostControls').classList.remove('hidden');
