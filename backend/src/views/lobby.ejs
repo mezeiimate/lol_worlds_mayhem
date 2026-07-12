@@ -352,6 +352,7 @@
         const socket = io();
         const LOBBY_ID = '<%= lobbyId %>';
         const USER_ID = '<%= userId %>';
+        const USERNAME = "<%= typeof username !== 'undefined' ? username : 'Guest' %>"; 
         
         socket.emit('identify', { userId: USER_ID });
 
@@ -360,6 +361,7 @@
         let globalVolume = parseFloat(localStorage.getItem('lol_volume') || '0.1');
         let isMuted = localStorage.getItem('lol_muted') === 'true';
 
+        // PONTOS FÁJLNEVEK BEÁLLÍTÁSA!
         const audioTracks = {
             draft: new Audio('/audio/LoL_Draft_Music_New.mp3'),
             groups: new Audio('/audio/LoL_Worlds_2025_Orchestral_Theme_Csoportkor.mp3'),
@@ -369,11 +371,11 @@
 
         Object.values(audioTracks).forEach(audio => {
             audio.loop = true;
-            audio.volume = isMuted ? 0 : globalVolume;
+            audio.volume = 0; // Nulláról indul a fade miatt
         });
-        audioTracks.silver.loop = false;
+        audioTracks.silver.loop = false; 
 
-        let audioInitialized = false;
+        let audioUnlocked = false;
 
         function setLoaderText(text) {
             const wrapper = document.getElementById('loaderWrapper');
@@ -385,43 +387,65 @@
             }
         }
 
-        // AGRESSZÍV AUDIO FELOLDÓ JAVÍTVA
-        function unlockAndPlayAudio() {
-            if (audioInitialized) return;
-            
-            // Megkeressük, melyik zene kell aktuálisan
-            let track = 'draft';
-            let text = 'Draft fázis';
+        function playTrack(trackName, loaderText) {
+            if (loaderText) setLoaderText(loaderText);
+            if (currentTrack === trackName) return;
 
-            if(document.getElementById('startArea')?.classList.contains('hidden') && document.getElementById('teamsAreaPhase1')?.classList.contains('hidden')) {
-                const phase = document.getElementById('matchGroupBadge')?.innerText || '';
-                if(phase.includes('QUARTER') || phase.includes('SEMI') || phase.includes('FINAL')) {
-                    track = 'knockout'; text = 'Worlds Theme';
-                } else {
-                    track = 'groups'; text = 'Worlds Theme';
-                }
-            }
+            const fadeOutTrack = currentTrack ? audioTracks[currentTrack] : null;
+            const fadeInTrack = audioTracks[trackName];
+            currentTrack = trackName;
 
-            currentTrack = track;
-            setLoaderText(text);
-
-            const trackToPlay = audioTracks[currentTrack];
-            trackToPlay.volume = isMuted ? 0 : globalVolume;
-            
-            const promise = trackToPlay.play();
-            if (promise !== undefined) {
-                promise.then(() => {
-                    audioInitialized = true;
-                }).catch(err => {
-                    console.log("Böngésző blokkolás. Várunk a kattintásra...");
+            const playPromise = fadeInTrack.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    audioUnlocked = true;
+                    
+                    let vol = 0;
+                    fadeInTrack.volume = 0;
+                    const fadeInterval = setInterval(() => {
+                        vol += 0.05;
+                        if(vol >= 1) {
+                            if(!isMuted) fadeInTrack.volume = globalVolume;
+                            if(fadeOutTrack) { fadeOutTrack.pause(); fadeOutTrack.currentTime = 0; }
+                            clearInterval(fadeInterval);
+                        } else {
+                            if(!isMuted) {
+                                fadeInTrack.volume = vol * globalVolume;
+                                if(fadeOutTrack) fadeOutTrack.volume = (1 - vol) * globalVolume;
+                            }
+                        }
+                    }, 50);
+                }).catch(e => {
+                    console.log("Autoplay blokkolva! Várakozás interakcióra...");
+                    audioUnlocked = false;
                 });
             }
         }
 
-        // Első interakcióra biztosan elindul
-        document.body.addEventListener('click', unlockAndPlayAudio, { once: true });
-        // Próba rögtön az elején
-        setTimeout(unlockAndPlayAudio, 100);
+        // AZONNALI INDÍTÁS PRÓBÁJA
+        setTimeout(() => {
+            if(!document.getElementById('startArea')?.classList.contains('hidden') || !document.getElementById('teamsAreaPhase1')?.classList.contains('hidden')) {
+                playTrack('draft', 'Draft fázis');
+            } else {
+                const phase = document.getElementById('matchGroupBadge')?.innerText || '';
+                if(phase.includes('QUARTER') || phase.includes('SEMI') || phase.includes('FINAL')) {
+                    playTrack('knockout', 'Worlds Theme');
+                } else {
+                    playTrack('groups', 'Worlds Theme');
+                }
+            }
+        }, 500);
+
+        // BIZTONSÁGI HÁLÓ (ELSŐ KATTINTÁSRA)
+        document.body.addEventListener('click', () => {
+            if (!audioUnlocked && currentTrack) {
+                const track = audioTracks[currentTrack];
+                track.volume = isMuted ? 0 : globalVolume;
+                track.play().then(() => {
+                    audioUnlocked = true;
+                }).catch(e => console.error(e));
+            }
+        });
 
         const vSlider = document.getElementById('volumeSlider');
         if(vSlider) vSlider.value = globalVolume * 100;
@@ -438,48 +462,18 @@
                 if(mIcon) mIcon.style.opacity = '1';
             }
             
-            if(!isMuted && currentTrack && audioInitialized) {
+            if(!isMuted && currentTrack && audioUnlocked) {
                 audioTracks[currentTrack].volume = globalVolume;
             }
-            unlockAndPlayAudio(); // Ha a sliderhez nyúl, induljon el!
         }
 
         function toggleMute() {
             isMuted = !isMuted;
             localStorage.setItem('lol_muted', isMuted);
-            if(currentTrack && audioInitialized) audioTracks[currentTrack].volume = isMuted ? 0 : globalVolume;
-            const mIcon = document.getElementById('muteIcon');
+            if(currentTrack && audioUnlocked) {
+                audioTracks[currentTrack].volume = isMuted ? 0 : globalVolume;
+            }
             if(mIcon) mIcon.style.opacity = isMuted ? '0.5' : '1';
-            unlockAndPlayAudio();
-        }
-
-        function playTrack(trackName, loaderText) {
-            setLoaderText(loaderText);
-            if (currentTrack === trackName) return;
-
-            const fadeOutTrack = currentTrack ? audioTracks[currentTrack] : null;
-            const fadeInTrack = audioTracks[trackName];
-            currentTrack = trackName;
-
-            if (!audioInitialized) return;
-
-            fadeInTrack.volume = 0;
-            fadeInTrack.play().catch(e => console.log(e));
-            
-            let vol = 0;
-            const fadeInterval = setInterval(() => {
-                vol += 0.05;
-                if(vol >= 1) {
-                    if(!isMuted) fadeInTrack.volume = globalVolume;
-                    if(fadeOutTrack) { fadeOutTrack.pause(); fadeOutTrack.currentTime = 0; }
-                    clearInterval(fadeInterval);
-                } else {
-                    if(!isMuted) {
-                        fadeInTrack.volume = vol * globalVolume;
-                        if(fadeOutTrack) fadeOutTrack.volume = (1 - vol) * globalVolume;
-                    }
-                }
-            }, 50);
         }
         // --- VÉGE: AUDIO MANAGER ---
 
