@@ -70,6 +70,7 @@
 
         /* --- CHAT STYLES --- */
         .chat-msg { display: flex; flex-direction: column; margin-bottom: 4px; }
+        .sys-msg { color: #facc15; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; text-align: center; opacity: 0.8; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid rgba(250, 204, 21, 0.2); }
 
         /* --- AUDIO LOADER ANIMATION --- */
         .loader-wrapper {
@@ -404,29 +405,45 @@
             audio.loop = true;
             audio.volume = isMuted ? 0 : globalVolume;
         });
-        audioTracks.silver.loop = false; 
+        audioTracks.silver.loop = false;
 
         let audioInitialized = false;
 
-        function startInitialAudio() {
+        function forcePlayAudio() {
             if(audioInitialized) return;
-            audioInitialized = true;
             
-            if(!document.getElementById('startArea')?.classList.contains('hidden') || !document.getElementById('teamsAreaPhase1')?.classList.contains('hidden')) {
-                playTrack('draft', 'Draft fázis');
-            } else {
+            let track = 'draft';
+            let text = 'Draft fázis';
+
+            if(document.getElementById('startArea')?.classList.contains('hidden') && document.getElementById('teamsAreaPhase1')?.classList.contains('hidden')) {
                 const phase = document.getElementById('matchGroupBadge')?.innerText || '';
                 if(phase.includes('QUARTER') || phase.includes('SEMI') || phase.includes('FINAL')) {
-                    playTrack('knockout', 'Worlds Theme');
+                    track = 'knockout'; text = 'Worlds Theme';
                 } else {
-                    playTrack('groups', 'Worlds Theme');
+                    track = 'groups'; text = 'Worlds Theme';
                 }
+            }
+
+            currentTrack = track;
+            setLoaderText(text);
+            
+            let promise = audioTracks[currentTrack].play();
+            if (promise !== undefined) {
+                promise.then(() => {
+                    audioInitialized = true;
+                }).catch(error => {
+                    console.log("Autoplay blokkolva! Várunk egy kattintásra.");
+                });
             }
         }
 
-        ['click', 'keydown', 'touchstart'].forEach(evt => 
-            document.addEventListener(evt, startInitialAudio, { once: true })
-        );
+        // Azonnali próba betöltéskor
+        forcePlayAudio();
+
+        // Biztonsági háló: A legelső kattintáskor elindítja a zenét, ha a böngésző blokkolta az autoplayt
+        window.addEventListener('click', () => {
+            if (!audioInitialized) forcePlayAudio();
+        }, { once: true });
 
         const vSlider = document.getElementById('volumeSlider');
         if(vSlider) vSlider.value = globalVolume * 100;
@@ -484,7 +501,7 @@
                                 }
                             }
                         }, 50);
-                    }).catch(e => console.log("Zene lejátszása böngésző által blokkolva."));
+                    }).catch(e => console.log("Zene lejátszása blokkolva."));
                 }
             }
         }
@@ -507,10 +524,16 @@
 
             if (sender === lastLobbySender) {
                 const msgDiv = list.lastElementChild;
-                const textSpan = document.createElement('span');
-                textSpan.className = textClass;
-                textSpan.textContent = msg;
-                msgDiv.appendChild(textSpan);
+                if (msgDiv && !msgDiv.classList.contains('sys-msg')) {
+                    const textSpan = document.createElement('span');
+                    textSpan.className = textClass;
+                    textSpan.textContent = msg;
+                    msgDiv.appendChild(textSpan);
+                } else {
+                    lastLobbySender = null;
+                    appendLobbyChatMessage(sender, msg, isSelf);
+                    return;
+                }
             } else {
                 const msgDiv = document.createElement('div');
                 msgDiv.className = `flex flex-col w-full mt-2 items-start`;
@@ -1025,6 +1048,7 @@
                 return null;
             };
 
+            // Lokális ágrajz-továbbjutó felülírás azonnal
             if (getWinner(quarters[0])) semis[0].team1_name = getWinner(quarters[0]);
             if (getWinner(quarters[1])) semis[0].team2_name = getWinner(quarters[1]);
             if (getWinner(quarters[2])) semis[1].team1_name = getWinner(quarters[2]);
@@ -1097,15 +1121,16 @@
 
         socket.on('match_simulated_event', (data) => {
             if (isTournamentEnded) return;
+            document.getElementById('matchStatusText')?.classList.add('hidden');
             document.getElementById('matchWinnerDisplay')?.classList.add('hidden');
             document.getElementById('fastForwardGroup')?.classList.add('hidden');
             document.getElementById('nextMatchBtn')?.classList.add('hidden');
 
+            // AZONNALI CACHE ÉPÍTÉS A PONTOKHOZ (BO5 esetén)
             if (data.isBO5) {
                 window.bracketScores = window.bracketScores || {};
                 const k1 = data.team1 + "_vs_" + data.team2;
                 const winName = data.isSeriesFinished ? data.winner : null;
-                
                 window.bracketScores[k1] = { s1: data.score1, s2: data.score2, winner: winName };
             }
             
