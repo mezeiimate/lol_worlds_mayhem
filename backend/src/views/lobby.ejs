@@ -70,7 +70,6 @@
 
         /* --- CHAT STYLES --- */
         .chat-msg { display: flex; flex-direction: column; margin-bottom: 4px; }
-        .sys-msg { color: #facc15; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; text-align: center; opacity: 0.8; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid rgba(250, 204, 21, 0.2); }
 
         /* --- AUDIO LOADER ANIMATION --- */
         .loader-wrapper {
@@ -405,31 +404,28 @@
             audio.loop = true;
             audio.volume = isMuted ? 0 : globalVolume;
         });
-        audioTracks.silver.loop = false; // Silver Scrapes csak egyszer
+        audioTracks.silver.loop = false; 
 
         let audioInitialized = false;
 
-        function initAudio() {
+        function startInitialAudio() {
             if(audioInitialized) return;
-            let playPromise;
+            audioInitialized = true;
+            
             if(!document.getElementById('startArea')?.classList.contains('hidden') || !document.getElementById('teamsAreaPhase1')?.classList.contains('hidden')) {
-                setLoaderText('Draft fázis');
-                currentTrack = 'draft';
-                playPromise = audioTracks.draft.play();
-            }
-            if (playPromise !== undefined) {
-                playPromise.then(() => { audioInitialized = true; }).catch(() => { console.log("Autoplay blokkolva."); });
+                playTrack('draft', 'Draft fázis');
+            } else {
+                const phase = document.getElementById('matchGroupBadge')?.innerText || '';
+                if(phase.includes('QUARTER') || phase.includes('SEMI') || phase.includes('FINAL')) {
+                    playTrack('knockout', 'Worlds Theme');
+                } else {
+                    playTrack('groups', 'Worlds Theme');
+                }
             }
         }
-        setTimeout(initAudio, 200);
 
         ['click', 'keydown', 'touchstart'].forEach(evt => 
-            document.body.addEventListener(evt, () => {
-                if(!audioInitialized) {
-                    audioInitialized = true;
-                    if(currentTrack) audioTracks[currentTrack].play().catch(e=>console.log(e));
-                }
-            }, { once: true })
+            document.addEventListener(evt, startInitialAudio, { once: true })
         );
 
         const vSlider = document.getElementById('volumeSlider');
@@ -462,29 +458,35 @@
         }
 
         function playTrack(trackName, loaderText) {
-            if (currentTrack === trackName) return;
             setLoaderText(loaderText);
+            if (currentTrack === trackName) return;
 
             const fadeOutTrack = currentTrack ? audioTracks[currentTrack] : null;
             const fadeInTrack = audioTracks[trackName];
             currentTrack = trackName;
 
-            fadeInTrack.play().catch(e => console.log("Kattintás szükséges a lejátszáshoz."));
-            
-            let vol = 0; fadeInTrack.volume = 0;
-            const fadeInterval = setInterval(() => {
-                vol += 0.05;
-                if(vol >= 1) {
-                    if(!isMuted) fadeInTrack.volume = globalVolume;
-                    if(fadeOutTrack) { fadeOutTrack.pause(); fadeOutTrack.currentTime = 0; }
-                    clearInterval(fadeInterval);
-                } else {
-                    if(!isMuted) {
-                        fadeInTrack.volume = vol * globalVolume;
-                        if(fadeOutTrack) fadeOutTrack.volume = (1 - vol) * globalVolume;
-                    }
+            if (audioInitialized) {
+                let vol = 0; fadeInTrack.volume = 0;
+                const playPromise = fadeInTrack.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        const fadeInterval = setInterval(() => {
+                            vol += 0.05;
+                            if(vol >= 1) {
+                                if(!isMuted) fadeInTrack.volume = globalVolume;
+                                if(fadeOutTrack) { fadeOutTrack.pause(); fadeOutTrack.currentTime = 0; }
+                                clearInterval(fadeInterval);
+                            } else {
+                                if(!isMuted) {
+                                    fadeInTrack.volume = vol * globalVolume;
+                                    if(fadeOutTrack) fadeOutTrack.volume = (1 - vol) * globalVolume;
+                                }
+                            }
+                        }, 50);
+                    }).catch(e => console.log("Zene lejátszása böngésző által blokkolva."));
                 }
-            }, 50);
+            }
         }
         // --- VÉGE: AUDIO MANAGER ---
 
@@ -505,16 +507,10 @@
 
             if (sender === lastLobbySender) {
                 const msgDiv = list.lastElementChild;
-                if (msgDiv && !msgDiv.classList.contains('sys-msg')) {
-                    const textSpan = document.createElement('span');
-                    textSpan.className = textClass;
-                    textSpan.textContent = msg;
-                    msgDiv.appendChild(textSpan);
-                } else {
-                    lastLobbySender = null;
-                    appendLobbyChatMessage(sender, msg, isSelf);
-                    return;
-                }
+                const textSpan = document.createElement('span');
+                textSpan.className = textClass;
+                textSpan.textContent = msg;
+                msgDiv.appendChild(textSpan);
             } else {
                 const msgDiv = document.createElement('div');
                 msgDiv.className = `flex flex-col w-full mt-2 items-start`;
@@ -1001,7 +997,6 @@
             
             area.classList.remove('hidden'); area.classList.add('flex');
             
-            // Kényszerítsük ki, hogy mindig legyen 4 negyed, 2 elő, 1 döntő doboz
             let quarters = matches.filter(m => m.match_type === 'QUARTER');
             while(quarters.length < 4) quarters.push({ match_type: 'QUARTER' });
 
@@ -1011,7 +1006,6 @@
             let final = matches.filter(m => m.match_type === 'FINAL');
             while(final.length < 1) final.push({ match_type: 'FINAL' });
 
-            // Segédfüggvény a győztes kiderítésére (Backend + Lokális Cache kombinálva)
             const getWinner = (m) => {
                 if (!m) return null;
                 if (m.winner_name && m.winner_name !== 'TBD') return m.winner_name;
@@ -1031,7 +1025,6 @@
                 return null;
             };
 
-            // Lokális ágrajz-továbbjutó felülírás, hogy azonnal megjelenjen a győztes a következő körben
             if (getWinner(quarters[0])) semis[0].team1_name = getWinner(quarters[0]);
             if (getWinner(quarters[1])) semis[0].team2_name = getWinner(quarters[1]);
             if (getWinner(quarters[2])) semis[1].team1_name = getWinner(quarters[2]);
@@ -1062,7 +1055,6 @@
 
                 let winner = getWinner(m);
 
-                // Erőszakos lokális felülírás a megjelenítésnél
                 const matchKey = t1 + "_vs_" + t2;
                 const matchKeyRev = t2 + "_vs_" + t1;
                 
@@ -1105,12 +1097,10 @@
 
         socket.on('match_simulated_event', (data) => {
             if (isTournamentEnded) return;
-            document.getElementById('matchStatusText')?.classList.add('hidden');
             document.getElementById('matchWinnerDisplay')?.classList.add('hidden');
             document.getElementById('fastForwardGroup')?.classList.add('hidden');
             document.getElementById('nextMatchBtn')?.classList.add('hidden');
 
-            // AZONNALI CACHE ÉPÍTÉS A PONTOKHOZ (BO5 esetén)
             if (data.isBO5) {
                 window.bracketScores = window.bracketScores || {};
                 const k1 = data.team1 + "_vs_" + data.team2;
@@ -1192,7 +1182,6 @@
                     
                     if (!data.isFastForward) setTimeout(() => p.classList.remove('opacity-0'), 50);
 
-                    // MECCS VÉGE LOGIKA + SILVER SCRAPES + LIVE BRACKET
                     if (index === data.actionLogs.length - 1) {
                         setTimeout(() => {
                             if (isTournamentEnded) return;
@@ -1219,13 +1208,11 @@
 
                             if (data.newState) { 
                                 updateLobbyStateUI(data.newState); 
-                                // FORCE BRACKET RENDER ON MATCH FINISH TO AVOID WAITING FOR NEXT MATCH
                                 if(data.newState.bracket && ['QUARTER', 'SEMI', 'FINAL'].includes(data.newState.currentPhase)) {
                                     renderBracket(data.newState.bracket);
                                 }
                             }
 
-                            // SILVER SCRAPES TRIGGER
                             if (data.isBO5 && data.score1 === 2 && data.score2 === 2 && !data.isSeriesFinished && !data.isFastForward) {
                                 const btn = document.getElementById('nextMatchBtn');
                                 const fwdGroup = document.getElementById('fastForwardGroup');
