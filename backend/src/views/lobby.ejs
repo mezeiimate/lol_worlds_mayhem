@@ -145,7 +145,7 @@
                 </div>
             </div>
 
-            <!-- AUDIO PANEL (Jobb oldal) -->
+            <!-- AUDIO PANEL (Fixen itt a fejlécben) -->
             <div id="audioControlPanel" class="flex items-center gap-10 z-20">
                 <div class="loader-wrapper" id="loaderWrapper">
                     <div class="loader-spinner"></div>
@@ -166,7 +166,7 @@
         <div class="flex-1 min-h-0 overflow-y-auto pr-2">
             <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 h-full">
                 
-                <!-- BAL OSZLOP: TÉRKÉP ÉS KÓD -->
+                <!-- BAL OSZLOP: TÉRKÉP ÉS KÓD / VEZÉRLÉS -->
                 <div class="xl:col-span-1 flex flex-col gap-4 h-full">
                     <div class="flex flex-col items-center justify-start relative hex-panel p-6 rounded-sm w-full" id="leftMapArea">
                         <div class="w-full flex justify-between items-center mb-6 border-b border-[#c8aa6e]/30 pb-3">
@@ -189,7 +189,7 @@
                         </div>
                     </div>
 
-                    <!-- MEGHÍVÓ ÉS KÓD (Map alatti panel) -->
+                    <!-- MEGHÍVÓ ÉS KÓD (Map alatti panel, csak draft alatt) -->
                     <div id="roomCodeContainer" class="hex-panel rounded-sm p-6 w-full flex flex-col gap-4 shadow-lg shrink-0">
                         <div class="text-center w-full">
                             <p class="text-[0.65rem] text-[#c8aa6e] uppercase tracking-widest mb-1 cyber-font font-bold">Szoba Kód</p>
@@ -198,6 +198,19 @@
                         <button id="inviteFriendBtn" onclick="openInviteModal()" class="w-full bg-[#1e2328] hover:bg-[#c8aa6e] hover:text-[#010a13] border border-[#c8aa6e]/50 px-5 py-2.5 rounded-sm text-sm font-bold text-[#c8aa6e] transition-colors cyber-font tracking-widest uppercase">
                             Barát Meghívása
                         </button>
+                    </div>
+
+                    <!-- HOST CONTROLS (Map alatti panel, szimuláció alatt) -->
+                    <div id="hostControls" class="hidden hex-panel rounded-sm p-6 w-full flex-col gap-3 shadow-lg shrink-0">
+                        <h3 class="text-[#c8aa6e] font-bold text-center text-xs uppercase tracking-widest mb-1 cyber-font border-b border-[#c8aa6e]/30 pb-2">Irányítópult</h3>
+                        <button id="nextMatchBtn" onclick="triggerNextMatch()" class="w-full esport-font text-xl font-bold text-[#010a13] bg-[#c8aa6e] hover:bg-[#f0e6d2] py-3 rounded-sm transition-colors shadow-[0_0_15px_rgba(200,170,110,0.3)] disabled:opacity-50 disabled:cursor-not-allowed">
+                            KÖVETKEZŐ MECCS
+                        </button>
+                        <div id="fastForwardGroup" class="flex flex-col gap-2 w-full mt-1">
+                            <button id="ffGroupBtn" onclick="fastForward('group')" class="w-full bg-[#1e2328] hover:bg-[#c8aa6e] hover:text-[#010a13] text-slate-300 text-[0.65rem] font-bold uppercase tracking-widest py-2.5 rounded-sm border border-[#c8aa6e]/50 transition-colors cyber-font">GYORSÍTÁS: CSOPORT</button>
+                            <button id="ffAllBtn" onclick="fastForward('all')" class="w-full bg-[#1e2328] hover:bg-[#c8aa6e] hover:text-[#010a13] text-slate-300 text-[0.65rem] font-bold uppercase tracking-widest py-2.5 rounded-sm border border-[#c8aa6e]/50 transition-colors cyber-font">GYORSÍTÁS: ÖSSZES</button>
+                            <button id="ffBo5Btn" onclick="fastForward('bo5')" class="hidden w-full bg-[#1e2328] hover:bg-[#c8aa6e] hover:text-[#010a13] text-slate-300 text-[0.65rem] font-bold uppercase tracking-widest py-2.5 rounded-sm border border-[#c8aa6e]/50 transition-colors cyber-font">TELJES BO5 LEJÁTSZÁSA</button>
+                        </div>
                     </div>
                 </div>
 
@@ -263,18 +276,6 @@
                             
                             <div id="matchWinnerDisplay" class="hidden mt-4 bg-emerald-900/30 border border-emerald-700 px-6 py-2.5 rounded-sm text-emerald-400 font-bold text-sm uppercase tracking-wider transition-opacity duration-500 flex items-center gap-2">
                                 <span id="winnerTextLabel" class="text-emerald-500/70">Győztes:</span> <span id="winnerText" class="text-white">Winner</span>
-                            </div>
-                        </div>
-
-                        <!-- HOST CONTROLS -->
-                        <div id="hostControls" class="hidden flex-col gap-3 w-full items-center">
-                            <button id="nextMatchBtn" onclick="triggerNextMatch()" class="w-full esport-font text-xl font-bold text-[#010a13] bg-[#c8aa6e] hover:bg-[#f0e6d2] py-3 rounded-sm transition-colors shadow-[0_0_15px_rgba(200,170,110,0.3)] disabled:opacity-50 disabled:cursor-not-allowed">
-                                KÖVETKEZŐ MECCS
-                            </button>
-                            <div id="fastForwardGroup" class="flex gap-3 w-full mt-1">
-                                <button id="ffGroupBtn" onclick="fastForward('group')" class="flex-1 bg-[#1e2328] hover:bg-[#c8aa6e] hover:text-[#010a13] text-slate-300 text-[0.65rem] font-bold uppercase tracking-widest py-2.5 rounded-sm border border-[#c8aa6e]/50 transition-colors cyber-font">GYORSÍTÁS: CSOPORT</button>
-                                <button id="ffAllBtn" onclick="fastForward('all')" class="flex-1 bg-[#1e2328] hover:bg-[#c8aa6e] hover:text-[#010a13] text-slate-300 text-[0.65rem] font-bold uppercase tracking-widest py-2.5 rounded-sm border border-[#c8aa6e]/50 transition-colors cyber-font">GYORSÍTÁS: ÖSSZES</button>
-                                <button id="ffBo5Btn" onclick="fastForward('bo5')" class="hidden flex-1 bg-[#1e2328] hover:bg-[#c8aa6e] hover:text-[#010a13] text-slate-300 text-[0.65rem] font-bold uppercase tracking-widest py-2.5 rounded-sm border border-[#c8aa6e]/50 transition-colors cyber-font">TELJES BO5 LEJÁTSZÁSA</button>
                             </div>
                         </div>
                     </div>
@@ -356,12 +357,12 @@
         
         socket.emit('identify', { userId: USER_ID });
 
-        // --- AUDIO MANAGER ---
-        let currentTrack = null;
+        // --- AUDIO MANAGER (Agresszív Feloldással) ---
+        let currentTrack = 'draft'; 
         let globalVolume = parseFloat(localStorage.getItem('lol_volume') || '0.1');
         let isMuted = localStorage.getItem('lol_muted') === 'true';
 
-        // PONTOS FÁJLNEVEK BEÁLLÍTÁSA!
+        // PONTOSAN A MEGADOTT FÁJLNEVEK!
         const audioTracks = {
             draft: new Audio('/audio/LoL_Draft_Music_New.mp3'),
             groups: new Audio('/audio/LoL_Worlds_2025_Orchestral_Theme_Csoportkor.mp3'),
@@ -371,11 +372,11 @@
 
         Object.values(audioTracks).forEach(audio => {
             audio.loop = true;
-            audio.volume = 0; // Nulláról indul a fade miatt
+            audio.volume = isMuted ? 0 : globalVolume;
         });
-        audioTracks.silver.loop = false; 
+        audioTracks.silver.loop = false;
 
-        let audioUnlocked = false;
+        let isAudioUnlocked = false;
 
         function setLoaderText(text) {
             const wrapper = document.getElementById('loaderWrapper');
@@ -387,65 +388,46 @@
             }
         }
 
-        function playTrack(trackName, loaderText) {
-            if (loaderText) setLoaderText(loaderText);
-            if (currentTrack === trackName) return;
+        // AGRESSZÍV AUDIO FELOLDÓ
+        function unlockAndPlayAudio() {
+            if (isAudioUnlocked) return;
+            
+            let track = 'draft';
+            let text = 'Draft fázis';
 
-            const fadeOutTrack = currentTrack ? audioTracks[currentTrack] : null;
-            const fadeInTrack = audioTracks[trackName];
-            currentTrack = trackName;
+            if(document.getElementById('startArea')?.classList.contains('hidden') && document.getElementById('teamsAreaPhase1')?.classList.contains('hidden')) {
+                const phase = document.getElementById('matchGroupBadge')?.innerText || '';
+                if(phase.includes('QUARTER') || phase.includes('SEMI') || phase.includes('FINAL')) {
+                    track = 'knockout'; text = 'Worlds Theme';
+                } else {
+                    track = 'groups'; text = 'Worlds Theme';
+                }
+            }
 
-            const playPromise = fadeInTrack.play();
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    audioUnlocked = true;
-                    
-                    let vol = 0;
-                    fadeInTrack.volume = 0;
-                    const fadeInterval = setInterval(() => {
-                        vol += 0.05;
-                        if(vol >= 1) {
-                            if(!isMuted) fadeInTrack.volume = globalVolume;
-                            if(fadeOutTrack) { fadeOutTrack.pause(); fadeOutTrack.currentTime = 0; }
-                            clearInterval(fadeInterval);
-                        } else {
-                            if(!isMuted) {
-                                fadeInTrack.volume = vol * globalVolume;
-                                if(fadeOutTrack) fadeOutTrack.volume = (1 - vol) * globalVolume;
-                            }
-                        }
-                    }, 50);
-                }).catch(e => {
-                    console.log("Autoplay blokkolva! Várakozás interakcióra...");
-                    audioUnlocked = false;
+            currentTrack = track;
+            setLoaderText(text);
+
+            const trackToPlay = audioTracks[currentTrack];
+            trackToPlay.volume = isMuted ? 0 : globalVolume;
+            
+            const promise = trackToPlay.play();
+            if (promise !== undefined) {
+                promise.then(() => {
+                    isAudioUnlocked = true;
+                    console.log("🔊 Audio Engine sikeresen feloldva és elindítva!");
+                }).catch(err => {
+                    console.log("🔇 Böngésző blokkolás (Autoplay Policy). Várunk a kattintásra...");
                 });
             }
         }
 
-        // AZONNALI INDÍTÁS PRÓBÁJA
-        setTimeout(() => {
-            if(!document.getElementById('startArea')?.classList.contains('hidden') || !document.getElementById('teamsAreaPhase1')?.classList.contains('hidden')) {
-                playTrack('draft', 'Draft fázis');
-            } else {
-                const phase = document.getElementById('matchGroupBadge')?.innerText || '';
-                if(phase.includes('QUARTER') || phase.includes('SEMI') || phase.includes('FINAL')) {
-                    playTrack('knockout', 'Worlds Theme');
-                } else {
-                    playTrack('groups', 'Worlds Theme');
-                }
-            }
-        }, 500);
+        // Kezdeti beállítás
+        setLoaderText('Draft fázis');
+        unlockAndPlayAudio(); // Azonnali próba betöltéskor
 
-        // BIZTONSÁGI HÁLÓ (ELSŐ KATTINTÁSRA)
-        document.body.addEventListener('click', () => {
-            if (!audioUnlocked && currentTrack) {
-                const track = audioTracks[currentTrack];
-                track.volume = isMuted ? 0 : globalVolume;
-                track.play().then(() => {
-                    audioUnlocked = true;
-                }).catch(e => console.error(e));
-            }
-        });
+        // A legelső, bárhova történő kattintás feloldja a hangot!
+        document.addEventListener('click', unlockAndPlayAudio);
+        document.addEventListener('keydown', unlockAndPlayAudio);
 
         const vSlider = document.getElementById('volumeSlider');
         if(vSlider) vSlider.value = globalVolume * 100;
@@ -462,18 +444,48 @@
                 if(mIcon) mIcon.style.opacity = '1';
             }
             
-            if(!isMuted && currentTrack && audioUnlocked) {
+            if(!isMuted && currentTrack && isAudioUnlocked) {
                 audioTracks[currentTrack].volume = globalVolume;
             }
+            unlockAndPlayAudio(); // Ha hozzányúl a hangerőhöz, az is interakció!
         }
 
         function toggleMute() {
             isMuted = !isMuted;
             localStorage.setItem('lol_muted', isMuted);
-            if(currentTrack && audioUnlocked) {
-                audioTracks[currentTrack].volume = isMuted ? 0 : globalVolume;
-            }
+            if(currentTrack && isAudioUnlocked) audioTracks[currentTrack].volume = isMuted ? 0 : globalVolume;
+            const mIcon = document.getElementById('muteIcon');
             if(mIcon) mIcon.style.opacity = isMuted ? '0.5' : '1';
+            unlockAndPlayAudio(); // Ez is interakció
+        }
+
+        function playTrack(trackName, loaderText) {
+            setLoaderText(loaderText);
+            if (currentTrack === trackName) return;
+
+            const fadeOutTrack = currentTrack ? audioTracks[currentTrack] : null;
+            const fadeInTrack = audioTracks[trackName];
+            currentTrack = trackName;
+
+            if (!isAudioUnlocked) return; // Ha nincs feloldva, a currentTrack beállítása elég, az unlockAndPlayAudio majd a jót indítja
+
+            fadeInTrack.volume = 0;
+            fadeInTrack.play().catch(e => console.log(e));
+            
+            let vol = 0;
+            const fadeInterval = setInterval(() => {
+                vol += 0.05;
+                if(vol >= 1) {
+                    if(!isMuted) fadeInTrack.volume = globalVolume;
+                    if(fadeOutTrack) { fadeOutTrack.pause(); fadeOutTrack.currentTime = 0; }
+                    clearInterval(fadeInterval);
+                } else {
+                    if(!isMuted) {
+                        fadeInTrack.volume = vol * globalVolume;
+                        if(fadeOutTrack) fadeOutTrack.volume = (1 - vol) * globalVolume;
+                    }
+                }
+            }, 50);
         }
         // --- VÉGE: AUDIO MANAGER ---
 
@@ -494,10 +506,16 @@
 
             if (sender === lastLobbySender) {
                 const msgDiv = list.lastElementChild;
-                const textSpan = document.createElement('span');
-                textSpan.className = textClass;
-                textSpan.textContent = msg;
-                msgDiv.appendChild(textSpan);
+                if (msgDiv && !msgDiv.classList.contains('sys-msg')) {
+                    const textSpan = document.createElement('span');
+                    textSpan.className = textClass;
+                    textSpan.textContent = msg;
+                    msgDiv.appendChild(textSpan);
+                } else {
+                    lastLobbySender = null;
+                    appendLobbyChatMessage(sender, msg, isSelf);
+                    return;
+                }
             } else {
                 const msgDiv = document.createElement('div');
                 msgDiv.className = `flex flex-col w-full mt-2 items-start`;
@@ -658,6 +676,7 @@
 
                 if(nextMatchBtn) { nextMatchBtn.classList.remove('hidden'); nextMatchBtn.disabled = false; }
                 
+                // FRONTEND-SZINTŰ FÁZIS-VÉGE ÉRZÉKELÉS
                 let phaseIsDone = false;
                 if (!hasPending) {
                     phaseIsDone = true;
@@ -1088,6 +1107,7 @@
             document.getElementById('fastForwardGroup')?.classList.add('hidden');
             document.getElementById('nextMatchBtn')?.classList.add('hidden');
 
+            // AZONNALI CACHE ÉPÍTÉS A PONTOKHOZ (BO5 esetén)
             if (data.isBO5) {
                 window.bracketScores = window.bracketScores || {};
                 const k1 = data.team1 + "_vs_" + data.team2;
