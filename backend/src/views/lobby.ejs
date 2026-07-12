@@ -98,7 +98,7 @@
 
         /* --- AUDIO VOLUME SLIDER --- */
         .slider-container { display: inline-flex; align-items: center; position: relative; cursor: pointer; }
-        .slider-container .volume { color: #f0e6d2; width: 18px; height: auto; margin-right: 10px; transition: opacity 0.3s; z-index: 20; }
+        .slider-container .volume { color: #f0e6d2; width: 18px; height: auto; margin-right: 10px; pointer-events: auto; transition: opacity 0.3s; z-index: 20; }
         .slider-container .level {
             -webkit-appearance: none; appearance: none;
             width: 80px; height: 8px; background: rgba(200, 170, 110, 0.2);
@@ -145,7 +145,7 @@
                 </div>
             </div>
 
-            <!-- AUDIO PANEL -->
+            <!-- AUDIO PANEL (Jobb oldal) -->
             <div id="audioControlPanel" class="flex items-center gap-10 z-20">
                 <div class="loader-wrapper" id="loaderWrapper">
                     <div class="loader-spinner"></div>
@@ -189,7 +189,7 @@
                         </div>
                     </div>
 
-                    <!-- MEGHÍVÓ ÉS KÓD -->
+                    <!-- MEGHÍVÓ ÉS KÓD (Map alatti panel) -->
                     <div id="roomCodeContainer" class="hex-panel rounded-sm p-6 w-full flex flex-col gap-4 shadow-lg shrink-0">
                         <div class="text-center w-full">
                             <p class="text-[0.65rem] text-[#c8aa6e] uppercase tracking-widest mb-1 cyber-font font-bold">Szoba Kód</p>
@@ -355,16 +355,15 @@
         
         socket.emit('identify', { userId: USER_ID });
 
-        // --- AUDIO MANAGER (Agresszív Feloldással) ---
-        let currentTrack = 'draft'; 
+        // --- AUDIO MANAGER ---
+        let currentTrack = null;
         let globalVolume = parseFloat(localStorage.getItem('lol_volume') || '0.1');
         let isMuted = localStorage.getItem('lol_muted') === 'true';
 
-        // URL KÓDOLÁS A SZÓKÖZÖK MIATT!
         const audioTracks = {
             draft: new Audio('/audio/LoL_Draft_Music_New.mp3'),
-            groups: new Audio('/audio/LoL_Worlds_2025%20_Orchestral_Theme_Csoportkor.mp3'),
-            knockout: new Audio('/audio/LoL_Worlds_2023%20_Orchestral_Theme_Kieseses.mp3'),
+            groups: new Audio('/audio/LoL_Worlds_2025_Orchestral_Theme_Csoportkor.mp3'),
+            knockout: new Audio('/audio/LoL_Worlds_2023_Orchestral_Theme_Kieseses.mp3'),
             silver: new Audio('/audio/LoL_SilverScrapes.mp3')
         };
 
@@ -374,7 +373,7 @@
         });
         audioTracks.silver.loop = false;
 
-        let isAudioUnlocked = false;
+        let audioInitialized = false;
 
         function setLoaderText(text) {
             const wrapper = document.getElementById('loaderWrapper');
@@ -386,31 +385,43 @@
             }
         }
 
-        // AGRESSZÍV AUDIO FELOLDÓ
+        // AGRESSZÍV AUDIO FELOLDÓ JAVÍTVA
         function unlockAndPlayAudio() {
-            if (isAudioUnlocked) return;
+            if (audioInitialized) return;
             
+            // Megkeressük, melyik zene kell aktuálisan
+            let track = 'draft';
+            let text = 'Draft fázis';
+
+            if(document.getElementById('startArea')?.classList.contains('hidden') && document.getElementById('teamsAreaPhase1')?.classList.contains('hidden')) {
+                const phase = document.getElementById('matchGroupBadge')?.innerText || '';
+                if(phase.includes('QUARTER') || phase.includes('SEMI') || phase.includes('FINAL')) {
+                    track = 'knockout'; text = 'Worlds Theme';
+                } else {
+                    track = 'groups'; text = 'Worlds Theme';
+                }
+            }
+
+            currentTrack = track;
+            setLoaderText(text);
+
             const trackToPlay = audioTracks[currentTrack];
             trackToPlay.volume = isMuted ? 0 : globalVolume;
             
             const promise = trackToPlay.play();
             if (promise !== undefined) {
                 promise.then(() => {
-                    isAudioUnlocked = true;
-                    console.log("🔊 Audio Engine sikeresen feloldva és elindítva!");
+                    audioInitialized = true;
                 }).catch(err => {
-                    console.log("🔇 Böngésző blokkolás (Autoplay Policy). Várunk a kattintásra...");
+                    console.log("Böngésző blokkolás. Várunk a kattintásra...");
                 });
             }
         }
 
-        // Kezdeti beállítás
-        setLoaderText('Draft fázis');
-        unlockAndPlayAudio(); // Azonnali próba betöltéskor
-
-        // A legelső, bárhova történő kattintás feloldja a hangot!
-        document.addEventListener('click', unlockAndPlayAudio);
-        document.addEventListener('keydown', unlockAndPlayAudio);
+        // Első interakcióra biztosan elindul
+        document.body.addEventListener('click', unlockAndPlayAudio, { once: true });
+        // Próba rögtön az elején
+        setTimeout(unlockAndPlayAudio, 100);
 
         const vSlider = document.getElementById('volumeSlider');
         if(vSlider) vSlider.value = globalVolume * 100;
@@ -427,19 +438,19 @@
                 if(mIcon) mIcon.style.opacity = '1';
             }
             
-            if(!isMuted && currentTrack && isAudioUnlocked) {
+            if(!isMuted && currentTrack && audioInitialized) {
                 audioTracks[currentTrack].volume = globalVolume;
             }
-            unlockAndPlayAudio(); // Ha hozzányúl a hangerőhöz, az is interakció!
+            unlockAndPlayAudio(); // Ha a sliderhez nyúl, induljon el!
         }
 
         function toggleMute() {
             isMuted = !isMuted;
             localStorage.setItem('lol_muted', isMuted);
-            if(currentTrack && isAudioUnlocked) audioTracks[currentTrack].volume = isMuted ? 0 : globalVolume;
+            if(currentTrack && audioInitialized) audioTracks[currentTrack].volume = isMuted ? 0 : globalVolume;
             const mIcon = document.getElementById('muteIcon');
             if(mIcon) mIcon.style.opacity = isMuted ? '0.5' : '1';
-            unlockAndPlayAudio(); // Ez is interakció
+            unlockAndPlayAudio();
         }
 
         function playTrack(trackName, loaderText) {
@@ -450,7 +461,7 @@
             const fadeInTrack = audioTracks[trackName];
             currentTrack = trackName;
 
-            if (!isAudioUnlocked) return; // Ha nincs feloldva, a currentTrack beállítása elég, az unlockAndPlayAudio majd a jót indítja
+            if (!audioInitialized) return;
 
             fadeInTrack.volume = 0;
             fadeInTrack.play().catch(e => console.log(e));
