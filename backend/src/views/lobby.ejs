@@ -70,7 +70,6 @@
 
         /* --- CHAT STYLES --- */
         .chat-msg { display: flex; flex-direction: column; margin-bottom: 4px; }
-        .sys-msg { color: #facc15; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; text-align: center; opacity: 0.8; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid rgba(250, 204, 21, 0.2); }
 
         /* --- AUDIO LOADER ANIMATION --- */
         .loader-wrapper {
@@ -99,7 +98,7 @@
 
         /* --- AUDIO VOLUME SLIDER --- */
         .slider-container { display: inline-flex; align-items: center; position: relative; cursor: pointer; }
-        .slider-container .volume { color: #f0e6d2; width: 18px; height: auto; margin-right: 10px; pointer-events: auto; transition: opacity 0.3s; z-index: 20; }
+        .slider-container .volume { color: #f0e6d2; width: 18px; height: auto; margin-right: 10px; transition: opacity 0.3s; z-index: 20; }
         .slider-container .level {
             -webkit-appearance: none; appearance: none;
             width: 80px; height: 8px; background: rgba(200, 170, 110, 0.2);
@@ -112,7 +111,7 @@
             width: 0; height: 0; border-radius: 0; border: none; box-shadow: -200px 0 0 200px #c8aa6e;
         }
 
-        /* --- COSMIC PORTAL BUTTON --- */
+        /* --- SPIN BUTTON --- */
         .cosmic-portal-btn {
             --btn-bg: #010a13; --btn-color: #c8aa6e; --btn-highlight: #091428;
             --portal-color1: #c8aa6e; --portal-color2: #f0e6d2;
@@ -136,13 +135,6 @@
         .cosmic-portal-btn:disabled { filter: grayscale(100%); cursor: not-allowed; opacity: 0.6; }
         @keyframes rotatePortal { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes pulsePortal { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-
-        /* --- CUSTOM CHECKBOX --- */
-        .custom-checkbox { cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative; }
-        .custom-checkbox input { display: none; }
-        .custom-checkbox svg { overflow: visible; height: 1.5em; width: 1.5em; }
-        .custom-checkbox .path { fill: none; stroke: #ff004d; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; transition: stroke-dasharray 0.5s ease, stroke-dashoffset 0.5s ease; stroke-dasharray: 241 9999999; stroke-dashoffset: 0; }
-        .custom-checkbox input:checked ~ svg .path { stroke-dasharray: 70.5096664428711 9999999; stroke-dashoffset: -262.2723388671875; stroke: #c8aa6e; }
     </style>
 </head>
 <body class="flex w-screen h-screen bg-[#010a13] text-[#f0e6d2] overflow-hidden relative">
@@ -178,8 +170,8 @@
                 </div>
             </div>
 
-            <!-- AUDIO PANEL (Jobb oldal) -->
-            <div id="audioControlPanel" class="flex items-center gap-6 z-20">
+            <!-- AUDIO PANEL (Fixen itt a fejlécben) -->
+            <div id="audioControlPanel" class="flex items-center gap-10 z-20">
                 <div class="loader-wrapper" id="loaderWrapper">
                     <div class="loader-spinner"></div>
                 </div>
@@ -405,7 +397,7 @@
             audio.loop = true;
             audio.volume = isMuted ? 0 : globalVolume;
         });
-        audioTracks.silver.loop = false;
+        audioTracks.silver.loop = false; 
 
         let audioInitialized = false;
 
@@ -440,7 +432,7 @@
         // Azonnali próba betöltéskor
         forcePlayAudio();
 
-        // Biztonsági háló: A legelső kattintáskor elindítja a zenét, ha a böngésző blokkolta az autoplayt
+        // Biztonsági háló: A legelső kattintáskor elindítja a zenét
         window.addEventListener('click', () => {
             if (!audioInitialized) forcePlayAudio();
         }, { once: true });
@@ -1121,12 +1113,10 @@
 
         socket.on('match_simulated_event', (data) => {
             if (isTournamentEnded) return;
-            document.getElementById('matchStatusText')?.classList.add('hidden');
             document.getElementById('matchWinnerDisplay')?.classList.add('hidden');
             document.getElementById('fastForwardGroup')?.classList.add('hidden');
             document.getElementById('nextMatchBtn')?.classList.add('hidden');
 
-            // AZONNALI CACHE ÉPÍTÉS A PONTOKHOZ (BO5 esetén)
             if (data.isBO5) {
                 window.bracketScores = window.bracketScores || {};
                 const k1 = data.team1 + "_vs_" + data.team2;
@@ -1333,15 +1323,6 @@
             
             const roomCodeDiv = document.getElementById('roomCodeContainer');
             if (roomCodeDiv) { roomCodeDiv.classList.add('hidden'); }
-            
-            const headerRight = document.getElementById('headerRightArea');
-            const audioPanel = document.getElementById('audioControlPanel');
-            if (headerRight && audioPanel) {
-                audioPanel.classList.remove('mt-6', 'w-full', 'bg-[#091428]/80', 'border-[#c8aa6e]/30', 'p-4', 'shadow-lg');
-                audioPanel.classList.add('gap-6');
-                headerRight.innerHTML = '';
-                headerRight.appendChild(audioPanel);
-            }
 
             document.getElementById('startArea')?.classList.add('hidden');
             document.getElementById('teamsAreaPhase1')?.classList.add('hidden');
